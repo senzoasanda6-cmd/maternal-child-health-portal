@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maternal Child Health Portal - Style Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1d4189;
+            --accent-color: #ff9800;
+            --secondary-color: #4497cb;
+            --text-color: #333;
+            --background-color: #ffffff;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        h1 { font-size: 3.5rem; }
+        h2 { font-size: 2.5rem; border-bottom: 2px solid var(--primary-color); padding-bottom: 0.5rem; margin-top: 2rem; }
+        h3 { font-size: 1.75rem; }
+        p {
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        .color-swatch {
+            text-align: center;
+        }
+        .swatch {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .swatch-label {
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+        .typography-section .example {
+            border: 1px dashed #ccc;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+        .button {
+            font-family: 'Poppins', sans-serif;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+            transition: box-shadow 0.2s ease-in-out;
+        }
+        .button:hover {
+            box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.2);
+        }
+        .button-primary {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+        .button-secondary {
+            background-color: var(--secondary-color); /* As per spec, same as primary */
+            color: #ffffff;
+        }
+        .button-accent {
+            background-color: var(--accent-color); /* Using a standard Material orange for contrast */
+            color: #ffffff;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-top: 1rem;
+            max-width: 350px;
+        }
+        .card h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Style Guide: Maternal Child Health Portal</h1>
+        <p>This style guide outlines the visual design standards for the Maternal Child Health Portal. Adhering to these guidelines ensures a consistent, professional, and user-friendly experience across the application, following Material Design principles.</p>
+
+        <h2>Color Palette</h2>
+        <p>The color scheme is designed to be professional and calming, with a strong primary color and a clear accent for calls-to-action.</p>
+        <div class="color-palette">
+            <div class="color-swatch">
+                <div class="swatch" style="background-color: #ffffff;"></div>
+                <div class="swatch-label">White Background<br>#ffffff</div>
+            </div>
+            <div class="color-swatch">
+                <div class="swatch" style="background-color: var(--primary-color);"></div>
+                <div class="swatch-label">Main Blue<br>#1d4189</div>
+            </div>
+            <div class="color-swatch">
+                <div class="swatch" style="background-color: var(--secondary-color);"></div>
+                <div class="swatch-label">Secondary Blue<br>#4497cb</div>
+            </div>
+            <div class="color-swatch">
+                <div class="swatch" style="background-color: var(--accent-color);"></div>
+                <div class="swatch-label">Accent Orange<br>#ff9800</div>
+            </div>
+        </div>
+
+        <h2 class="typography-section">Typography</h2>
+        <p>The font selection provides clear hierarchy and excellent readability, crucial for a professional application.</p>
+        
+        <h3>Headers (Montserrat)</h3>
+        <div class="example">
+            <h1>Heading 1: The quick brown fox jumps over the lazy dog.</h1>
+            <h2>Heading 2: The quick brown fox jumps over the lazy dog.</h2>
+            <h3>Heading 3: The quick brown fox jumps over the lazy dog.</h3>
+            <h4>Heading 4: The quick brown fox jumps over the lazy dog.</h4>
+        </div>
+
+        <h3>Body Text (Poppins)</h3>
+        <div class="example">
+            <p>This is the main body text, using the Poppins font. It is selected for its clarity and modern, professional feel. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.</p>
+            <p><strong>This is bold text.</strong> <em>This is italic text.</em></p>
+        </div>
+
+        <h2>Components</h2>
+        <p>Here are some examples of how the styles are applied to common UI components, following Material Design principles.</p>
+
+        <h3>Buttons</h3>
+        <div class="example" style="display: flex; gap: 1rem; align-items: center;">
+            <button class="button button-primary">Primary Action</button>
+            <button class="button button-secondary">Secondary Action</button>
+            <button class="button button-accent">Accent Action</button>
+        </div>
+
+        <h3>Cards</h3>
+        <div class="example">
+            <div class="card">
+                <h3>Patient Overview</h3>
+                <p>This is an example of a Material Design card. It has a slight shadow for depth and contains grouped information, providing a clean and organized layout.</p>
+                <button class="button button-primary" style="margin-top: 1rem;">View Details</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
