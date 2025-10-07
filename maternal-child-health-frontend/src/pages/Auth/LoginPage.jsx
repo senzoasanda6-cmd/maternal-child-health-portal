@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../services/api";
+import { AuthContext } from "../../context/AuthContext";
 import "./LoginPage.css";
 
 function LoginPage() {
+    const navigate = useNavigate();
     const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); // 👈 Add this
+    const { login } = useContext(AuthContext);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -16,24 +17,7 @@ function LoginPage() {
         e.preventDefault();
         setError(null);
         try {
-            const data = await login(form);
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("role", data.user.role);
-
-            // 👇 Redirect based on role
-            switch (data.user.role) {
-                case "admin":
-                    navigate("/admin/dashboard");
-                    break;
-                case "health_worker":
-                    navigate("/health/dashboard");
-                    break;
-                case "mother":
-                    navigate("/mother/home");
-                    break;
-                default:
-                    navigate("/");
-            }
+            await login(form);
         } catch (err) {
             setError(err.response?.data?.error || "Login failed");
         }
@@ -92,6 +76,14 @@ function LoginPage() {
                             />{" "}
                             {error && <p className="error">{error}</p>}{" "}
                             <button type="submit">Login</button>{" "}
+                            <p style={{marginBottom: '4px', marginTop: '12px'}}>Or</p>
+                            <button
+                                type="button"
+                                onClick={() => navigate("/register")}
+                            >
+                                Register
+                            </button>
+
                         </form>{" "}
                     </div>{" "}
                 </div>{" "}
