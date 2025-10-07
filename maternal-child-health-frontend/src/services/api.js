@@ -42,12 +42,6 @@ export const register = async (formData) => {
   return response.data;
 };
 
-export const login = async (formData) => {
-  await api.get('/sanctum/csrf-cookie'); // uses baseURL
-  const response = await api.post('/api/login', formData);
-  return response.data;
-};
-
 export const getUser = async () => {
   const response = await api.get('/api/user');
   return response.data;
