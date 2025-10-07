@@ -9,13 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('postnatal_visits', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('postnatal_visits', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('child_id');
+        $table->date('visit_date');
+        $table->text('notes')->nullable();
+        $table->timestamps();
+
+        $table->foreign('child_id')->references('id')->on('children')->onDelete('cascade');
+    });
+}
 
     /**
      * Reverse the migrations.
