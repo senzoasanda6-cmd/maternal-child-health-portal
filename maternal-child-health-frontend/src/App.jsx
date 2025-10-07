@@ -21,7 +21,39 @@ import VaccineProgressChart from "./pages/ChildProfile/Vaccinations/VaccineProgr
 import { useEffect, useState } from "react";
 import { getUser } from "./services/api";
 
+
 function App() {
+  const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const token = localStorage.getItem("authToken");
+        if (token) {
+            getUser()
+                .then(setUser)
+                .catch(() => {
+                    localStorage.clear();
+                    setUser(null);
+                })
+                .finally(() => setLoading(false));
+        } else {
+            setLoading(false);
+        }
+    }, []);
+    if (loading) return <div>Loading...</div>;
+
+    // if (!user) {
+    //     return (
+    //         <Router>
+    //             <Routes>
+    //                 <Route path="/register" element={<RegisterForm />} />
+    //                 <Route path="/" element={<CareTimeline />} />
+    //                 {/* <Route path="*" element={<NotFound />} /> */}
+    //             </Routes>
+    //         </Router>
+    //     );
+    // }
+    
   return (
     <Router>
       <Routes>
