@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create Axios instance
 const api = axios.create({
-  baseURL: 'http://localhost', // Change to your Laravel API URL
+  baseURL: 'http://127.0.0.1:8000', // Change to your Laravel API URL
   withCredentials: true,            // Needed for Sanctum (cookies)
   headers: {
     'Content-Type': 'application/json',
@@ -38,19 +38,20 @@ api.interceptors.response.use(
 axios.defaults.withCredentials = true;
 
 export const register = async (formData) => {
-  const response = await axios.post('http://127.0.0.1:8000/api/register', formData);
+  const response = await api.post('/api/register', formData);
   return response.data;
 };
 
 export const login = async (formData) => {
-  await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie');
-  const response = await axios.post('http://127.0.0.1:8000/api/login', formData);
+  await api.get('/sanctum/csrf-cookie'); // uses baseURL
+  const response = await api.post('/api/login', formData);
   return response.data;
 };
 
 export const getUser = async () => {
-  const response = await axios.get('http://127.0.0.1:8000/api/user');
+  const response = await api.get('/api/user');
   return response.data;
 };
+
 
 export default api;
