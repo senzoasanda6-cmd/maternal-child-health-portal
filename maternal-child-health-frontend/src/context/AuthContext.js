@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../services/api'; // Your Axios instance
+import api from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       fetchUser();
     } else {
       setLoading(false);
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get('/api/user');
+      const res = await api.get('/api/user');
       setUser(res.data);
     } catch (err) {
       console.error('Auth error:', err);
@@ -32,15 +32,32 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (credentials) => {
-    const res = await axios.post('/api/login', credentials);
-    const authToken = res.data.token;
-    localStorage.setItem('authToken', authToken);
-    setToken(authToken);
-    navigate('/dashboard');
+    await api.get('/sanctum/csrf-cookie');
+    const res = await api.post('/api/login', credentials);
+    const { token, user } = res.data;
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('role', user.role);
+    setToken(token);
+    setUser(user);
+
+    switch (user.role) {
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+      case "health_worker":
+        navigate("/health/dashboard");
+        break;
+      case "mother":
+        navigate("/mother/home");
+        break;
+      default:
+        navigate("/");
+    }
   };
 
   const logout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('role');
     setToken(null);
     setUser(null);
     navigate('/login');
