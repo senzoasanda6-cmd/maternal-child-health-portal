@@ -1,5 +1,5 @@
 import React from 'react';
-import HealthEducationLayout from '../../components/HealthEducationLayout';
+import HealthEducationLayout from './HealthEducationLayout';
 
 const PostNatalCare = () => {
   return (
