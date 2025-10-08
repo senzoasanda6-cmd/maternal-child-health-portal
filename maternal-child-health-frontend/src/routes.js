@@ -27,7 +27,7 @@ import HomeLayout from "./pages/Home/LandingPage.jsx";
 import NutritionResource from "./pages/Resources/NutritionResource";
 import PostnatalChecklistResource from "./pages/Resources/PostnatalChecklistResource";
 import BreastfeedingVideoResource from "./pages/Resources/BreastfeedingVideoResource";
-import Layout from "./layouts/Layout.jsx";
+
 
 const AppRoutes = () => (
     <Routes>
@@ -55,7 +55,7 @@ const AppRoutes = () => (
         />
 
         <Route element={<ProtectedLayout />}>
-            <Layout>
+          
                 <Route path="/mother/home" element={<HomePage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/calendar" element={<CalendarView />} />
@@ -91,7 +91,7 @@ const AppRoutes = () => (
                 />
                 <Route path="/health/dashboard" element={<DashboaredCards />} />
                 <Route path="*" element={<div>404 - Page Not Found</div>} />
-            </Layout>
+          
         </Route>
     </Routes>
 );
