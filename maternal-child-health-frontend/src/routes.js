@@ -39,7 +39,7 @@ const AppRoutes = () => (
             <Route path="*" element={<NotFoundPage />} />
             <Route path="/gdpr" element={<GDPR />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
-            <Route path="/" element={<HomeLayout />} />
+            <Route path="/landing-page" element={<HomeLayout />} />
             <Route
                 path="/resources/nutrition"
                 element={<NutritionResource />}
