@@ -27,6 +27,7 @@ import HomeLayout from "./pages/Home/LandingPage.jsx";
 import NutritionResource from "./pages/Resources/NutritionResource";
 import PostnatalChecklistResource from "./pages/Resources/PostnatalChecklistResource";
 import BreastfeedingVideoResource from "./pages/Resources/BreastfeedingVideoResource";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const AppRoutes = () => (
     <Routes>
@@ -66,6 +67,7 @@ const AppRoutes = () => (
             <Route path="/PregnancyStages" element={<PregnancyStages />} />
             <Route path="/SafeMedicines" element={<SafeMedicines />} />
             <Route path="/timeline-event/:id" element={<TimelineEvent />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route
                 path="/child-details"
                 element={<ChildDetailsForm onSave={() => {}} />}
