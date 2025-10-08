@@ -159,6 +159,45 @@ Route::middleware('auth:sanctum')->group(function () {
 
         return $summary;
     });
+    // Hospital Dashboard for Admin
+    Route::middleware(['auth:sanctum', 'role:admin'])->get('/hospitals/{id}/dashboard', function ($id) {
+        $hospital = App\Models\Hospital::withCount(['patients', 'appointments'])
+            ->findOrFail($id);
+
+        $visitsCount = App\Models\PostnatalVisit::where('hospital_id', $id)->count();
+
+        return response()->json([
+            'id' => $hospital->id,
+            'name' => $hospital->name,
+            'patients_count' => $hospital->patients_count,
+            'appointments_count' => $hospital->appointments_count,
+            'visits_count' => $visitsCount,
+        ]);
+    });
+
+    // Monthly Visit Trends for Admin
+    Route::middleware(['auth:sanctum', 'role:admin'])->get('/hospitals/{id}/visit-trends', function (Request $request, $id) {
+        $department = $request->query('department');
+
+        $query = App\Models\PostnatalVisit::selectRaw('MONTH(visit_date) as month, COUNT(*) as count')
+            ->where('hospital_id', $id)
+            ->whereYear('visit_date', now()->year);
+
+        if ($department && $department !== 'All') {
+            $query->where('department', $department);
+        }
+
+        $visits = $query->groupBy('month')->orderBy('month')->get();
+
+        $months = collect(range(1, 12))->map(fn($m) => date('M', mktime(0, 0, 0, $m, 10)));
+        $counts = $months->map(fn($label, $index) => optional($visits->firstWhere('month', $index + 1))->count ?? 0);
+
+        return response()->json([
+            'months' => $months,
+            'counts' => $counts,
+        ]);
+    });
+
     Route::get('/children/search', function (Request $request) {
         $query = Child::query();
 
