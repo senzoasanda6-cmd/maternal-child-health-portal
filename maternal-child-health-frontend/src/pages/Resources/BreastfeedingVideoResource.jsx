@@ -12,7 +12,7 @@ const BreastfeedingVideoResource = () => {
           Breastfeeding provides essential nutrients and bonding for newborns. This video offers practical tips for positioning, latching, and maintaining milk supply.
         </p>
 
-        <div className="ratio ratio-16x9 mb-4">
+        <div className="ratio ratio-16x9 mb-4 rounded-xl overflow-hidden" style={{ margin: "0 auto" , boxShadow: "0 4px 8px rgba(0,0,0,0.1)" , borderRadius: "18px" }}>
           <iframe
             src="/breastfeeding-tips.mp4"
             title="Breastfeeding Tips"
