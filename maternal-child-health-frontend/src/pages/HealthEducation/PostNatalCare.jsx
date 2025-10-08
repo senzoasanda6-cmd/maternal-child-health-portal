@@ -1,46 +1,41 @@
 import React from 'react';
+import HealthEducationLayout from '../../components/HealthEducationLayout';
 
 const PostNatalCare = () => {
-    return (
-        <div className="container py-4">
-            <h1 className="mb-4 text-center">Postnatal Care</h1>
-
-            <div className="row mb-5">
-                <div className="col-md-6">
-                    <h3>Mother's Health</h3>
-                    <ul className="list-group">
-                        <li className="list-group-item">Physical recovery tips</li>
-                        <li className="list-group-item">Mental health support</li>
-                        <li className="list-group-item">Nutrition and rest</li>
-                    </ul>
-                </div>
-                <div className="col-md-6">
-                    https://via.placeholder.com/400x250
-                </div>
-            </div>
-
-            <div className="row mb-5">
-                <div className="col-md-6">
-                    <img
-                        src="maternal-child-health-frontend\public\dizziness-during-pregnancy-hero-shutterstock_2273460889 (1).png"
-                        alt=""
-                        className="img-fluid"
-                    />
-                    <h3>Baby's Health</h3>
-                    <ul className="list-group">
-                        <li className="list-group-item">Vaccination schedule</li>
-                        <li className="list-group-item">Feeding guidelines</li>
-                        <li className="list-group-item">Growth monitoring</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div className="text-center">
-                <h3>Follow-up Visits</h3>
-                <p>Schedule and importance of postnatal checkups.</p>
-            </div>
-        </div>
-    );
+  return (
+    <HealthEducationLayout
+      title="Postnatal Care"
+      intro="Supporting mothers after childbirth with essential care tips and resources."
+      sections={[
+        {
+          heading: "Mother's Health",
+          items: [
+            "Physical recovery tips",
+            "Mental health support",
+            "Nutrition and rest",
+          ],
+          image: "https://via.placeholder.com/400x250",
+        },
+        {
+          heading: "Baby's Health",
+          items: [
+            "Vaccination schedule",
+            "Feeding guidelines",
+            "Growth monitoring",
+          ],
+          image: "/dizziness-during-pregnancy.png",
+        },
+      ]}
+      followUp={{
+        heading: "Follow-up Visits",
+        description: "Schedule and importance of postnatal checkups.",
+      }}
+      cta={{
+        label: "Book a Visit",
+        link: "/appointments",
+      }}
+    />
+  );
 };
 
 export default PostNatalCare;
