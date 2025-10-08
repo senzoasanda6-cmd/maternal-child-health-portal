@@ -33,7 +33,7 @@ const PregnancyStages = () => {
         </div>
 
         //{/* <div className="text-center"> */}//
-        //{/* <img src="https://via.placeholder.com/800x300" alt="Pregnancy stages" className="img-fluidncyStages; */}
+        //{/* <img src="https://via.placeholder.com/800x300" alt="Pregnancy stages" className="img-fluidncyStages" ; */}
     );
 };
 
