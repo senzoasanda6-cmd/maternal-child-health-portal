@@ -10,5 +10,9 @@ class PostnatalVisit extends Model
     {
         return $this->belongsTo(Child::class);
     }
+    public function hospital()
+    {
+        return $this->belongsTo(Hospital::class);
+    }
 
 }
