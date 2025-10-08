@@ -27,7 +27,9 @@ import HomeLayout from "./pages/Home/LandingPage.jsx";
 import NutritionResource from "./pages/Resources/NutritionResource";
 import PostnatalChecklistResource from "./pages/Resources/PostnatalChecklistResource";
 import BreastfeedingVideoResource from "./pages/Resources/BreastfeedingVideoResource";
-
+import ChildrenList from "./pages/MotherProfile/ChildrenList";
+import MotherDetailsForm from "./pages/MotherProfile/MotherDetailsForm";
+import MotherProfile from "./pages/MotherProfile/MotherProfile";
 
 const AppRoutes = () => (
     <Routes>
@@ -89,6 +91,11 @@ const AppRoutes = () => (
                     path="/vaccine-progress/:childId"
                     element={<VaccineProgressChart childId={1} />}
                 />
+                <Route path="/children" element={<ChildrenList />} />
+                <Route path="/mother-form" element={<MotherDetailsForm />} />
+                <Route path="/mother-profile" element={<MotherProfile />} />
+                {/* Fallback route for other paths */}
+                {/* <Route path="/*" element={<AppRoutes />} /> */}
                 <Route path="/health/dashboard" element={<DashboaredCards />} />
                 <Route path="*" element={<div>404 - Page Not Found</div>} />
           
