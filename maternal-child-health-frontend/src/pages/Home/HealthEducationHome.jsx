@@ -105,7 +105,7 @@ const HealthEducationHome = () => {
                                     title: "Breastfeeding Tips",
                                     type: "Video",
                                     icon: "bi-play-circle",
-                                    link: "/resources/breastfeeding-video",
+                                    link: "/breastfeeding-video.mp4",
                                     color: "warning",
                                 },
                             ].map((resource, index) => (
