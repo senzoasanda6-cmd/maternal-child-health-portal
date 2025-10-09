@@ -31,6 +31,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import MotherRoute from "./contexts/MotherRoute.jsx";
 import HealthWorkerRoute from "./contexts/HealthWorkerRoute.jsx";
 import AdminRoute from "./contexts/AdminRoute.js"; // Add this import
+import ChildrenList from "./pages/MotherProfile/ChildrenList";
+import MotherDetailsForm from "./pages/MotherProfile/MotherDetailsForm";
+import MotherProfile from "./pages/MotherProfile/MotherProfile";
 
 const AppRoutes = () => (
   <Routes>
@@ -45,11 +48,8 @@ const AppRoutes = () => (
       <Route path="/cookie-policy" element={<CookiePolicy />} />
       <Route path="/resources/nutrition" element={<NutritionResource />} />
       <Route path="/resources/postnatal-checklist" element={<PostnatalChecklistResource />} />
+      <Route path="/resources/breastfeeding-video" element={<BreastfeedingVideoResource />} />
     </Route>
-
-    {/* Public Resource */}
-    <Route path="/resources/breastfeeding-video" element={<BreastfeedingVideoResource />} />
-    <Route path="*" element={<NotFoundPage />} />
 
     {/* Protected Routes */}
     <Route element={<ProtectedLayout />}>
@@ -61,8 +61,7 @@ const AppRoutes = () => (
       <Route path="/PostNatalCare" element={<PostNatalCare />} />
       <Route path="/PregnancyStages" element={<PregnancyStages />} />
       <Route path="/SafeMedicines" element={<SafeMedicines />} />
-      <Route path="/timeline-event/:id" element={<TimelineEvent />} />
-      
+
       {/* Role-Protected Routes */}
       <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       <Route path="/health/dashboard" element={<HealthWorkerRoute><DashboaredCards /></HealthWorkerRoute>} />
@@ -71,14 +70,21 @@ const AppRoutes = () => (
       {/* Child Profile Routes */}
       <Route path="/child-details" element={<ChildDetailsForm onSave={() => {}} />} />
       <Route path="/child-form/:id" element={<ChildDetailsForm onSave={() => {}} />} />
-      <Route path="/child-profile/:childId" element={<ChildProfile childId={1} />} />
-      <Route path="/postnatal-visits/:childId" element={<PostnatalVisit childId={1} />} />
-      <Route path="/vaccinations/:childId" element={<VaccinationList childId={1} />} />
-      <Route path="/vaccine-progress/:childId" element={<VaccineProgressChart childId={1} />} />
+      <Route path="/child-profile/:childId" element={<ChildProfile />} />
+      <Route path="/postnatal-visits/:childId" element={<PostnatalVisit />} />
+      <Route path="/vaccinations/:childId" element={<VaccinationList />} />
+      <Route path="/vaccine-progress/:childId" element={<VaccineProgressChart />} />
 
-      <Route path="*" element={<div>404 - Page Not Found</div>} />
+      {/* Mother Profile Routes */}
+      <Route path="/children" element={<ChildrenList />} />
+      <Route path="/mother-form" element={<MotherDetailsForm />} />
+      <Route path="/mother-profile" element={<MotherProfile />} />
+
+      {/* Fallback */}
+      <Route path="*" element={<NotFoundPage />} />
     </Route>
   </Routes>
 );
+
 
 export default AppRoutes;
