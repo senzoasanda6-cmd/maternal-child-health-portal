@@ -28,10 +28,9 @@ import NutritionResource from "./pages/Resources/NutritionResource";
 import PostnatalChecklistResource from "./pages/Resources/PostnatalChecklistResource";
 import BreastfeedingVideoResource from "./pages/Resources/BreastfeedingVideoResource";
 import AdminDashboard from "./pages/AdminDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
-import MotherRoute from "./contexts/MotherRoute.jsx";
-import HealthWorkerRoute from "./contexts/HealthWorkerRoute.jsx";
-import AdminRoute from "./contexts/AdminRoute.js"; // Add this import
+import MotherRoute from "./components/protected/MotherRoute.jsx";
+// import HealthWorkerRoute from "./contexts/HealthWorkerRoute.jsx";
+import AdminRoute from "./components/protected/AdminRoute.jsx"; // Add this import
 import ChildrenList from "./pages/MotherProfile/ChildrenList";
 import MotherDetailsForm from "./pages/MotherProfile/MotherDetailsForm";
 import MotherProfile from "./pages/MotherProfile/MotherProfile";
@@ -99,6 +98,34 @@ const AppRoutes = () => (
                 path="/vaccine-progress/:childId"
                 element={<VaccineProgressChart childId={1} />}
             />
+                <Route element={<MotherRoute />} />
+                <Route path="/mother/home" element={<HomePage />} />
+                <Route path="/mother/children" element={<ChildrenList />} />
+                <Route path="/mother/child-form" element={<MotherDetailsForm />} />
+                <Route path="/mother/child-profile" element={<MotherProfile />} />
+                <Route path="/mother/dashboard" element={<DashboaredCards />} />
+                <Route path="/mother/calendar" element={<CalendarView />} />
+                <Route path="/mother/care-timeline" element={<CareTimeline />} />
+                <Route path="/mother/timeline-event/:id" element={<TimelineEvent />} />
+                <Route path="/mother/postnatal-care" element={<PostNatalCare />} />
+                <Route path="/mother/pregnancy-stages" element={<PregnancyStages />} />
+                <Route path="/mother/safe-medicines" element={<SafeMedicines />} />
+                {/* <Route element={<HealthWorkerRoute />} /> */}
+                <Route path="/health/dashboard" element={<Dashboard />} />
+                <Route path="/health/calendar" element={<CalendarView />} />
+                <Route path="/health/care-timeline" element={<CareTimeline />} />
+                <Route path="/health/timeline-event/:id" element={<TimelineEvent />} />
+                <Route path="/health/postnatal-care" element={<PostNatalCare />} />
+                <Route path="/health/pregnancy-stages" element={<PregnancyStages />} />
+                <Route path="/health/safe-medicines" element={<SafeMedicines />} />
+                <Route path="/health/child-details" element={<ChildDetailsForm onSave={() => {}} />} />
+                <Route path="/health/child-form/:id" element={<ChildDetailsForm onSave={() => {}} />} />
+                <Route path="/health/child-profile/:childId" element={<ChildProfile childId={1} />} />
+                <Route path="/health/postnatal-visits/:childId" element={<PostnatalVisit childId={1} />} />
+                <Route path="/health/vaccinations/:childId" element={<VaccinationList childId={1} />} />
+                <Route path="/health/vaccine-progress/:childId" element={<VaccineProgressChart childId={1} />} />
+                <Route element={<AdminRoute />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/children" element={<ChildrenList />} />
                 <Route path="/mother-form" element={<MotherDetailsForm />} />
                 <Route path="/mother-profile" element={<MotherProfile />} />

@@ -1,11 +1,17 @@
 import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../contexts/AuthContext";
 import Sidebar from "../components/Sidebar";
 import Layout from "./Layout"; // Import your full layout
 
 const ProtectedLayout = () => {
-  const { user, loading } = useContext(AuthContext);
+  const context = useContext(AuthContext);
+
+if (!context) {
+  return <div className="text-danger">Auth context not available</div>;
+}
+
+const { user, loading } = context;
 
   if (loading) {
     return <div>Loading...</div>;
