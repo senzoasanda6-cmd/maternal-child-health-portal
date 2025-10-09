@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
 
     switch (user.role) {
       case "admin":
-        navigate("/admin/dashboard");
+        navigate("/admin");
         break;
       case "health_worker":
         navigate("/health/dashboard");
