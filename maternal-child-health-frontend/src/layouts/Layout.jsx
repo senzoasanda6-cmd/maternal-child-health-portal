@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../components/Header";
-import CookieConsentModal from "../components/CookieConsentModal";
+import CookieConsentModal from "../components/layout/CookieConsentModal";
 
 const Layout = ({ children }) => {
     return (
