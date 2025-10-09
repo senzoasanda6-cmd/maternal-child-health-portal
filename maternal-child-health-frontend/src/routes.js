@@ -28,74 +28,57 @@ import NutritionResource from "./pages/Resources/NutritionResource";
 import PostnatalChecklistResource from "./pages/Resources/PostnatalChecklistResource";
 import BreastfeedingVideoResource from "./pages/Resources/BreastfeedingVideoResource";
 import AdminDashboard from "./pages/AdminDashboard";
+import MotherRoute from "./contexts/MotherRoute.jsx";
+import HealthWorkerRoute from "./contexts/HealthWorkerRoute.jsx";
+import AdminRoute from "./contexts/AdminRoute.js"; // Add this import
 
 const AppRoutes = () => (
-    <Routes>
-        <Route element={<PublicLayout />}>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/gdpr" element={<GDPR />} />
-            <Route path="/cookie-policy" element={<CookiePolicy />} />
+  <Routes>
+    {/* Public Routes */}
+    <Route element={<PublicLayout />}>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/gdpr" element={<GDPR />} />
+      <Route path="/cookie-policy" element={<CookiePolicy />} />
+      <Route path="/resources/nutrition" element={<NutritionResource />} />
+      <Route path="/resources/postnatal-checklist" element={<PostnatalChecklistResource />} />
+    </Route>
 
-            <Route
-                path="/resources/nutrition"
-                element={<NutritionResource />}
-            />
-            <Route
-                path="/resources/postnatal-checklist"
-                element={<PostnatalChecklistResource />}
-            />
-        </Route>
-        <Route path="*" element={<NotFoundPage />} />
+    {/* Public Resource */}
+    <Route path="/resources/breastfeeding-video" element={<BreastfeedingVideoResource />} />
+    <Route path="*" element={<NotFoundPage />} />
 
-        <Route
-            path="/resources/breastfeeding-video"
-            element={<BreastfeedingVideoResource />}
-        />
+    {/* Protected Routes */}
+    <Route element={<ProtectedLayout />}>
+      <Route path="/landing" element={<HomeLayout />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/calendar" element={<CalendarView />} />
+      <Route path="/care-timeline" element={<CareTimeline />} />
+      <Route path="/timeline-event/:id" element={<TimelineEvent />} />
+      <Route path="/PostNatalCare" element={<PostNatalCare />} />
+      <Route path="/PregnancyStages" element={<PregnancyStages />} />
+      <Route path="/SafeMedicines" element={<SafeMedicines />} />
+      <Route path="/timeline-event/:id" element={<TimelineEvent />} />
+      
+      {/* Role-Protected Routes */}
+      <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+      <Route path="/health/dashboard" element={<HealthWorkerRoute><DashboaredCards /></HealthWorkerRoute>} />
+      <Route path="/mother/home" element={<MotherRoute><HomePage /></MotherRoute>} />
 
-        <Route element={<ProtectedLayout />}>
-            <Route path="/landing" element={<HomeLayout />} />
-            <Route path="/mother/home" element={<HomePage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/calendar" element={<CalendarView />} />
-            <Route path="/care-timeline" element={<CareTimeline />} />
-            <Route path="/timeline-event/:id" element={<TimelineEvent />} />
-            <Route path="/PostNatalCare" element={<PostNatalCare />} />
-            <Route path="/PregnancyStages" element={<PregnancyStages />} />
-            <Route path="/SafeMedicines" element={<SafeMedicines />} />
-            <Route path="/timeline-event/:id" element={<TimelineEvent />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route
-                path="/child-details"
-                element={<ChildDetailsForm onSave={() => {}} />}
-            />
-            <Route
-                path="/child-form/:id"
-                element={<ChildDetailsForm onSave={() => {}} />}
-            />
-            <Route
-                path="/child-profile/:childId"
-                element={<ChildProfile childId={1} />}
-            />
-            <Route
-                path="/postnatal-visits/:childId"
-                element={<PostnatalVisit childId={1} />}
-            />
-            <Route
-                path="/vaccinations/:childId"
-                element={<VaccinationList childId={1} />}
-            />
-            <Route
-                path="/vaccine-progress/:childId"
-                element={<VaccineProgressChart childId={1} />}
-            />
-            <Route path="/health/dashboard" element={<DashboaredCards />} />
-            <Route path="*" element={<div>404 - Page Not Found</div>} />
-        </Route>
-    </Routes>
+      {/* Child Profile Routes */}
+      <Route path="/child-details" element={<ChildDetailsForm onSave={() => {}} />} />
+      <Route path="/child-form/:id" element={<ChildDetailsForm onSave={() => {}} />} />
+      <Route path="/child-profile/:childId" element={<ChildProfile childId={1} />} />
+      <Route path="/postnatal-visits/:childId" element={<PostnatalVisit childId={1} />} />
+      <Route path="/vaccinations/:childId" element={<VaccinationList childId={1} />} />
+      <Route path="/vaccine-progress/:childId" element={<VaccineProgressChart childId={1} />} />
+
+      <Route path="*" element={<div>404 - Page Not Found</div>} />
+    </Route>
+  </Routes>
 );
 
 export default AppRoutes;

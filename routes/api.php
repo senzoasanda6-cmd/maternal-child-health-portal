@@ -10,6 +10,7 @@ use App\Models\Child;
 use App\Http\Controllers\PostnatalVisitController;
 use App\Http\Controllers\VaccinationController;
 use App\Helpers\VaccineHelper;
+use App\Http\Controllers\AdminController;
 
 // 🔐 Registration
 Route::post('/register', function (Request $request) {
@@ -61,6 +62,11 @@ Route::post('/login', function (Request $request) {
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
+    $request->user()->currentAccessToken()->delete();
+
+    return response()->json(['message' => 'Logged out successfully']);
+});
 
 // 🏥 Admin Routes
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
@@ -99,6 +105,10 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
         return $dashboard;
     });
+    Route::get('/users', [AdminController::class, 'index']);
+    Route::put('/users/{id}/role', [AdminController::class, 'updateRole']);
+    Route::delete('/users/{id}', [AdminController::class, 'destroy']);
+
 
 });
 
