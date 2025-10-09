@@ -9,6 +9,7 @@ use App\Models\Hospital;
 use App\Models\Child;
 use App\Http\Controllers\PostnatalVisitController;
 use App\Http\Controllers\VaccinationController;
+use App\Http\Controllers\EventController;
 use App\Helpers\VaccineHelper;
 
 // 🔐 Registration
@@ -140,6 +141,7 @@ Route::middleware('auth:sanctum')->group(function () {
         $child = Child::with('vaccinations')->findOrFail($childId);
         return $child->getVaccineProgressSummary();
     });
+    // Hospital Vaccine Progress Summary
     Route::get('/hospital/{hospitalId}/vaccine-progress', function ($hospitalId) {
         $hospital = Hospital::with('children.vaccinations')->findOrFail($hospitalId);
 
@@ -174,6 +176,8 @@ Route::middleware('auth:sanctum')->group(function () {
             'visits_count' => $visitsCount,
         ]);
     });
+    // Events for Calendar
+    Route::get('/events', [EventController::class, 'index']);
 
     // Monthly Visit Trends for Admin
     Route::middleware(['auth:sanctum', 'role:admin'])->get('/hospitals/{id}/visit-trends', function (Request $request, $id) {
