@@ -9,7 +9,10 @@ use App\Models\Hospital;
 use App\Models\Child;
 use App\Http\Controllers\PostnatalVisitController;
 use App\Http\Controllers\VaccinationController;
+use App\Http\Controllers\EventController;
 use App\Helpers\VaccineHelper;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
 
 // 🔐 Registration
 Route::post('/register', function (Request $request) {
@@ -38,7 +41,7 @@ Route::post('/register', function (Request $request) {
         'user' => $user,
     ]);
 });
-
+Route::post('/login', [LoginController::class, 'login']);
 // 🔐 Login
 Route::post('/login', function (Request $request) {
     $request->validate([
@@ -140,6 +143,7 @@ Route::middleware('auth:sanctum')->group(function () {
         $child = Child::with('vaccinations')->findOrFail($childId);
         return $child->getVaccineProgressSummary();
     });
+    // Hospital Vaccine Progress Summary
     Route::get('/hospital/{hospitalId}/vaccine-progress', function ($hospitalId) {
         $hospital = Hospital::with('children.vaccinations')->findOrFail($hospitalId);
 
@@ -174,6 +178,8 @@ Route::middleware('auth:sanctum')->group(function () {
             'visits_count' => $visitsCount,
         ]);
     });
+    // Events for Calendar
+    Route::get('/events', [EventController::class, 'index']);
 
     // Monthly Visit Trends for Admin
     Route::middleware(['auth:sanctum', 'role:admin'])->get('/hospitals/{id}/visit-trends', function (Request $request, $id) {
@@ -197,6 +203,10 @@ Route::middleware('auth:sanctum')->group(function () {
             'counts' => $counts,
         ]);
     });
+    
+    Route::middleware('auth:sanctum')->get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
+    Route::middleware('auth:sanctum')->get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
+    Route::middleware('auth:sanctum')->get('/dashboard/appointments', [DashboardController::class, 'appointments']);
 
     Route::get('/children/search', function (Request $request) {
         $query = Child::query();
