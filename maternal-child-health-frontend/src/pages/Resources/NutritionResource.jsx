@@ -1,9 +1,10 @@
 import React from "react";
-import Layout from "../../layouts/Layout";
+import nav from "../../components/nav";
 
 const NutritionResource = () => {
   return (
-    <Layout>
+    <>
+      {nav()}
       <div className="container py-5">
         <h2>Nutrition During Pregnancy</h2>
         <p className="text-muted">Category: Pregnancy</p>
@@ -24,7 +25,7 @@ const NutritionResource = () => {
           <a href="/resources/postnatal-checklist">Postnatal Care Guide</a>.
         </p>
       </div>
-    </Layout>
+    </>
   );
 };
 

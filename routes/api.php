@@ -41,7 +41,7 @@ Route::post('/register', function (Request $request) {
         'user' => $user,
     ]);
 });
-Route::post('/login', [LoginController::class, 'login']);
+
 // 🔐 Login
 Route::post('/login', function (Request $request) {
     $request->validate([
@@ -54,6 +54,7 @@ Route::post('/login', function (Request $request) {
     }
 
     $user = Auth::user();
+
     return response()->json([
         'user' => $user,
         'token' => $user->createToken('authToken')->plainTextToken,
@@ -102,7 +103,6 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
         return $dashboard;
     });
-
 });
 
 // 🩺 Health Worker Routes
@@ -136,7 +136,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/children/{childId}/missed-vaccines', function ($childId) {
         $child = Child::with('vaccinations')->findOrFail($childId);
         return $child->getMissedVaccines();
-
     });
     // Vaccine Progress Summary
     Route::get('/children/{childId}/vaccine-progress', function ($childId) {
@@ -203,7 +202,7 @@ Route::middleware('auth:sanctum')->group(function () {
             'counts' => $counts,
         ]);
     });
-    
+
     Route::middleware('auth:sanctum')->get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
     Route::middleware('auth:sanctum')->get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
     Route::middleware('auth:sanctum')->get('/dashboard/appointments', [DashboardController::class, 'appointments']);
@@ -229,5 +228,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
         return $query->with('hospital', 'mother')->orderBy('name')->get();
     });
-
 });

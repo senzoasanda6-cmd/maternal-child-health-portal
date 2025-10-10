@@ -4,7 +4,7 @@ import './styles.css'
 
 const Sidebar = ({ role }) => {
   const links = [
-    { label: 'Overview', path: '/' },
+    // { label: 'Overview', path: '/' },
     ...(role === 'admin' ? [{ label: 'Hospitals', path: '/hospitals' }] : []),
     ...(role === 'health_worker' ? [{ label: 'My Patients', path: '/patients' }] : []),
   ];

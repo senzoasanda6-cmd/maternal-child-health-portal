@@ -34,17 +34,21 @@ import AdminRoute from "./components/protected/AdminRoute.jsx"; // Add this impo
 import ChildrenList from "./pages/MotherProfile/ChildrenList";
 import MotherDetailsForm from "./pages/MotherProfile/MotherDetailsForm";
 import MotherProfile from "./pages/MotherProfile/MotherProfile";
+import LandingPage from "./components/LandingPage.jsx";
+import ServicesGrid from "./components/ServicesGrid.jsx";
+
 
 const AppRoutes = () => (
     <Routes>
         {/* 🌐 Public Routes */}
         <Route element={<PublicLayout />}>
-            <Route path="/" element={<LoginPage />} />
+            
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/gdpr" element={<GDPR />} />
+            <Route path="/services" element={<ServicesGrid />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route
                 path="/resources/nutrition"
@@ -59,6 +63,7 @@ const AppRoutes = () => (
                 element={<BreastfeedingVideoResource />}
             />
         </Route>
+        <Route path="/" element={<LandingPage />} />
 
         {/* 🔐 Protected Routes */}
         <Route element={<ProtectedLayout />}>
@@ -74,7 +79,7 @@ const AppRoutes = () => (
 
             {/* 👩 Mother Routes */}
             <Route element={<MotherRoute />}>
-                <Route path="/mother/home" element={<HomePage />} />
+                <Route path="/mother/home" element={<HomePage/>} />
                 <Route path="/mother/dashboard" element={<DashboaredCards />} />
                 <Route path="/mother/children" element={<ChildrenList />} />
                 <Route
