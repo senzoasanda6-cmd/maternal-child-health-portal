@@ -6,5 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
-    // Add fillable or relationships as needed
+    protected $fillable = [
+        'child_id',
+        'user_id',
+        'date',
+        'type',
+        'notes',
+    ];
+
+    public function child()
+    {
+        return $this->belongsTo(Child::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
