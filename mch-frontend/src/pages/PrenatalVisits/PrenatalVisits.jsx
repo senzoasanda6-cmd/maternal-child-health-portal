@@ -16,6 +16,7 @@ const PreNatalVisit = ({ visit }) => {
 
   const headingStyle = {
     textAlign: 'center',
+    
     marginBottom: '1.5rem',
     color: '#333'
   };
