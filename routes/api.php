@@ -11,6 +11,8 @@ use App\Http\Controllers\PostnatalVisitController;
 use App\Http\Controllers\VaccinationController;
 use App\Http\Controllers\EventController;
 use App\Helpers\VaccineHelper;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
 
 // 🔐 Registration
 Route::post('/register', function (Request $request) {
@@ -39,7 +41,7 @@ Route::post('/register', function (Request $request) {
         'user' => $user,
     ]);
 });
-
+Route::post('/login', [LoginController::class, 'login']);
 // 🔐 Login
 Route::post('/login', function (Request $request) {
     $request->validate([
@@ -201,6 +203,10 @@ Route::middleware('auth:sanctum')->group(function () {
             'counts' => $counts,
         ]);
     });
+    
+    Route::middleware('auth:sanctum')->get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
+    Route::middleware('auth:sanctum')->get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
+    Route::middleware('auth:sanctum')->get('/dashboard/appointments', [DashboardController::class, 'appointments']);
 
     Route::get('/children/search', function (Request $request) {
         $query = Child::query();
