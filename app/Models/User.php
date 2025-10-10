@@ -17,6 +17,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'hospital_id',
     ];
 
     protected $hidden = [
@@ -33,19 +34,31 @@ class User extends Authenticatable
 
     protected $appends = ['is_admin'];
 
+    // Accessor for is_admin attribute
     public function getIsAdminAttribute()
     {
         return $this->role === 'admin';
     }
 
+    // Helper methods for role checks
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isHealthWorker(): bool
+    {
+        return $this->role === 'health_worker';
+    }
+
+    public function isMother(): bool
+    {
+        return $this->role === 'mother';
+    }
+
     public function hospital()
     {
         return $this->belongsTo(Hospital::class);
-    }
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
     }
 
     public function children()
