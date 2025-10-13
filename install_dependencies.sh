@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Check for a -f flag to force installation
+NPM_ARGS="--legacy-peer-deps"
+if [[ " $@ " =~ " -f " ]]; then
+    echo "Force flag (-f) detected. Using --force for npm install."
+    NPM_ARGS="$NPM_ARGS --force"
+fi
+
 # Function to check if a command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -17,7 +24,9 @@ fi
 # Check for Node.js
 if command_exists node; then
     echo "Node.js is installed. Installing Node.js dependencies..."
-    cd maternal-child-health-frontend && npm install
+    # Use a subshell to run commands in the frontend directory
+    # This prevents the script's working directory from changing
+    (cd maternal-child-health-frontend && npm install $NPM_ARGS)
 else
     echo "Node.js is not installed. Please install Node.js and add it to your PATH."
     echo "Installation instructions: https://nodejs.org/"
