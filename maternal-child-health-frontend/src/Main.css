@@ -1,0 +1,150 @@
+
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f4f6f8; /* A slightly off-white for better component visibility */
+    color: #333;
+    margin: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    color: #1d4189;
+}
+h1 {
+    font-size: 3rem;
+}
+h2 {
+    font-size: 2rem;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+h3 {
+    font-size: 1.5rem;
+}
+
+.button {
+    font-family: "Poppins", sans-serif;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.2s ease-in-out;
+}
+.button:hover {
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+        0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+.button-primary {
+    background-color: #1d4189;
+    color: #ffffff;
+}
+.button-accent {
+    background-color: #ff9800;
+    color: #ffffff;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.card h3 {
+    margin-top: 0;
+    color: #1d4189;
+}
+
+/* Page Layout */
+.header {
+    background-color: #1d4189;
+    color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.header h1 {
+    font-size: 1.75rem;
+    margin: 0;
+    color: #ffffff;
+}
+.nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 500;
+}
+
+.main-container {
+    display: flex;
+}
+
+.sidebar {
+    width: 250px;
+    background: #ffffff;
+    padding: 2rem;
+    height: calc(100vh - 70px); /* Full height minus header */
+    box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+}
+.sidebar h2 {
+    font-size: 1.2rem;
+    color: #1d4189;
+    border: none;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li a {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.sidebar ul li a.active,
+.sidebar ul li a:hover {
+    background-color: #1d4189;
+    color: #ffffff;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    height: calc(100vh - 70px);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+}
+.list-item:last-child {
+    border-bottom: none;
+}

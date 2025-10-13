@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 
-const MotherRoute = ({ children }) => {
+const MotherRoute = () => {
   const { user, loading } = useContext(AuthContext);
 
   if (loading) {
@@ -17,7 +17,7 @@ const MotherRoute = ({ children }) => {
     return <Navigate to="/unauthorized" />;
   }
 
-  return children;
+  return <Outlet />;
 };
 
 export default MotherRoute;
