@@ -42,7 +42,7 @@ const AppRoutes = () => (
     <Routes>
         {/* 🌐 Public Routes */}
         <Route element={<PublicLayout />}>
-            
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/privacy" element={<Privacy />} />
@@ -63,12 +63,12 @@ const AppRoutes = () => (
                 element={<BreastfeedingVideoResource />}
             />
         </Route>
-        <Route path="/" element={<LandingPage />} />
+        
 
         {/* 🔐 Protected Routes */}
         <Route element={<ProtectedLayout />}>
             {/* Shared Authenticated Routes */}
-            <Route path="/landing" element={<HomeLayout />} />
+            <Route path="/home" element={<HomeLayout />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/calendar" element={<CalendarView />} />
             <Route path="/care-timeline" element={<CareTimeline />} />
