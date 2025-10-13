@@ -6,7 +6,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000'], // your React frontend
+    'allowed_origins' => ['http://localhost:3000','http://10.147.249.115:3000'], // your React frontend
 
     'allowed_origins_patterns' => [],
 

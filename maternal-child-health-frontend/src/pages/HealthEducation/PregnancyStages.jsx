@@ -1,167 +1,125 @@
 import React from "react";
-import "bootstrap-icons/font/bootstrap-icons.css"; // Ensure this is installed
+import { useTranslation } from "react-i18next";
+import TrimesterSection from "./TrimesterSection";
+import LanguageSwitcher from "./LanguageSwitcher";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const PregnancyStages = () => {
-  return (
-    <div className="container py-4">
-      <h1 className="mb-4 text-center">Pregnancy Stages</h1>
+    const { t } = useTranslation();
 
-      <ul className="nav nav-tabs" id="trimesterTabs" role="tablist">
-        {["First", "Second", "Third"].map((stage, index) => (
-          <li className="nav-item" role="presentation" key={stage}>
-            <button
-              className={`nav-link ${index === 0 ? "active" : ""}`}
-              id={`${stage.toLowerCase()}-tab`}
-              data-bs-toggle="tab"
-              data-bs-target={`#${stage.toLowerCase()}`}
-              type="button"
-              role="tab"
-              aria-controls={stage.toLowerCase()}
-              aria-selected={index === 0}
-            >
-              <i className="bi bi-calendar-heart me-2"></i>
-              {stage} Trimester
-            </button>
-          </li>
-        ))}
-      </ul>
+    const trimesterData = [
+        {
+            id: "first",
+            label: t("firstTrimester"),
+            icon: "bi-calendar-heart",
+            sections: [
+                {
+                    title: t("commonSymptoms"),
+                    icon: "bi-emoji-smile",
+                    content: t("symptomsContent"),
+                },
+                {
+                    title: t("nutritionTips"),
+                    icon: "bi-nutrition",
+                    content: t("nutritionContent"),
+                },
+                {
+                    title: t("emotionalWellness"),
+                    icon: "bi-heart-pulse",
+                    content: t("wellnessContent"),
+                },
+            ],
+        },
+        {
+            id: "second",
+            label: t("secondTrimester"),
+            icon: "bi-body-text",
+            sections: [
+                {
+                    title: t("physicalChanges"),
+                    icon: "bi-body-text",
+                    content: t("physicalContent"),
+                },
+                {
+                    title: t("exerciseTips"),
+                    icon: "bi-bicycle",
+                    content: t("exerciseContent"),
+                },
+                {
+                    title: t("medicalCheckups"),
+                    icon: "bi-clipboard2-pulse",
+                    content: t("checkupContent"),
+                },
+            ],
+        },
+        {
+            id: "third",
+            label: t("thirdTrimester"),
+            icon: "bi-hospital",
+            sections: [
+                {
+                    title: t("preparingForBirth"),
+                    icon: "bi-hospital",
+                    content: t("birthPrepContent"),
+                },
+                {
+                    title: t("emotionalPreparation"),
+                    icon: "bi-journal-medical",
+                    content: t("emotionalPrepContent"),
+                },
+                {
+                    title: t("finalMedicalPrep"),
+                    icon: "bi-prescription2",
+                    content: t("finalPrepContent"),
+                },
+            ],
+        },
+    ];
 
-      <div className="tab-content mt-3" id="trimesterTabsContent">
-        {/* First Trimester */}
-        <div
-          className="tab-pane fade show active"
-          id="first"
-          role="tabpanel"
-          aria-labelledby="first-tab"
-        >
-          <div className="accordion" id="firstAccordion">
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="firstHeadingOne">
-                <button
-                  className="accordion-button"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#firstCollapseOne"
-                  aria-expanded="true"
-                  aria-controls="firstCollapseOne"
-                >
-                  <i className="bi bi-emoji-smile me-2"></i>
-                  Common Symptoms
-                </button>
-              </h2>
-              <div
-                id="firstCollapseOne"
-                className="accordion-collapse collapse show"
-                aria-labelledby="firstHeadingOne"
-                data-bs-parent="#firstAccordion"
-              >
-                <div className="accordion-body">
-                  Nausea, fatigue, and mood swings are common in early pregnancy.
-                </div>
-              </div>
+    return (
+        <div className="container py-4">
+            <LanguageSwitcher />
+            <h1 className="mb-4 text-center">{t("pregnancyStages")}</h1>
+
+            <ul className="nav nav-tabs" id="trimesterTabs" role="tablist">
+                {trimesterData.map((trimester, index) => (
+                    <li
+                        className="nav-item"
+                        role="presentation"
+                        key={trimester.id}
+                    >
+                        <button
+                            className={`nav-link ${
+                                index === 0 ? "active" : ""
+                            }`}
+                            id={`${trimester.id}-tab`}
+                            data-bs-toggle="tab"
+                            data-bs-target={`#${trimester.id}`}
+                            type="button"
+                            role="tab"
+                            aria-controls={trimester.id}
+                            aria-selected={index === 0}
+                        >
+                            <i className={`bi ${trimester.icon} me-2`}></i>
+                            {trimester.label}
+                        </button>
+                    </li>
+                ))}
+            </ul>
+
+            <div className="tab-content mt-3" id="trimesterTabsContent">
+                {trimesterData.map((trimester, index) => (
+                    <TrimesterSection
+                        key={trimester.id}
+                        id={trimester.id}
+                        label={trimester.label}
+                        active={index === 0}
+                        sections={trimester.sections}
+                    />
+                ))}
             </div>
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="firstHeadingTwo">
-                <button
-                  className="accordion-button collapsed"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#firstCollapseTwo"
-                  aria-expanded="false"
-                  aria-controls="firstCollapseTwo"
-                >
-                  <i className="bi bi-nutrition me-2"></i>
-                  Nutrition Tips
-                </button>
-              </h2>
-              <div
-                id="firstCollapseTwo"
-                className="accordion-collapse collapse"
-                aria-labelledby="firstHeadingTwo"
-                data-bs-parent="#firstAccordion"
-              >
-                <div className="accordion-body">
-                  Focus on folic acid, iron-rich foods, and hydration.
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-
-        {/* Second Trimester */}
-        <div
-          className="tab-pane fade"
-          id="second"
-          role="tabpanel"
-          aria-labelledby="second-tab"
-        >
-          <div className="accordion" id="secondAccordion">
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="secondHeadingOne">
-                <button
-                  className="accordion-button"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#secondCollapseOne"
-                  aria-expanded="true"
-                  aria-controls="secondCollapseOne"
-                >
-                  <i className="bi bi-body-text me-2"></i>
-                  Physical Changes
-                </button>
-              </h2>
-              <div
-                id="secondCollapseOne"
-                className="accordion-collapse collapse show"
-                aria-labelledby="secondHeadingOne"
-                data-bs-parent="#secondAccordion"
-              >
-                <div className="accordion-body">
-                  Baby bump grows, and energy levels improve.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Third Trimester */}
-        <div
-          className="tab-pane fade"
-          id="third"
-          role="tabpanel"
-          aria-labelledby="third-tab"
-        >
-          <div className="accordion" id="thirdAccordion">
-            <div className="accordion-item">
-              <h2 className="accordion-header" id="thirdHeadingOne">
-                <button
-                  className="accordion-button"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#thirdCollapseOne"
-                  aria-expanded="true"
-                  aria-controls="thirdCollapseOne"
-                >
-                  <i className="bi bi-hospital me-2"></i>
-                  Preparing for Birth
-                </button>
-              </h2>
-              <div
-                id="thirdCollapseOne"
-                className="accordion-collapse collapse show"
-                aria-labelledby="thirdHeadingOne"
-                data-bs-parent="#thirdAccordion"
-              >
-                <div className="accordion-body">
-                  Pack your hospital bag, review birth plans, and watch for labor signs.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default PregnancyStages;
