@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
                 navigate("/health/dashboard");
                 break;
             case "mother":
-                navigate("/landing");
+                navigate("/mother/home");
                 break;
             default:
                 navigate("/");

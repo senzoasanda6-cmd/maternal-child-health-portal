@@ -1,0 +1,53 @@
+{
+  "health_education": "Health Education",
+  "pregnancy_stages": "Pregnancy Stages",
+  "safe_medicines": "Safe Medicines",
+  "visit_history": "Visit History",
+  "hospital_dashboard": "Hospital Dashboard",
+  "welcome_heading": "Welcome to Health Education",
+  "welcome_paragraph": "This module provides essential information and tools to support maternal and child health. Learn about pregnancy stages, safe medications, and track postnatal visits to ensure informed care.",
+  "explore": "Explore",
+  "view_list": "View List",
+  "view_visits": "View Visits",
+  "resource_library": "Resource Library",
+  "resource_intro": "Browse curated educational materials to support mothers, families, and health workers. These resources include articles, videos, printable guides, and interactive tools.",
+  "view_resource": "View Resource",
+  "postnatalTitle": "Postnatal Care",
+  "postnatalIntro": "Supporting mothers after childbirth with essential care tips, emotional support, and practical resources for both mother and baby.",
+  "motherHealth": "Mother's Health",
+  "motherItems": [
+    "Physical recovery tips: managing perineal pain, C-section healing, and pelvic floor exercises.",
+    "Mental health support: recognizing postpartum depression, accessing counseling, and building a support network.",
+    "Nutrition and rest: balanced meals for recovery, hydration, and sleep strategies with a newborn.",
+    "Breast care: managing engorgement, mastitis, and breastfeeding comfort."
+  ],
+  "babyHealth": "Baby's Health",
+  "babyItems": [
+    "Vaccination schedule: key immunizations in the first year and how to track them.",
+    "Feeding guidelines: breastfeeding tips, formula options, and recognizing hunger cues.",
+    "Growth monitoring: tracking weight, length, and developmental milestones.",
+    "Safe sleep practices: reducing SIDS risk and creating a sleep-friendly environment."
+  ],
+  "emotionalSupport": "Emotional & Social Support",
+  "emotionalItems": [
+    "Partner involvement: sharing responsibilities and emotional bonding.",
+    "Community resources: local support groups, helplines, and parenting workshops.",
+    "Cultural practices: honoring traditional postnatal customs and rituals."
+  ],
+  "followUpHeading": "Follow-up Visits",
+  "followUpDescription": "Postnatal checkups are essential for monitoring recovery, screening for complications, and supporting emotional well-being. Schedule visits at 6 weeks and as needed.",
+  "ctaLabel": "Book a Visit",
+  "ctaDescription": "Connect with a health professional for personalized postnatal care.",
+  "bookPostnatalVisit": "Book a Postnatal Visit",
+  "postnatalBookingIntro": "Schedule your follow-up checkup to support your recovery and your baby's health.",
+  "fullName": "Full Name",
+  "preferredDate": "Preferred Date",
+  "preferredTime": "Preferred Time",
+  "location": "Location",
+  "selectLocation": "Select a location",
+  "clinicA": "Community Clinic A",
+  "clinicB": "Community Clinic B",
+  "reasonForVisit": "Reason for Visit",
+  "submitBooking": "Submit Booking",
+  "bookingConfirmation": "Your appointment has been booked successfully!"
+}

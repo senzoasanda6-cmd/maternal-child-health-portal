@@ -1,38 +1,39 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import HealthEducationLayout from './HealthEducationLayout';
 
 const PostNatalCare = () => {
+  const { t } = useTranslation();
+
   return (
     <HealthEducationLayout
-      title="Postnatal Care"
-      intro="Supporting mothers after childbirth with essential care tips and resources."
+      title={t("postnatalTitle")}
+      intro={t("postnatalIntro")}
       sections={[
         {
-          heading: "Mother's Health",
-          items: [
-            "Physical recovery tips",
-            "Mental health support",
-            "Nutrition and rest",
-          ],
-          image: "https://via.placeholder.com/400x250",
+          heading: t("motherHealth"),
+          items: t("motherItems", { returnObjects: true }),
+          image: "https://via.placeholder.com/400x250"
         },
         {
-          heading: "Baby's Health",
-          items: [
-            "Vaccination schedule",
-            "Feeding guidelines",
-            "Growth monitoring",
-          ],
-          image: "/dizziness-during-pregnancy.png",
+          heading: t("babyHealth"),
+          items: t("babyItems", { returnObjects: true }),
+          image: "/dizziness-during-pregnancy.png"
         },
+        {
+          heading: t("emotionalSupport"),
+          items: t("emotionalItems", { returnObjects: true }),
+          image: "https://via.placeholder.com/400x250"
+        }
       ]}
       followUp={{
-        heading: "Follow-up Visits",
-        description: "Schedule and importance of postnatal checkups.",
+        heading: t("followUpHeading"),
+        description: t("followUpDescription")
       }}
       cta={{
-        label: "Book a Visit",
+        label: t("ctaLabel"),
         link: "/appointments",
+        description: t("ctaDescription")
       }}
     />
   );

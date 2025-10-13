@@ -34,15 +34,18 @@ import AdminRoute from "./components/protected/AdminRoute.jsx"; // Add this impo
 import ChildrenList from "./pages/MotherProfile/ChildrenList";
 import MotherDetailsForm from "./pages/MotherProfile/MotherDetailsForm";
 import MotherProfile from "./pages/MotherProfile/MotherProfile";
+import ChildProfileForm from "./pages/ChildProfile/ChildProfileForm.jsx";
 import LandingPage from "./components/LandingPage.jsx";
 import ServicesGrid from "./components/ServicesGrid.jsx";
-
+import Mother from "./pages/Mother-Dashboard.jsx";
+import PostnatalBookingPage from "./pages/MotherProfile/PostnatalBookingPage.jsx";
+import Main from "./Main.js";
+import AdminRescheduleDashboard from "./pages/CareTimeline/AdminRescheduleDashboard.jsx";
 
 const AppRoutes = () => (
     <Routes>
         {/* 🌐 Public Routes */}
         <Route element={<PublicLayout />}>
-            
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/privacy" element={<Privacy />} />
@@ -50,6 +53,7 @@ const AppRoutes = () => (
             <Route path="/gdpr" element={<GDPR />} />
             <Route path="/services" element={<ServicesGrid />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="Main" element={<Main />} />
             <Route
                 path="/resources/nutrition"
                 element={<NutritionResource />}
@@ -79,9 +83,26 @@ const AppRoutes = () => (
 
             {/* 👩 Mother Routes */}
             <Route element={<MotherRoute />}>
-                <Route path="/mother/home" element={<HomePage/>} />
-                <Route path="/mother/dashboard" element={<DashboaredCards />} />
+                <Route
+                    path="/admin/reschedule-dashboard"
+                    element={<AdminRescheduleDashboard />}
+                />
+                <Route path="/mother/home" element={<HomePage />} />
+                <Route path="/mother/form" element={<MotherDetailsForm />} />
+                <Route
+                    path="/mother/dashboard-cards"
+                    element={<DashboaredCards />}
+                />
+                <Route path="/mother/dashboard" element={<Mother />} />
                 <Route path="/mother/children" element={<ChildrenList />} />
+                <Route
+                    path="/mother/child-form/:id"
+                    element={<ChildProfileForm />}
+                />
+                <Route
+                    path="/appointments"
+                    element={<PostnatalBookingPage />}
+                />
                 <Route
                     path="/mother/child-form"
                     element={<MotherDetailsForm />}
@@ -114,7 +135,10 @@ const AppRoutes = () => (
             </Route>
 
             {/* 🩺 Health Worker Routes */}
-            <Route path="/health/dashboard" element={<DashboaredCards />} />
+            <Route
+                path="/health/dashboard-cards"
+                element={<DashboaredCards />}
+            />
             <Route path="/health/calendar" element={<CalendarView />} />
             <Route path="/health/care-timeline" element={<CareTimeline />} />
             <Route
