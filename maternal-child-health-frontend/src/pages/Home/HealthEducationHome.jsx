@@ -1,114 +1,124 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../../components/LanguageSwitcher";
 
 const HealthEducationHome = () => {
+    const { t } = useTranslation();
+
+    const resources = [
+        {
+            title: t("nutrition_during_pregnancy"),
+            type: t("article"),
+            icon: "bi-book",
+            link: "/resources/nutrition",
+            color: "primary",
+        },
+        {
+            title: t("postnatal_care_checklist"),
+            type: t("downloadable_guide"),
+            icon: "bi-file-earmark-pdf",
+            link: "/resources/postnatal-checklist",
+            color: "success",
+        },
+        {
+            title: t("breastfeeding_tips"),
+            type: t("video"),
+            icon: "bi-play-circle",
+            link: "/resources/breastfeeding-video",
+            color: "warning",
+        },
+    ];
+
     return (
-        <div className="row">
-            {/* Sidebar Navigation */}
-            <aside className="col-md-3 bg-light border-end py-4">
-                <nav className="nav flex-column px-3">
-                    <h5 className="mb-3">Health Education</h5>
-                    <Link to="/PregnancyStages" className="nav-link">
-                        Pregnancy Stages
-                    </Link>
-                    <Link to="/SafeMedicines" className="nav-link">
-                        Safe Medicines
-                    </Link>
-                    <Link to="/postnatal-visits/1" className="nav-link">
-                        Visit History
-                    </Link>
-                    <Link to="/dashboard" className="nav-link">
-                        Hospital Dashboard
-                    </Link>
-                </nav>
-            </aside>
+        <div className="container-fluid">
+            <LanguageSwitcher />
+            <div className="row" >
+                <aside className="col-md-3 bg-light border-end py-4" style={{backgroundColor: "Black", color:"#ccc"}}>
+                    <nav className="nav flex-column px-3" style={{backgroundColor: "Black", color:"#ccc"}}>
+                        <h5 className="mb-3">{t("health_education")}</h5>
+                        <Link to="/PregnancyStages" className="nav-link">
+                            {t("pregnancy_stages")}
+                        </Link>
+                        <Link to="/SafeMedicines" className="nav-link">
+                            {t("safe_medicines")}
+                        </Link>
+                        <Link to="/postnatal-visits/1" className="nav-link">
+                            {t("visit_history")}
+                        </Link>
+                        <Link to="/dashboard" className="nav-link">
+                            {t("hospital_dashboard")}
+                        </Link>
+                    </nav>
+                </aside>
 
-            {/* Main Content */}
-            <main className="col-md-9 py-4">
-                {/* Intro Paragraph */}
-                <section className="mb-4">
-                    <h2>Welcome to Health Education</h2>
-                    <p>
-                        This module provides essential information and tools to
-                        support maternal and child health. Learn about pregnancy
-                        stages, safe medications, and track postnatal visits to
-                        ensure informed care.
-                    </p>
-                </section>
+                <main className="col-md-9 py-4">
+                    <section className="mb-4">
+                        <h2>{t("welcome_heading")}</h2>
+                        <p>{t("welcome_paragraph")}</p>
+                    </section>
 
-                {/* Feature Cards */}
-                <section className="row text-center">
-                    <div className="col-md-4 mb-4">
-                        <div className="card h-100 shadow-sm">
-                            <div className="card-body">
-                                <i className="bi bi-heart-pulse fs-1 text-primary"></i>
-                                <h5 className="mt-3">Pregnancy Stages</h5>
-                                <p>
-                                    Learn what to expect in each trimester and
-                                    how to prepare.
-                                </p>
-                                <Link
-                                    to="/PregnancyStages"
-                                    className="btn btn-outline-primary btn-sm"
-                                >
-                                    Explore
-                                </Link>
+                    <section className="row text-center">
+                        <div className="col-md-4 mb-4">
+                            <div className="card h-100 shadow-sm">
+                                <div className="card-body">
+                                    <i className="bi bi-heart-pulse fs-1 text-primary"></i>
+                                    <h5 className="mt-3">
+                                        {t("pregnancy_stages")}
+                                    </h5>
+                                    <p>{t("pregnancy_stages_description")}</p>
+                                    <Link
+                                        to="/PregnancyStages"
+                                        className="btn btn-outline-primary btn-sm"
+                                    >
+                                        {t("explore")}
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="col-md-4 mb-4">
-                        <div className="card h-100 shadow-sm">
-                            <div className="card-body">
-                                <i className="bi bi-capsule fs-1 text-success"></i>
-                                <h5 className="mt-3">Safe Medicines</h5>
-                                <p>
-                                    Find approved medications for pregnancy and
-                                    breastfeeding.
-                                </p>
-                                <Link
-                                    to="/SafeMedicines"
-                                    className="btn btn-outline-success btn-sm"
-                                >
-                                    View List
-                                </Link>
+                        <div className="col-md-4 mb-4">
+                            <div className="card h-100 shadow-sm">
+                                <div className="card-body">
+                                    <i className="bi bi-capsule fs-1 text-success"></i>
+                                    <h5 className="mt-3">
+                                        {t("safe_medicines")}
+                                    </h5>
+                                    <p>{t("safe_medicines_description")}</p>
+                                    <Link
+                                        to="/SafeMedicines"
+                                        className="btn btn-outline-success btn-sm"
+                                    >
+                                        {t("view_list")}
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {/* Resource Library Section */}
+
+                        <div className="col-md-4 mb-4">
+                            <div className="card h-100 shadow-sm">
+                                <div className="card-body">
+                                    <i className="bi bi-clipboard-data fs-1 text-warning"></i>
+                                    <h5 className="mt-3">
+                                        {t("visit_history")}
+                                    </h5>
+                                    <p>{t("visit_history_description")}</p>
+                                    <Link
+                                        to="/postnatal-visits/1"
+                                        className="btn btn-outline-warning btn-sm"
+                                    >
+                                        {t("view_visits")}
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                     <section className="mt-5">
-                        <h3 className="mb-4">Resource Library</h3>
-                        <p>
-                            Browse curated educational materials to support
-                            mothers, families, and health workers. These
-                            resources include articles, videos, printable
-                            guides, and interactive tools.
-                        </p>
-
+                        <h3 className="mb-4">{t("resource_library")}</h3>
+                        <p>{t("resource_intro")}</p>
                         <div className="row">
-                            {[
-                                {
-                                    title: "Nutrition During Pregnancy",
-                                    type: "Article",
-                                    icon: "bi-book",
-                                    link: "/resources/nutrition",
-                                    color: "primary",
-                                },
-                                {
-                                    title: "Postnatal Care Checklist",
-                                    type: "Downloadable Guide",
-                                    icon: "bi-file-earmark-pdf",
-                                    link: "/resources/postnatal-checklist",
-                                    color: "success",
-                                },
-                                {
-                                    title: "Breastfeeding Tips",
-                                    type: "Video",
-                                    icon: "bi-play-circle",
-                                    link: "/breastfeeding-video.mp4",
-                                    color: "warning",
-                                },
-                            ].map((resource, index) => (
+                            {resources.map((resource, index) => (
                                 <div className="col-md-4 mb-4" key={index}>
                                     <div
                                         className={`card border-${resource.color} h-100 shadow-sm`}
@@ -127,7 +137,7 @@ const HealthEducationHome = () => {
                                                 to={resource.link}
                                                 className={`btn btn-outline-${resource.color} btn-sm`}
                                             >
-                                                View Resource
+                                                {t("view_resource")}
                                             </Link>
                                         </div>
                                     </div>
@@ -135,27 +145,8 @@ const HealthEducationHome = () => {
                             ))}
                         </div>
                     </section>
-
-                    <div className="col-md-4 mb-4">
-                        <div className="card h-100 shadow-sm">
-                            <div className="card-body">
-                                <i className="bi bi-clipboard-data fs-1 text-warning"></i>
-                                <h5 className="mt-3">Visit History</h5>
-                                <p>
-                                    Track postnatal visits and access detailed
-                                    records.
-                                </p>
-                                <Link
-                                    to="/postnatal-visits/1"
-                                    className="btn btn-outline-warning btn-sm"
-                                >
-                                    View Visits
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </main>
+                </main>
+            </div>
         </div>
     );
 };

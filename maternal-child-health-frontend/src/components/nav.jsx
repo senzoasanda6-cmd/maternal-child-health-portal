@@ -6,7 +6,7 @@ function nav() {
   return (
     <header className="header">
                 <Link to="/" className="logo">
-                    MCHP
+                    <img src="/gdoh.jpeg" alt="health" style={{ height:'50px', width:'100px'}} />
                 </Link>
                 <nav className="main-nav">
                     <ul>

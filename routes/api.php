@@ -12,6 +12,15 @@ use App\Http\Controllers\VaccinationController;
 use App\Http\Controllers\EventController;
 use App\Helpers\VaccineHelper;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HospitalController;
+use App\Http\Controllers\Api\MotherController;
+use App\Http\Controllers\Api\ChildController;
+use App\Http\Controllers\Api\MotherDashboardController;
+use App\Http\Controllers\PostnatalBookingController;
+use App\Http\Controllers\CalendarEventController;
+use App\Http\Controllers\AdminBookingController;
+
+
 use App\Http\Controllers\Auth\LoginController;
 
 // 🔐 Registration
@@ -113,6 +122,12 @@ Route::middleware(['auth:sanctum', 'role:health_worker'])->get('/health/dashboar
 });
 
 // 👶 Child Health Routes
+Route::get('/admin/reschedule-requests', [AdminBookingController::class, 'pendingReschedules']);
+Route::patch('/admin/bookings/{id}/approve-reschedule', [AdminBookingController::class, 'approveReschedule']);
+
+
+Route::get('/events', [CalendarEventController::class, 'index']);
+Route::post('/postnatal-bookings', [PostnatalBookingController::class, 'store']);
 Route::middleware('auth:sanctum')->group(function () {
     // Postnatal Visits
     Route::get('/children/{childId}/postnatal-visits', [PostnatalVisitController::class, 'index']);
@@ -206,6 +221,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('auth:sanctum')->get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
     Route::middleware('auth:sanctum')->get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
     Route::middleware('auth:sanctum')->get('/dashboard/appointments', [DashboardController::class, 'appointments']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/mother/{id}/dashboard', [MotherDashboardController::class, 'show']);
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::middleware('auth:sanctum')->apiResource('children', ChildController::class);
+
+        Route::apiResource('mothers', MotherController::class);
+    });
 
     Route::get('/children/search', function (Request $request) {
         $query = Child::query();

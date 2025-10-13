@@ -19,6 +19,10 @@
         "@fullcalendar/daygrid": "^6.1.19",
         "@fullcalendar/interaction": "^6.1.19",
         "@fullcalendar/react": "^6.1.19",
-        "bootstrap": "^5.3.8"
+        "@hookform/resolvers": "^5.2.2",
+        "bootstrap": "^5.3.8",
+        "react-hook-form": "^7.65.0",
+        "react-router-dom": "^7.9.4",
+        "yup": "^1.7.1"
     }
 }
