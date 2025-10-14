@@ -1,43 +1,235 @@
-import React from 'react';
-// Uncomment and adjust the path if you have an image to use
-// import MotherImage from '../../assets/MotherProfile.jpg';
+import React, { useEffect, useState } from "react";
+import api from "../../services/api"; // Adjust path if needed
 
 const MotherProfile = () => {
-  const mother = {
-    name: 'Nomsa Dlamini',
-    dob: '1990-05-12',
-    contact: '082 123 4567',
-    address: '123 Main Street, Brakpan',
-    children: ['Thabo', 'Lerato'],
-  };
+    const [mother, setMother] = useState(null);
+    const [editing, setEditing] = useState(false);
+    const [formData, setFormData] = useState({
+        name: "",
+        dob: "",
+        contact: "",
+        address: "",
+        children: [],
+    });
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
 
-  return (
-    <div className="container py-4">
-      <h2 className="mb-4 text-center">Mother Profile</h2>
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const res = await api.get("/api/mother-profile"); // Authenticated endpoint
+                setMother(res.data);
+                setFormData({
+                    name: res.data.name,
+                    dob: res.data.dob,
+                    contact: res.data.contact,
+                    address: res.data.address,
+                    children: res.data.children || [],
+                });
+            } catch (error) {
+                console.error("Failed to fetch profile:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-      <div className="row">
-        <div className="col-md-4">
-          {/* Uncomment this line if you have the image */}
-          {/* <img src={MotherImage} alt="Mother" className="img-fluid rounded" /> */}
-          <div className="bg-secondary text-white p-4 rounded text-center">
-            Image Placeholder
-          </div>
+        fetchProfile();
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleChildChange = (index, field, value) => {
+        const updatedChildren = [...formData.children];
+        updatedChildren[index][field] = value;
+        setFormData((prev) => ({ ...prev, children: updatedChildren }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSaving(true);
+        try {
+            await api.patch("/api/mother-profile", formData);
+            alert("Profile updated successfully.");
+            setMother(formData);
+            setEditing(false);
+        } catch (error) {
+            console.error("Update failed:", error);
+            alert("Something went wrong.");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) return <p className="text-center py-5">Loading profile...</p>;
+    if (!mother) return <p className="text-center py-5">Profile not found.</p>;
+
+    return (
+        <div className="container py-4">
+            <h2 className="mb-4 text-center">Mother Profile</h2>
+
+            <div className="row">
+                <div className="col-md-4">
+                    {/* <img src={MotherImage} alt="Mother" className="img-fluid rounded" /> */}
+                    <div className="bg-secondary text-white p-4 rounded text-center">
+                        Image Placeholder
+                    </div>
+                </div>
+
+                <div className="col-md-8">
+                    {editing ? (
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-3">
+                                <label className="form-label">Full Name</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    className="form-control"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label">
+                                    Date of Birth
+                                </label>
+                                <input
+                                    type="date"
+                                    name="dob"
+                                    className="form-control"
+                                    value={formData.dob}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label">Contact</label>
+                                <input
+                                    type="text"
+                                    name="contact"
+                                    className="form-control"
+                                    value={formData.contact}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label">Address</label>
+                                <input
+                                    type="text"
+                                    name="address"
+                                    className="form-control"
+                                    value={formData.address}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label">Children</label>
+                                {formData.children.map((child, index) => (
+                                    <input
+                                        key={index}
+                                        type="text"
+                                        className="form-control mb-2"
+                                        value={child}
+                                        onChange={(e) =>
+                                            handleChildChange(
+                                                index,
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                ))}
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                disabled={saving}
+                            >
+                                {saving ? "Saving..." : "Save Changes"}
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-secondary ms-2"
+                                onClick={() => setEditing(false)}
+                            >
+                                Cancel
+                            </button>
+                        </form>
+                    ) : (
+                        <>
+                            <h4>{mother.name}</h4>
+                            <p>
+                                <strong>Date of Birth:</strong> {mother.dob}
+                            </p>
+                            <p>
+                                <strong>Contact:</strong> {mother.contact}
+                            </p>
+                            <p>
+                                <strong>Address:</strong> {mother.address}
+                            </p>
+                            {formData.children.map((child, index) => (
+                                <div key={index} className="mb-3">
+                                    <label className="form-label">
+                                        Child {index + 1} Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control mb-2"
+                                        value={child.name}
+                                        onChange={(e) =>
+                                            handleChildChange(
+                                                index,
+                                                "name",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                    <label className="form-label">
+                                        Child {index + 1} Birth Date
+                                    </label>
+                                    <input
+                                        type="date"
+                                        className="form-control"
+                                        value={child.dob}
+                                        onChange={(e) =>
+                                            handleChildChange(
+                                                index,
+                                                "dob",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                </div>
+                            ))}
+                            <ul>
+                                {mother.children.map((child, index) => (
+                                    <li key={index}>
+                                        {child.name} — {child.dob}
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <button
+                                className="btn btn-warning mt-3"
+                                onClick={() => setEditing(true)}
+                            >
+                                Edit Profile
+                            </button>
+                        </>
+                    )}
+                </div>
+            </div>
         </div>
-        <div className="col-md-8">
-          <h4>{mother.name}</h4>
-          <p><strong>Date of Birth:</strong> {mother.dob}</p>
-          <p><strong>Contact:</strong> {mother.contact}</p>
-          <p><strong>Address:</strong> {mother.address}</p>
-          <h5>Children:</h5>
-          <ul>
-            {mother.children.map((child, index) => (
-              <li key={index}>{child}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default MotherProfile;
