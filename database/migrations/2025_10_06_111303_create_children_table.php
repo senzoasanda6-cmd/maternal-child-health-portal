@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('mother_profile_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->date('dob');
+            $table->string('gender');
             $table->integer('age')->nullable();
-            $table->string('gender')->nullable();
+            $table->date('dob')->nullable();
+            $table->date('next_checkup')->nullable();
+            $table->string('growth_status')->nullable();
             $table->timestamps();
         });
     }

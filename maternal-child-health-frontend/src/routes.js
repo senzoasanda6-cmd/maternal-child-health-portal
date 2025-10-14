@@ -41,6 +41,9 @@ import Mother from "./pages/Mother-Dashboard.jsx";
 import PostnatalBookingPage from "./pages/MotherProfile/PostnatalBookingPage.jsx";
 import Main from "./Main.js";
 import AdminRescheduleDashboard from "./pages/CareTimeline/AdminRescheduleDashboard.jsx";
+import MentalHealth from "./components/MentalHealth.jsx";
+import EmergencyResources from "./components/EmergencyResources.jsx";
+import BreastfeedingFAQ from "./components/BreastfeedingFAQ.jsx";
 
 const AppRoutes = () => (
     <Routes>
@@ -54,6 +57,15 @@ const AppRoutes = () => (
             <Route path="/services" element={<ServicesGrid />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="Main" element={<Main />} />
+            <Route
+                path="/resources/breastfeeding"
+                element={<BreastfeedingFAQ />}
+            />
+            <Route
+                path="/resources/emergency"
+                element={<EmergencyResources />}
+            />
+            <Route path="/resources/mental-health" element={<MentalHealth />} />
             <Route
                 path="/resources/nutrition"
                 element={<NutritionResource />}

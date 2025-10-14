@@ -64,6 +64,36 @@ class ChildController extends Controller
 
         return response()->json($child);
     }
+    public function show(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        $profile = $user->motherProfile;
+
+        if (!$profile) {
+            return response()->json(['error' => 'Mother profile not found'], 404);
+        }
+
+        $child = $profile->children()->first();
+
+        if (!$child) {
+            return response()->json(['error' => 'No child found'], 404);
+        }
+
+        return response()->json([
+            'name' => $child->name,
+            'age' => $child->age . ' months',
+            'gender' => $child->gender,
+            'nextCheckup' => $child->next_checkup ?? 'Not scheduled',
+            'growthStatus' => $child->growth_status ?? 'Unknown',
+        ]);
+    }
+
+
 
     /**
      * Delete a child profile.
