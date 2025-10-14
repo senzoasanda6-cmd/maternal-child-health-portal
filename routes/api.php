@@ -19,7 +19,7 @@ use App\Http\Controllers\Api\MotherDashboardController;
 use App\Http\Controllers\PostnatalBookingController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\AdminBookingController;
-
+use App\Http\Controllers\MotherProfileController;
 
 use App\Http\Controllers\Auth\LoginController;
 
@@ -124,7 +124,12 @@ Route::middleware(['auth:sanctum', 'role:health_worker'])->get('/health/dashboar
 // 👶 Child Health Routes
 Route::get('/admin/reschedule-requests', [AdminBookingController::class, 'pendingReschedules']);
 Route::patch('/admin/bookings/{id}/approve-reschedule', [AdminBookingController::class, 'approveReschedule']);
-
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/children', [ChildController::class, 'index']);
+    Route::post('/children', [ChildController::class, 'store']);
+    Route::patch('/children/{child}', [ChildController::class, 'update']);
+    Route::delete('/children/{child}', [ChildController::class, 'destroy']);
+});
 
 Route::get('/events', [CalendarEventController::class, 'index']);
 Route::post('/postnatal-bookings', [PostnatalBookingController::class, 'store']);
@@ -217,6 +222,13 @@ Route::middleware('auth:sanctum')->group(function () {
             'counts' => $counts,
         ]);
     });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/mother-profile', [MotherProfileController::class, 'show']);
+        Route::put('/mother-profile', [MotherProfileController::class, 'update']);
+        Route::delete('/mother-profile', [MotherProfileController::class, 'destroy']);
+    });
+
 
     Route::middleware('auth:sanctum')->get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
     Route::middleware('auth:sanctum')->get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
