@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Nav from "./nav";
 
 const CookieConsentModal = () => {
     const [showModal, setShowModal] = useState(false);
@@ -18,7 +17,6 @@ const CookieConsentModal = () => {
 
     return (
         <>
-            <Nav />
             <div
                 className="position-fixed bottom-0 start-0 end-0 bg-light border-top shadow-lg p-3"
                 style={{ zIndex: 9999 }}

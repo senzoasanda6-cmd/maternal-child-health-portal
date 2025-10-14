@@ -225,7 +225,7 @@ Route::middleware('auth:sanctum')->group(function () {
             'counts' => $counts,
         ]);
     });
-Route::post('/contact-message', [ContactController::class, 'send']);
+    Route::post('/contact-message', [ContactController::class, 'send']);
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/mother-profile', [MotherProfileController::class, 'show']);
         Route::put('/mother-profile', [MotherProfileController::class, 'update']);

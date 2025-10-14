@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import nav from "../../components/nav";
+import Navbar from "../../components/PublicNavbar.jsx";
 import ResourceSearch from "../../components/ResourceSearch";
 import { Link } from "react-router-dom";
 

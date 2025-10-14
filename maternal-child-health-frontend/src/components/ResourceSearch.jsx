@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Nav from "./nav.jsx";
+import Navbar from "./PublicNavbar.jsx";
 
 const ResourceSearch = ({ resources, onFilter }) => {
     const [query, setQuery] = useState("");
@@ -18,7 +18,7 @@ const ResourceSearch = ({ resources, onFilter }) => {
 
     return (
         <>
-            <Nav />
+            
             <div className="mb-4">
                 <div className="d-flex gap-3 flex-wrap">
                     <input

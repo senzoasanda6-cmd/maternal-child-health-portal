@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./BreastfeedingFAQ.css";
+import "./_components.css";
 import Header from "./Header";
 
 const faqs = [

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import "./styles.css";
+import "./_components.css";
 
 const Sidebar = ({ role = 'mother' }) => {
   const normalizedRole = role.toLowerCase();

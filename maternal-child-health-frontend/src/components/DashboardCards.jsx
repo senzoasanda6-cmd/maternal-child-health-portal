@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import StatCard from "./StatCard"; // adjust path if needed
-import "./styles.css";
+import "./_components.css";
 
 const DashboardCards = ({ role, hospitalId }) => {
     const [stats, setStats] = useState(null);

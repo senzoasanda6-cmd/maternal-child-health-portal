@@ -1,10 +1,8 @@
 import React from "react";
-import nav from "../../components/nav";
 
 const NutritionResource = () => {
   return (
     <>
-      {nav()}
       <div className="container py-5">
         <h2>Nutrition During Pregnancy</h2>
         <p className="text-muted">Category: Pregnancy</p>
