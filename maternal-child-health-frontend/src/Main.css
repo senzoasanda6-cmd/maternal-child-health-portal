@@ -47,7 +47,7 @@ h3 {
     padding: 12px 24px;
     border: none;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
     text-transform: uppercase;
@@ -61,15 +61,58 @@ h3 {
     box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
         0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 }
+
+.button:disabled,
+.button[disabled] {
+    background-color: #cccccc;
+    color: #666666 !important;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 .button-primary {
-    background-color: #1d4189;
+    background-color: var(--primary-color);
     color: #ffffff !important;
     text-decoration: none;
 }
 .button-accent {
-    background-color: #ff9800;
+    background-color: var(--accent-color);
     color: #ffffff !important;
     text-decoration: none;
+}
+
+.button-secondary {
+    background-color: var(--secondary-color);
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+.button-outline {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color) !important;
+    text-decoration: none;
+}
+.button-outline:hover {
+    background-color: var(--primary-color);
+    color: #ffffff !important;
+}
+.button-fw-small {
+    min-width: 80px;
+    text-align: center;
+    text-justify: auto;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+}
+.button-fw-medium {
+    width: 150px;
+    padding: 10px 16px;
+    font-size: 1rem;
+}
+.button-fw-large {
+    width: 200px;
+    padding: 12px 24px;
+    font-size: 1.125rem;
 }
 
 .card {
@@ -108,7 +151,8 @@ h3 {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background-color: var(--background-color);
+    /* background-color: var(--background-color); */
+    background-color: rgba(255, 255, 255, 0.9);
     color: var(--primary-color);
     padding: 1rem 2rem;
     display: flex;
@@ -117,16 +161,16 @@ h3 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.nav a {
+/* .nav a {
     color: #ffffff;
     text-decoration: none;
     margin-left: 1.5rem;
     font-weight: 500;
-}
+} */
 
 /* override nav-item0 */
 .nav-item {
-    margin-left: 1.5rem;
+    margin-right: 0.5rem;
     color: #1d4189 !important;
 }
 
@@ -310,18 +354,26 @@ h3 {
 
 .nav-link {
     color: #1d4189 !important;
-    font-weight: 500;
+    font-weight: 500 !important;
+    font-size: 12px !important;
     text-decoration: none;
-    /* margin-left: 1.5rem; */
     border-radius: 8px;
     padding: 8px 12px;
+    /* min-width: 120px; */
+    text-align: center;
 }
 
 .nav-link:hover {
     text-decoration: underline !important;
+    background: linear-gradient(180deg,var(--secondary-color) 0%, rgba(255, 255, 255, 0) 100%);
+    color: var(--primary-color) !important;
+    font-weight: 600 !important;
+}
+
+.nav-link.active {
     background: linear-gradient(180deg,var(--accent-color) 0%, rgba(255, 255, 255, 0) 100%);
     color: var(--primary-color) !important;
-    font-weight: 400;
+    font-weight: 700;
 }
 
 /* .anim-link:hover {
