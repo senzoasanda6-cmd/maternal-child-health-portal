@@ -1,10 +1,8 @@
 import React from "react";
-import Nav from "../components/nav";
 
 const CookiePolicy = () => {
     return (
         <>
-            <Nav />
             <div className="container py-4">
                 <h2>Cookie Policy</h2>
                 <p>Last updated: October 8, 2025</p>

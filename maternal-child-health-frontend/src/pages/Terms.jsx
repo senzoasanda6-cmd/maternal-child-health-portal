@@ -1,10 +1,8 @@
-import React from "react";
-import Nav from "../components/nav.jsx";
+
 
 const Terms = () => {
     return (
         <>
-            <Nav />
             <div className="container py-4">
                 <h2>Terms of Use</h2>
                 <p>Last updated: October 8, 2025</p>
