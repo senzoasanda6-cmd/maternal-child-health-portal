@@ -1,5 +1,5 @@
 import React from 'react'
-import './styles.css'
+import './_components.css'
 
 function StatCard({ title, value }) {
   return (

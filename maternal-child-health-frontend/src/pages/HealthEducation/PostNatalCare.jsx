@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import HealthEducationLayout from './HealthEducationLayout';
+import HealthEducationLayout from '../../layouts/HealthEducationLayout.jsx';
 
 const PostNatalCare = () => {
   const { t } = useTranslation();

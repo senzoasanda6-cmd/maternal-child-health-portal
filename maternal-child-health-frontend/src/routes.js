@@ -1,46 +1,73 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+// import HealthWorkerRoute from "./contexts/HealthWorkerRoute.jsx";
+
+import Main from "./Main.js";
+
+// Layouts
 import PublicLayout from "./layouts/PublicLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
+
+// Component Routers
+import MotherRoute from "./components/protected/MotherRoute.jsx";
+import AdminRoute from "./components/protected/AdminRoute.jsx";
+import Mother from "./pages/Mother-Dashboard.jsx";
+
+// Landing Page
+import LandingPage from "./pages/Landing/LandingPage.jsx";
+
+// Auth Pages
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
+
+// Home Pages
+import HomeLayout from "./pages/Home/LandingPage.jsx";
 import HomePage from "./pages/Home/HealthEducationHome.jsx";
+
+// Dashboard Pages  
 import Dashboard from "./pages/Dashboard/Dashboard";
+
+// Care Timeline Pages
 import CalendarView from "./pages/CareTimeline/CalendarView.jsx";
 import CareTimeline from "./pages/CareTimeline/CareTimeline.jsx";
 import TimelineEvent from "./pages/CareTimeline/TimelineEvent.jsx";
+import AdminRescheduleDashboard from "./pages/CareTimeline/AdminRescheduleDashboard.jsx";
+
+// Health Education Pages
 import PostNatalCare from "./pages/HealthEducation/PostNatalCare.jsx";
 import PregnancyStages from "./pages/HealthEducation/PregnancyStages.jsx";
 import SafeMedicines from "./pages/HealthEducation/SafeMedicines.jsx";
+
+// Child Profile Pages
 import ChildDetailsForm from "./pages/ChildProfile/ChildDetailsForm.jsx";
 import ChildProfile from "./pages/ChildProfile/ChildProfile.jsx";
 import PostnatalVisit from "./pages/ChildProfile/PostnatalVisits/PostnatalVisitList.jsx";
 import VaccinationList from "./pages/ChildProfile/Vaccinations/Vaccinations.jsx";
 import VaccineProgressChart from "./pages/ChildProfile/Vaccinations/VaccineProgressChart.jsx";
-import DashboaredCards from "./components/DashboaredCards";
+import ChildProfileForm from "./pages/ChildProfile/ChildProfileForm.jsx";
+
+// Dashboard Components
+import DashboaredCards from "./components/DashboardCards.jsx";
+import ServicesGrid from "./components/ServicesGrid.jsx";
+
+// Public Pages
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import NotFoundPage from "./pages/NotFound/NotFoundPage";
 import GDPR from "./pages/GDPR";
 import CookiePolicy from "./pages/CookiePolicy.jsx";
-import HomeLayout from "./pages/Home/LandingPage.jsx";
+import AdminDashboard from "./pages/AdminDashboard";
 import NutritionResource from "./pages/Resources/NutritionResource";
 import PostnatalChecklistResource from "./pages/Resources/PostnatalChecklistResource";
 import BreastfeedingVideoResource from "./pages/Resources/BreastfeedingVideoResource";
-import AdminDashboard from "./pages/AdminDashboard";
-import MotherRoute from "./components/protected/MotherRoute.jsx";
-// import HealthWorkerRoute from "./contexts/HealthWorkerRoute.jsx";
-import AdminRoute from "./components/protected/AdminRoute.jsx"; // Add this import
+
+// Mother Profile Pages
 import ChildrenList from "./pages/MotherProfile/ChildrenList";
 import MotherDetailsForm from "./pages/MotherProfile/MotherDetailsForm";
 import MotherProfile from "./pages/MotherProfile/MotherProfile";
-import ChildProfileForm from "./pages/ChildProfile/ChildProfileForm.jsx";
-import LandingPage from "./components/LandingPage.jsx";
-import ServicesGrid from "./components/ServicesGrid.jsx";
-import Mother from "./pages/Mother-Dashboard.jsx";
 import PostnatalBookingPage from "./pages/MotherProfile/PostnatalBookingPage.jsx";
-import Main from "./Main.js";
-import AdminRescheduleDashboard from "./pages/CareTimeline/AdminRescheduleDashboard.jsx";
+
+// Resource Pages
 import MentalHealth from "./components/MentalHealth.jsx";
 import EmergencyResources from "./components/EmergencyResources.jsx";
 import BreastfeedingFAQ from "./components/BreastfeedingFAQ.jsx";
@@ -49,6 +76,7 @@ const AppRoutes = () => (
     <Routes>
         {/* 🌐 Public Routes */}
         <Route element={<PublicLayout />}>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/privacy" element={<Privacy />} />
@@ -79,7 +107,6 @@ const AppRoutes = () => (
                 element={<BreastfeedingVideoResource />}
             />
         </Route>
-        <Route path="/" element={<LandingPage />} />
 
         {/* 🔐 Protected Routes */}
         <Route element={<ProtectedLayout />}>

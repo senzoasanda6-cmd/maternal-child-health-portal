@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./MentalHealth.css";
 import api from "../services/api";
-import Header from "./Header.js";
 
 const resources = [
     {
@@ -79,7 +78,6 @@ export default function MentalHealth() {
 
     return (
         <>
-            <Header />
             <div className="mh-container">
                 <h1 className="mh-title"> Mental Health Support for Mothers</h1>
                 <p className="mh-intro">
