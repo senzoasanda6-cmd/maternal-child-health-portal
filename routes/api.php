@@ -20,6 +20,7 @@ use App\Http\Controllers\PostnatalBookingController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\MotherProfileController;
+use App\Http\Controllers\ContactController;
 
 use App\Http\Controllers\Auth\LoginController;
 
@@ -130,7 +131,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/children/{child}', [ChildController::class, 'update']);
     Route::delete('/children/{child}', [ChildController::class, 'destroy']);
 });
-
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/child-profile', [ChildController::class, 'show']);
+});
 Route::get('/events', [CalendarEventController::class, 'index']);
 Route::post('/postnatal-bookings', [PostnatalBookingController::class, 'store']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -222,7 +225,7 @@ Route::middleware('auth:sanctum')->group(function () {
             'counts' => $counts,
         ]);
     });
-
+Route::post('/contact-message', [ContactController::class, 'send']);
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/mother-profile', [MotherProfileController::class, 'show']);
         Route::put('/mother-profile', [MotherProfileController::class, 'update']);
