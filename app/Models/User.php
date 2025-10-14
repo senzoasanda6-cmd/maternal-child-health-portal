@@ -65,4 +65,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Child::class);
     }
+    public function motherProfile()
+    {
+        return $this->hasOne(MotherProfile::class);
+    }
 }

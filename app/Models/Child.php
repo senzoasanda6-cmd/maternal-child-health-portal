@@ -38,6 +38,11 @@ class Child extends Model
     {
         return $this->hasMany(Vaccination::class);
     }
+    public function motherProfile()
+    {
+        return $this->belongsTo(MotherProfile::class);
+    }
+
 
     public function mother()
     {

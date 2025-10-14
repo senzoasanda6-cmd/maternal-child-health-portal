@@ -11,22 +11,24 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('children', function (Blueprint $table) {
+        Schema::create('mother_profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mother_profile_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->date('dob');
-            $table->integer('age')->nullable();
-            $table->string('gender')->nullable();
+            $table->string('contact');
+            $table->string('address');
+            $table->json('children')->nullable(); // store as array
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('children');
+        Schema::dropIfExists('mother_profiles');
     }
 };
