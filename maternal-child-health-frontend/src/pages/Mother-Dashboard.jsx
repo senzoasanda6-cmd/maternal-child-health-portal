@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api";
-
+import api from "../services/api";
 import ChildCard from "../components/ChildCard";
 import GrowthChart from "../components/GrowthChart";
 import AppointmentsList from "../components/AppointmentsList";
@@ -8,12 +7,12 @@ import MilestoneTracker from "../components/MilestoneTracker";
 import HealthRecords from "../components/HealthRecords";
 import QuickLinks from "../components/QuickLinks";
 
+const CHILDREN_PER_PAGE = 3;
+
 export default function Dashboard() {
-    const [child, setChild] = useState(null);
-    const [growthData, setGrowthData] = useState([]);
-    const [appointments, setAppointments] = useState([]);
-    const [milestones, setMilestones] = useState([]);
-    const [records, setRecords] = useState([]);
+    const [children, setChildren] = useState([]);
+    const [activeChildId, setActiveChildId] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -27,20 +26,12 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const [childRes, growthRes, apptRes, milestoneRes, recordRes] =
-                    await Promise.all([
-                        api.get("/api/child-profile"),
-                        api.get("/api/growth-data"),
-                        api.get("/api/appointments"),
-                        api.get("/api/milestones"),
-                        api.get("/api/health-records"),
-                    ]);
-
-                setChild(childRes.data);
-                setGrowthData(growthRes.data);
-                setAppointments(apptRes.data);
-                setMilestones(milestoneRes.data);
-                setRecords(recordRes.data);
+                const res = await api.get("/api/children");
+                const data = Array.isArray(res.data) ? res.data : [];
+                setChildren(data);
+                if (data.length > 0) {
+                    setActiveChildId(data[0].id);
+                }
             } catch (err) {
                 console.error("Dashboard load failed:", err);
                 setError("Failed to load dashboard data.");
@@ -52,17 +43,93 @@ export default function Dashboard() {
         fetchDashboardData();
     }, []);
 
+    const totalPages = Math.ceil(children.length / CHILDREN_PER_PAGE);
+    const paginatedChildren = Array.isArray(children)
+        ? children.slice(
+              (currentPage - 1) * CHILDREN_PER_PAGE,
+              currentPage * CHILDREN_PER_PAGE
+          )
+        : [];
+
+    const activeChild = Array.isArray(children)
+        ? children.find((c) => c.id === activeChildId)
+        : null;
+
     if (loading)
         return <p className="text-center py-5">Loading dashboard...</p>;
     if (error) return <p className="text-center text-danger">{error}</p>;
 
     return (
         <div className="p-6 space-y-6">
-            {child && <ChildCard {...child} />}
-            <GrowthChart data={growthData} />
-            <AppointmentsList appointments={appointments} />
-            <MilestoneTracker milestones={milestones} />
-            <HealthRecords records={records} />
+            {/* Tabs */}
+            {paginatedChildren.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                    {paginatedChildren.map((child) => (
+                        <button
+                            key={child.id}
+                            onClick={() => setActiveChildId(child.id)}
+                            className={`px-4 py-2 rounded ${
+                                child.id === activeChildId
+                                    ? "bg-blue-600 text-white"
+                                    : "bg-gray-200 text-gray-800"
+                            }`}
+                        >
+                            {child.name}
+                        </button>
+                    ))}
+                </div>
+            ) : (
+                <p className="text-center text-gray-500">
+                    No child profiles available.
+                </p>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-4">
+                    <button
+                        onClick={() =>
+                            setCurrentPage((p) => Math.max(p - 1, 1))
+                        }
+                        disabled={currentPage === 1}
+                        className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
+                    >
+                        ◀ Prev
+                    </button>
+                    <span>
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        onClick={() =>
+                            setCurrentPage((p) => Math.min(p + 1, totalPages))
+                        }
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50"
+                    >
+                        Next ▶
+                    </button>
+                </div>
+            )}
+
+            {/* Active Child Dashboard */}
+            {activeChild ? (
+                <div className="space-y-6 border-t pt-6 mt-6">
+                    <ChildCard {...activeChild} />
+                    <GrowthChart data={activeChild.growthData || []} />
+                    <AppointmentsList
+                        appointments={activeChild.appointments || []}
+                    />
+                    <MilestoneTracker
+                        milestones={activeChild.milestones || []}
+                    />
+                    <HealthRecords records={activeChild.records || []} />
+                </div>
+            ) : (
+                <p className="text-center text-gray-500">
+                    Select a child to view their dashboard.
+                </p>
+            )}
+
             <QuickLinks links={links} />
         </div>
     );
