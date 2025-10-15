@@ -8,13 +8,13 @@ function AppPageLoading({ loadingText = "Loading, please wait..." }) {
     >
       <div className="text-center">
         <div
-          className="spinner-border text-primary"
+          className="spinner-border text-custom-color-primary"
           style={{ width: "3rem", height: "3rem" }}
           role="status"
         >
           <span className="visually-hidden">Loading...</span>
         </div>
-        <p className="mt-3 fw-bold text-primary">{loadingText}</p>
+        <p className="mt-3 fw-bold text-custom-color-primary">{loadingText}</p>
       </div>
     </div>
   );

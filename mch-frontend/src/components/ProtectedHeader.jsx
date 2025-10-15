@@ -1,13 +1,15 @@
 import React from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./_components.css";
+
+import mch_logo from "../assets/logos/mch_ai_v1_logo.png";
 
 const Header = ({ user, onLogout }) => {
     const navigate = useNavigate();
     const userName = user.name || "Jane Doe";
     const role = user.role || "Mother";
 
-    function onLogout() {
+    function handleLogout() {
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
         navigate("/login");
@@ -29,28 +31,44 @@ const Header = ({ user, onLogout }) => {
     const profileImageUrl = getProfileImage(role);
 
     return (
-        <header className="header">
+        <header className="header gap-4">
             <Link to="/" className="navbar-brand d-flex align-items-center">
-                <img
-                    src="/gdoh.jpeg"
-                    alt="health"
-                    className="rounded-4 shadow"
-                    style={{ height: "60px", marginRight: "10px" }}
-                />
+                <div className="d-flex align-items-center bg-white overflow-hidden rounded-3 pe-2 me-2 shadow">
+                    <img
+                        src="/gdoh.jpeg"
+                        alt="gdoh logo"
+                        className="navbar-brand"
+                        style={{ height: "60px" }}
+                    />
+                    <img
+                        src={mch_logo}
+                        alt="mch logo"
+                        className="navbar-brand py-2"
+                        style={{ width: "auto", height: "60px" }}
+                    />
+                </div>
                 <p
                     className="mb-0 text-truncate"
                     style={{
                         fontSize: "12px",
                         color: "#fff",
                         fontWeight: "600",
+                        paddingBottom: "2px",
                     }}
                 >
-                    Maternal Child Health Portal
+                    <span className="text-custom-color-accent">Gauteng Health</span> <br />
+                    Maternal Child <br /> Health Portal
                 </p>
             </Link>
-            <nav className="nav justify-content-end align-items-center gap-3">
+            <nav className="nav justify-content-end align-items-center gap-3 rounded-4 p-3 shadow -sm">
                 <div className="d-flex justify-content-end align-items-center gap-2">
-                    <span className="text-end" style={{fontSize: "12px"}}>{userName}</span>
+                    <p className="mb-0 text-center" style={{ lineHeight: "1.1" }}>
+                        <span className="text-end" style={{ fontSize: "14px", fontWeight: "600" }}>{userName}</span><br />
+                        <span className="text-custom-color-secondary" style={{ fontSize: "10px", fontWeight: "400" }}>
+                            {role.charAt(0).toUpperCase() + role.slice(1)} Profile
+                        </span>
+                    </p>
+
                     <img
                         src={profileImageUrl}
                         alt={`${userName}'s profile`}
@@ -66,7 +84,7 @@ const Header = ({ user, onLogout }) => {
                     />
                 </div>
                 <span className="d-none d-lg-block">|</span>
-                <button onClick={onLogout} className="logout-button fw-bold">
+                <button onClick={handleLogout} className="logout-button fw-bold">
                     Logout
                 </button>
             </nav>

@@ -78,7 +78,7 @@ const LandingPage = () => {
             </section>
 
             {/* Health Tip Banner */}
-            <section className="bg-warning text-dark py-3 text-center">
+            <section className="bg-warning text-dark py-3 text-center health-tip-banner">
                 <strong>Tip:</strong> Breastfeeding within the first hour boosts
                 immunity.
             </section>

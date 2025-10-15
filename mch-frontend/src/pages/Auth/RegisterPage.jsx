@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../services/api";
+import Spinner from "../../components/spinners/Spinner";
 import "./LoginPage.css";
 
 function RegisterPage() {
@@ -14,6 +15,7 @@ function RegisterPage() {
         hospital_id: "",
     });
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,11 +28,14 @@ function RegisterPage() {
             setError("Passwords do not match");
             return;
         }
+        setLoading(true);
         try {
             await register(form);
             navigate("/login");
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -38,11 +43,12 @@ function RegisterPage() {
 
     return (
         <div className="login-page">
-            <div className="login-wrapper">
+            {loading && <Spinner />}
+            <div className="container login-wrapper">
                 <div className="login-left">
                     <div className="image-container">
                         <img
-                            src="/mother_child.jpg"
+                            src="/mother_child_ai_2.png"
                             alt="Mother and Child"
                             className="side-image"
                         />
@@ -116,7 +122,7 @@ function RegisterPage() {
                             </select>
                             {error && <p className="error">{error}</p>}
                             <button type="submit">Register</button>
-                            <p>
+                            <p className="mt-3 mb-0">
                                 Already have an account?{" "}
                                 <span
                                     className="link-primary"

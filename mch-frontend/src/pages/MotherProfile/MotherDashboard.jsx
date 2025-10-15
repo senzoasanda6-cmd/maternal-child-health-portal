@@ -49,9 +49,9 @@ export default function Dashboard() {
     const totalPages = Math.ceil(children.length / CHILDREN_PER_PAGE);
     const paginatedChildren = Array.isArray(children)
         ? children.slice(
-              (currentPage - 1) * CHILDREN_PER_PAGE,
-              currentPage * CHILDREN_PER_PAGE
-          )
+            (currentPage - 1) * CHILDREN_PER_PAGE,
+            currentPage * CHILDREN_PER_PAGE
+        )
         : [];
 
     const activeChild = Array.isArray(children)
@@ -59,7 +59,7 @@ export default function Dashboard() {
         : null;
 
     if (loading)
-        return <AppLoading loadingText="Loading dashboard..."/>;
+        return <AppLoading loadingText="Loading dashboard..." />;
     if (error) return <AppLoadError errorText={error} />;
 
     return (
@@ -68,7 +68,7 @@ export default function Dashboard() {
             <AppCarousel />
 
             <hr />
-<h3>Your Childrens Wellness Analysis</h3>
+            <h5 className="text-custom-color-primary fw-bold">Your Childrens Wellness Analysis</h5>
             {/* Tabs */}
             {paginatedChildren.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
@@ -76,11 +76,10 @@ export default function Dashboard() {
                         <button
                             key={child.id}
                             onClick={() => setActiveChildId(child.id)}
-                            className={`px-4 py-2 rounded ${
-                                child.id === activeChildId
+                            className={`px-4 py-2 rounded ${child.id === activeChildId
                                     ? "bg-blue-600 text-white"
                                     : "bg-gray-200 text-gray-800"
-                            }`}
+                                }`}
                         >
                             {child.name}
                         </button>
@@ -118,9 +117,9 @@ export default function Dashboard() {
                     </button>
                 </div>
             )}
-            
+
             <hr />
-<h3>Active Child Monitor</h3>
+            <h5 className="text-custom-color-primary fw-bold">Active Child Monitor</h5>
             {/* Active Child Dashboard */}
             {activeChild ? (
                 <div className="space-y-6 border-t pt-6 mt-6">
@@ -141,7 +140,7 @@ export default function Dashboard() {
             )}
 
             <hr />
-            <h3>Quick Links</h3>
+            <h5 className="text-custom-color-primary fw-bold">Quick Links</h5>
             <QuickLinks links={links} />
         </div>
     );

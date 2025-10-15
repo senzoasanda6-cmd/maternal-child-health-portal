@@ -3,7 +3,7 @@ import React from 'react'
 function AppCarousel() {
   return (
     <section className="container p-0 rounded-4 overflow-hidden shadow-md">
-        <div id="carouselExampleRide" className="carousel slide" data-bs-ride="carousel">
+        <div id="carouselExampleRide" className="carousel slide carousel-fade" data-bs-ride="carousel">
             {/* indicators */}
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExampleRide" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -15,16 +15,16 @@ function AppCarousel() {
             {/* slides */}
             <div className="carousel-inner">
                 <div className="carousel-item active">
-                    <img src="/banners/Maternal-and-Child-Health-Banner-1420151488.jpg" className="d-block w-100 object-fit-cover" style={{height: "40vh"}} alt="banner 4" />
+                    <img src="/mother_child_ai_1.png" className="d-block w-100 object-fit-cover" alt="banner 4" style={{height: "50vh", objectPosition: "top"}} />
                 </div>
                 <div className="carousel-item">
-                    <img src="/banners/Designer_3.png" className="d-block w-100 object-fit-cover object-position-top" alt="banner 3" style={{height: "40vh"}} />
+                    <img src="/banners/Designer_3.png" className="d-block w-100 object-fit-cover" alt="banner 3" style={{height: "50vh", objectPosition: "top"}} />
                 </div>
                 <div className="carousel-item">
-                    <img src="/banners/Designer_2.png" className="d-block w-100 object-fit-cover object-position-top" alt="banner 2" style={{height: "40vh"}} />
+                    <img src="/banners/Designer_2.png" className="d-block w-100 object-fit-cover" alt="banner 2" style={{height: "50vh", objectPosition: "top"}} />
                 </div>
-                <div className="carousel-item active">
-                    <img src="/banners/Designer_1.png" className="d-block w-100 object-fit-cover object-position-top" alt="banner 1" style={{height: "40vh"}} />
+                <div className="carousel-item">
+                    <img src="/banners/Designer_1.png" className="d-block w-100 object-fit-cover" alt="banner 1" style={{height: "50vh", objectPosition: "top"}} />
                 </div>
             </div>
 
