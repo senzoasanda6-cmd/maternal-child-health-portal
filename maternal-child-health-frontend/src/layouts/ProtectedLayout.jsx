@@ -24,18 +24,18 @@ const ProtectedLayout = () => {
     }
 
     return (
-        <>
+        <div style={{maxHeight: "100vh"}}>
             <Navbar user={user} />
             <main>
                 <CookieConsentModal />
                 <div style={{ display: "flex" }}>
                     <Sidebar />
-                    <div style={{ flexGrow: 1, padding: "20px" }}>
+                    <div className="page-view">
                         <Outlet />
                     </div>
                 </div>
             </main>
-        </>
+        </div>
     );
 };
 

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api"; // Adjust path if needed
+import AppLoading from "../../components/spinners/AppPageLoading";
+import { Link } from "react-router-dom";
+import AppLoadError from "../../components/spinners/AppLoadError";
 
 const MotherProfile = () => {
     const [mother, setMother] = useState(null);
@@ -11,6 +14,7 @@ const MotherProfile = () => {
         address: "",
         children: [],
     });
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
@@ -27,6 +31,10 @@ const MotherProfile = () => {
                     children: res.data.children || [],
                 });
             } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    setError("Session expired. Please login again.");
+                }
+
                 console.error("Failed to fetch profile:", error);
             } finally {
                 setLoading(false);
@@ -63,12 +71,23 @@ const MotherProfile = () => {
         }
     };
 
-    if (loading) return <p className="text-center py-5">Loading profile...</p>;
-    if (!mother) return <p className="text-center py-5">Profile not found.</p>;
+    if (loading) return <AppLoading loadingText="Loading profile..." />;
+    if (error) {
+        return (
+            <div className="container py-4 text-center">
+                <div className="alert alert-danger" role="alert">
+                    {error}
+                    <br />
+                    <Link to="/login" className="btn btn-primary mt-3">Login</Link>
+                </div>
+            </div>
+        );
+    }
+    if (!mother) return <AppLoadError errorText="Profile not found." />;
 
     return (
-        <div className="container py-4">
-            <h2 className="mb-4 text-center">Mother Profile</h2>
+        <div className="container p-4">
+            <h2 className="mb-4 text-center">👩🏽 Mother Profile</h2>
 
             <div className="row">
                 <div className="col-md-4">

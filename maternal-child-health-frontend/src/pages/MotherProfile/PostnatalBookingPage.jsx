@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+// import AppLoading from "../components/spinners/AppPageLoading";
+// import AppLoadError from "../components/spinners/AppLoadError";
 
 const PostnatalBookingPage = () => {
     const { t } = useTranslation();
@@ -12,7 +14,7 @@ const PostnatalBookingPage = () => {
     };
 
     return (
-        <div className="container py-5">
+        <div className="container p-5">
             <h1 className="mb-4 text-center">{t("bookPostnatalVisit")}</h1>
             <p className="text-center mb-4">{t("postnatalBookingIntro")}</p>
 
