@@ -4,6 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+// import AppLoading from "../components/spinners/AppPageLoading";
+// import AppLoadError from "../components/spinners/AppLoadError";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -39,7 +41,7 @@ const MotherDetailsForm = () => {
   };
 
   return (
-    <div className="container py-4">
+    <div className="container p-4">
       <h2 className="mb-4 text-center">Mother Details Form</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">

@@ -11,7 +11,7 @@ import ProtectedLayout from "./layouts/ProtectedLayout";
 // Component Routers
 import MotherRoute from "./components/protected/MotherRoute.jsx";
 import AdminRoute from "./components/protected/AdminRoute.jsx";
-import Mother from "./pages/Mother-Dashboard.jsx";
+import Mother from "./pages/MotherProfile/MotherDashboard.jsx";
 
 // Landing Page
 import LandingPage from "./pages/Landing/LandingPage.jsx";
@@ -22,7 +22,8 @@ import RegisterPage from "./pages/Auth/RegisterPage";
 
 // Home Pages
 import HomeLayout from "./pages/Home/LandingPage.jsx";
-import HomePage from "./pages/Home/HealthEducationHome.jsx";
+import MotherHomePage from "./pages/Home/MotherHome.jsx";
+import HealthEducationHome from "./pages/Home/HealthEducationHome.jsx";
 
 // Dashboard Pages  
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -56,7 +57,7 @@ import Terms from "./pages/Terms";
 import NotFoundPage from "./pages/NotFound/NotFoundPage";
 import GDPR from "./pages/GDPR";
 import CookiePolicy from "./pages/CookiePolicy.jsx";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 import NutritionResource from "./pages/Resources/NutritionResource";
 import PostnatalChecklistResource from "./pages/Resources/PostnatalChecklistResource";
 import BreastfeedingVideoResource from "./pages/Resources/BreastfeedingVideoResource";
@@ -126,7 +127,7 @@ const AppRoutes = () => (
                     path="/admin/reschedule-dashboard"
                     element={<AdminRescheduleDashboard />}
                 />
-                <Route path="/mother/home" element={<HomePage />} />
+                <Route path="/mother/home" element={<MotherHomePage />} />
                 <Route path="/mother/form" element={<MotherDetailsForm />} />
                 <Route
                     path="/mother/dashboard-cards"
@@ -147,7 +148,7 @@ const AppRoutes = () => (
                     element={<MotherDetailsForm />}
                 />
                 <Route
-                    path="/mother/child-profile"
+                    path="/mother/mom-profile"
                     element={<MotherProfile />}
                 />
                 <Route path="/mother/calendar" element={<CalendarView />} />
@@ -170,6 +171,10 @@ const AppRoutes = () => (
                 <Route
                     path="/mother/safe-medicines"
                     element={<SafeMedicines />}
+                />
+                <Route
+                    path="/mother/health-education"
+                    element={<HealthEducationHome />}
                 />
             </Route>
 
