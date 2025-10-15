@@ -1,0 +1,36 @@
+{
+  "files": {
+    "main.css": "/static/css/main.cbe5c2dd.css",
+    "main.js": "/static/js/main.b911bfb8.js",
+    "static/js/977.328b9e77.chunk.js": "/static/js/977.328b9e77.chunk.js",
+    "static/js/455.6f322459.chunk.js": "/static/js/455.6f322459.chunk.js",
+    "static/media/mch_ai_v1_logo.png": "/static/media/mch_ai_v1_logo.8b944a98e53178ea9065.png",
+    "static/media/edenvale.jpg": "/static/media/edenvale.18dacc0410bfba20bf1e.jpg",
+    "static/media/dgmah.jpg": "/static/media/dgmah.aaa6c440b6fa37be57cb.jpg",
+    "static/media/mch_ai_v1_logo_transp.png": "/static/media/mch_ai_v1_logo_transp.09d7c1dc1396f07d9f52.png",
+    "static/media/kalafong.jpg": "/static/media/kalafong.e20c1a59b9fb486faa19.jpg",
+    "static/media/sbah.jpg": "/static/media/sbah.1d3343cd2be8211fc4ee.jpg",
+    "static/media/tembisa.jpg": "/static/media/tembisa.14d2ea78527534acaa48.jpg",
+    "static/media/thelle.jpg": "/static/media/thelle.8c6250bff63818453fc4.jpg",
+    "static/media/chbah.jpg": "/static/media/chbah.de88c751663c57898fcc.jpg",
+    "static/media/sebokeng.jpg": "/static/media/sebokeng.ae24065fc4b9f6daa1cf.jpg",
+    "static/media/bootstrap-icons.woff?": "/static/media/bootstrap-icons.1295669cd4e305c97f2c.woff",
+    "static/media/weskoppies.jpg": "/static/media/weskoppies.50cf7df3803b832763da.jpg",
+    "static/media/bootstrap-icons.woff2?": "/static/media/bootstrap-icons.92ea18a81d737146ff04.woff2",
+    "static/media/Jubilee.jpg": "/static/media/Jubilee.4e5aa708f6b9de359137.jpg",
+    "static/media/rahima.jpg": "/static/media/rahima.4c5b14ecb475960dd55e.jpg",
+    "static/media/helenjoseph.jpg": "/static/media/helenjoseph.f4f7ce01127d21cbbc35.jpg",
+    "static/media/pholosong.jpg": "/static/media/pholosong.32630453e77ed83894a5.jpg",
+    "static/media/cmjah.webp": "/static/media/cmjah.2c0739435648fa551d34.webp",
+    "static/media/tara.jpg": "/static/media/tara.e012b9a18f2946584d02.jpg",
+    "index.html": "/index.html",
+    "main.cbe5c2dd.css.map": "/static/css/main.cbe5c2dd.css.map",
+    "main.b911bfb8.js.map": "/static/js/main.b911bfb8.js.map",
+    "977.328b9e77.chunk.js.map": "/static/js/977.328b9e77.chunk.js.map",
+    "455.6f322459.chunk.js.map": "/static/js/455.6f322459.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cbe5c2dd.css",
+    "static/js/main.b911bfb8.js"
+  ]
+}
