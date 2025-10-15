@@ -1,12 +1,14 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
+import Spinner from "../../components/spinners/Spinner";
 import "./LoginPage.css";
 
 function LoginPage() {
     const navigate = useNavigate();
     const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const { login } = useContext(AuthContext);
 
     const handleChange = (e) => {
@@ -16,23 +18,27 @@ function LoginPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
+        setLoading(true);
         try {
             await login(form);
         } catch (err) {
             setError(err.response?.data?.error || "Login failed");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="login-page">
-            <div className="login-wrapper">
+            {loading && <Spinner />}
+            <div className="container login-wrapper">
                 {" "}
                 <div className="login-left">
                     {" "}
                     <div className="image-container">
                         {" "}
                         <img
-                            src="/mother_child.jpg"
+                            src="/mother_child_ai_2.png"
                             alt="Mother and Child"
                             className="side-image"
                         />{" "}
@@ -75,10 +81,13 @@ function LoginPage() {
                                 required
                             />{" "}
                             {error && <p className="error">{error}</p>}{" "}
-                            <button type="submit">Login</button>{" "}
-                            <p style={{marginBottom: '4px', marginTop: '12px'}}>Or</p>
+                            <div style={{ marginBottom: '12px' }}></div>
+                            <button type="submit" className="button button-primary" style={{ maxWidth: '200px', marginTop: '0' }}>Login</button>{" "}
+                            <p style={{ marginBottom: '12px', marginTop: '12px' }}>Or</p>
                             <button
                                 type="button"
+                                className="button button-secondary"
+                                style={{ maxWidth: '200px', marginTop: '0' }}
                                 onClick={() => navigate("/register")}
                             >
                                 Register

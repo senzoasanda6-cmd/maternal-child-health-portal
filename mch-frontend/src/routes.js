@@ -24,7 +24,7 @@ import NotFoundPage from "./pages/NotFound/NotFoundPage";
 
 // Shared Authenticated Pages
 import Dashboard from "./pages/Dashboard/Dashboard";
-import CalendarView from "./pages/CareTimeline/CalendarView.jsx";
+// import CalendarView from "./pages/CareTimeline/CalendarView.jsx";
 import CareTimeline from "./pages/CareTimeline/CareTimeline.jsx";
 import TimelineEvent from "./pages/CareTimeline/TimelineEvent.jsx";
 import PostNatalCare from "./pages/HealthEducation/PostNatalCare.jsx";
@@ -130,7 +130,7 @@ const AppRoutes = () => (
         <Route element={<ProtectedLayout />}>
             {/* Shared Authenticated Routes */}
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/calendar" element={<CalendarView />} />
+            {/* <Route path="/calendar" element={<CalendarView />} /> */} {/* Temporarily disabled */}
             <Route path="/care-timeline" element={<CareTimeline />} />
             <Route path="/timeline-event/:id" element={<TimelineEvent />} />
             <Route path="/postnatal-care" element={<PostNatalCare />} />

@@ -1,24 +1,30 @@
+.login-page {
+  background-color: #f9fafb;
+  background: radial-gradient(circle at top left, #F0F4F8, #D9E2EC);
+}
 .login-wrapper {
-  height: 100vh;
+  height: calc(100vh - 60px);
   display: flex;
   background: radial-gradient(circle at top left, #F0F4F8, #D9E2EC);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-y: auto;
 }
 
 /* Left side with image and overlay */
 .login-left {
-  flex: 1;
+  flex: 1.5;
   position: relative;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
   overflow: hidden;
+  padding: 40px 0;
 }
 
 .image-container {
   position: relative;
   width: 90%;
-  max-width: 500px;
+  /* max-width: 500px; */
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -31,6 +37,12 @@
   filter: brightness(0.7);
 }
 
+.login-logo {
+  width: 60px;
+  margin-bottom: 12px;
+  display: none;
+}
+
 .image-overlay {
   position: absolute;
   top: 20px;
@@ -40,22 +52,27 @@
   text-align: left;
 }
 
-.login-logo {
-  width: 60px;
-  margin-bottom: 12px;
-}
 
 .image-overlay h1 {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 6px;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.75);
+  color: var(--primary-color);
+  text-shadow: 1px 1px 4px rgba(217, 217, 217, 0.75);
 }
 
 .image-overlay p {
   font-size: 16px;
   line-height: 1.3;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.75);
+  color: var(--secondary-color);
+  text-shadow: 1px 1px 4px rgba(217, 217, 217, 0.75);
+}
+
+.image-overlay img {
+  width: 150px;
+  margin-top: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Right side with login form */
@@ -71,7 +88,7 @@
   background: #ffffff;
   border-radius: 16px;
   width: 100%;
-  max-width: 380px;
+  /* max-width: 380px; */
   padding: 40px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   text-align: center;
