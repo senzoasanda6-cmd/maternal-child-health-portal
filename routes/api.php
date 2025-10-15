@@ -21,7 +21,7 @@ use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\AdminBookingController;
 use App\Http\Controllers\MotherProfileController;
 use App\Http\Controllers\ContactController;
-
+use app\Http\Controllers\HealthWorkerController;
 use App\Http\Controllers\Auth\LoginController;
 
 // 🔐 Registration
@@ -77,19 +77,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // 🏥 Admin Routes
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return response()->json(['message' => 'Welcome Admin']);
-    });
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', fn() => response()->json(['message' => 'Welcome Admin']));
 
-    Route::get('/admin/hospitals', function () {
-        return Hospital::withCount(['patients', 'appointments'])->get();
-    });
+    // Hospital Management
+    Route::get('/hospitals', [HospitalController::class, 'index']);
+    Route::post('/hospitals', [HospitalController::class, 'store']);
+    Route::get('/hospitals/{id}', [HospitalController::class, 'show']);
+    Route::put('/hospitals/{id}', [HospitalController::class, 'update']);
+    Route::delete('/hospitals/{id}', [HospitalController::class, 'destroy']);
+    Route::get('/hospitals-summary', [HospitalController::class, 'summary']);
+    Route::get('/hospitals/{id}/dashboard', [HospitalController::class, 'dashboard']);
+    Route::get('/admin/hospitals/search', [HospitalController::class, 'search']);
+    Route::get('/admin/hospitals/{id}/visit-trends', [HospitalController::class, 'visitTrends']);
 
-    Route::get('/admin/hospital/{id}/dashboard', function ($id) {
-        $hospital = Hospital::with(['patients', 'appointments'])->findOrFail($id);
-        return response()->json($hospital);
-    });
+    // Vaccine Schedule
     Route::get('/children/{childId}/vaccine-schedule', function ($childId) {
         $child = Child::with('vaccinations')->findOrFail($childId);
         $schedule = [
@@ -102,18 +104,16 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
         $ageInWeeks = now()->diffInWeeks($child->dob);
         $given = $child->vaccinations->pluck('vaccine_name')->toArray();
 
-        $dashboard = [];
-        foreach ($schedule as $week => $vaccine) {
-            $dashboard[] = [
+        return collect($schedule)->map(function ($vaccine, $week) use ($ageInWeeks, $given) {
+            return [
                 'vaccine' => $vaccine,
                 'due_week' => $week,
                 'status' => in_array($vaccine, $given) ? 'Completed' : ($ageInWeeks >= $week ? 'Overdue' : 'Upcoming'),
             ];
-        }
-
-        return $dashboard;
+        })->values();
     });
 });
+
 
 // 🩺 Health Worker Routes
 Route::middleware(['auth:sanctum', 'role:health_worker'])->get('/health/dashboard', function () {
@@ -232,6 +232,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/mother-profile', [MotherProfileController::class, 'destroy']);
     });
 
+    Route::middleware(['auth:sanctum', 'role:health_worker'])->get('/health/patients', [HealthWorkerController::class, 'patients']);
 
     Route::middleware('auth:sanctum')->get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
     Route::middleware('auth:sanctum')->get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
