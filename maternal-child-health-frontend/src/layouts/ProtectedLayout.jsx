@@ -3,7 +3,6 @@ import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import Navbar from "../components/ProtectedHeader.jsx";
 import Sidebar from "../components/AppSidebar.jsx";
-//import Layout from "./Layout"; // Import your full layout
 import CookieConsentModal from "../components/CookieConsentModal";
 
 const ProtectedLayout = () => {
@@ -24,12 +23,12 @@ const ProtectedLayout = () => {
     }
 
     return (
-        <div style={{maxHeight: "100vh"}}>
+        <div style={{ maxHeight: "100vh" }}>
             <Navbar user={user} />
             <main>
                 <CookieConsentModal />
                 <div style={{ display: "flex" }}>
-                    <Sidebar />
+                    <Sidebar user={user} />
                     <div className="page-view">
                         <Outlet />
                     </div>
