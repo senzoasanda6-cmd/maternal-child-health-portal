@@ -66,9 +66,9 @@ const CalendarView = () => {
   };
 
   return (
-    <div className="container py-4">
-      <h2 className="mb-4">📅 Care Calendar</h2>
-      <div className="card shadow-sm">
+    <div className="container p-4">
+      <h2 className="mb-4">📅 Maternal Care Calendar</h2>
+      <div className="card rounded-4 shadow-sm">
         <div className="card-body">
           <FullCalendar
             plugins={[dayGridPlugin, interactionPlugin, bootstrapPlugin]}

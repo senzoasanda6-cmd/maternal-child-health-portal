@@ -7,14 +7,16 @@ const Sidebar = ({ role = 'mother' }) => {
 
   const routesByRole = {
     mother: [
+      { label: 'Home', path: '/mother/home' },
       { label: 'Dashboard', path: '/mother/dashboard' },
-      { label: 'My Profile', path: '/mother/child-profile' },
-      { label: 'Children', path: '/mother/children' },
+      { label: 'My Profile', path: '/mother/mom-profile' },
+      { label: 'My Children', path: '/mother/children' },
       { label: 'Appointments', path: '/mother/calendar' },
       { label: 'Care Timeline', path: '/mother/care-timeline' },
       { label: 'Postnatal Care', path: '/mother/postnatal-care' },
       { label: 'Pregnancy Stages', path: '/mother/pregnancy-stages' },
       { label: 'Safe Medicines', path: '/mother/safe-medicines' },
+      { label: 'Health Education', path: '/mother/health-education' },
     ],
     health: [
       { label: 'Dashboard', path: '/health/dashboard' },
@@ -35,8 +37,9 @@ const Sidebar = ({ role = 'mother' }) => {
     `sidebar-link ${isActive ? 'active-link' : ''}`;
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar shadow">
       <h2>Navigation</h2>
+      <hr />
       <ul>
         {links.map(link => (
           <li key={link.path}>
@@ -46,6 +49,12 @@ const Sidebar = ({ role = 'mother' }) => {
           </li>
         ))}
       </ul>
+      <hr />
+      <div className='pb-2'>
+        <p style={{ fontSize: '12px', color: '#666' }}>
+          &copy; {new Date().getFullYear()} Maternal Child Health Portal. <a href="mailto:senzo.dubazana@gauteng.gov.za" className="text-primary">Need help?</a>
+        </p>
+      </div>
     </aside>
   );
 };

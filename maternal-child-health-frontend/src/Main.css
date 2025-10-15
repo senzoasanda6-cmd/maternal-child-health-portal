@@ -13,11 +13,12 @@ body {
     margin: 0;
 }
 
-/* #root { 
+#root { 
     position: relative;
-    /* height: 100vh;
-    /* overflow-y: auto;
-} */
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
 h1,
 h2,
@@ -221,12 +222,20 @@ h3 {
     text-align: left
 }
 
+.page-view {
+    flex-grow: 1;
+    padding: 0px;
+    overflow-y: auto;
+    height: calc(100vh - 70px); /* Full height minus header */
+}
+
 .sidebar {
-    width: 250px;
+    min-width: 250px;
     background: #ffffff;
-    padding: 2rem;
+    padding: 1.5rem;
     height: calc(100vh - 70px); /* Full height minus header */
     box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
 }
 .sidebar h2 {
     font-size: 1.2rem;
@@ -297,12 +306,21 @@ h3 {
     transform: translateY(-5px);
 }
 .logout-button {
-    background: none;
+    background: red;
     border: none;
     color: #fff;
     font-weight: 500;
     cursor: pointer;
-    margin-left: 1.5rem;
+    /* margin-left: 1.5rem; */
+    font-family: "Poppins", sans-serif;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.4rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 .logout-button:hover {
     text-decoration: underline;
@@ -312,20 +330,27 @@ h3 {
     padding: 0.75rem 1rem;
     color: #333;
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: 12px !important;
     margin-bottom: 0.5rem;
     font-weight: 500;
     transition: background-color 0.2s ease;
+    /* box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2); */
 }
 
 .sidebar-link:hover {
-    background-color: #e0e0e0;
+    background: linear-gradient(90deg,var(--secondary-color) 0%, rgba(255, 255, 255, 0) 100%);
+    color: var(--background-color) !important;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 }
 
 .active-link {
     background-color: #1d4189;
-    color: #fff;
+    color: #fff !important;
     font-weight: 600;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+        0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 }
 
 .footer {

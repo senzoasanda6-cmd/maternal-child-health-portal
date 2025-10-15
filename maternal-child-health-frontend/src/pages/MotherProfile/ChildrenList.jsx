@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api"; // Axios instance with auth headers
+// import AppLoading from "../components/spinners/AppPageLoading";
+// import AppLoadError from "../components/spinners/AppLoadError";
 
 const ChildrenList = () => {
     const [children, setChildren] = useState([]);
@@ -92,15 +94,9 @@ const ChildrenList = () => {
             setError("Failed to delete child.");
         }
     };
-    if (!Array.isArray(children)) {
-        return (
-            <p className="text-center">No children found or data is invalid.</p>
-        );
-    }
-
     return (
-        <div className="container py-4">
-            <h2 className="mb-4 text-center">Children List</h2>
+        <div className="container p-4">
+            <h2 className="mb-4 text-start">👨🏽‍👩🏻‍👧🏽‍👦🏽 My Children List</h2>
             {error && <div className="alert alert-danger">{error}</div>}
 
             <div className="text-end mb-3">
@@ -123,7 +119,7 @@ const ChildrenList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {children.map((child) => (
+                    {Array.isArray(children) && children.map((child) => (
                         <tr key={child.id}>
                             <td>
                                 {editingId === child.id ? (
@@ -226,6 +222,60 @@ const ChildrenList = () => {
                             </td>
                         </tr>
                     ))}
+                    {addingNew && editingId === "new" && (
+                        <tr>
+                            <td>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    placeholder="Child's Name"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    name="age"
+                                    value={formData.age}
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    placeholder="Age"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="date"
+                                    name="dob"
+                                    value={formData.dob}
+                                    onChange={handleChange}
+                                    className="form-control"
+                                />
+                            </td>
+                            <td>
+                                <select
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    className="form-control"
+                                >
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button className="btn btn-success btn-sm me-2" onClick={handleSave}>Save</button>
+                                <button className="btn btn-secondary btn-sm" onClick={() => setAddingNew(false)}>Cancel</button>
+                            </td>
+                        </tr>
+                    )}
+                    {(!Array.isArray(children) || children.length === 0) && !addingNew && (
+                        <tr>
+                            <td colSpan="5" className="text-center">No children found. Click "+ New Child" to add one.</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </div>

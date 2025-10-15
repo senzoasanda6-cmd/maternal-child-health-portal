@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../layouts/ProtectedLayout";
-import { getUsers, updateUserRole } from "../services/userService";
+import Layout from "../../layouts/ProtectedLayout";
+import { getUsers, updateUserRole } from "../../services/userService";
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);

@@ -4,6 +4,8 @@ import PregnancyStageCard from "./PregnancyStageCard";
 import UpcomingAppointmentsCard from "./UpcomingAppointmentsCard";
 import { useParams } from "react-router-dom";
 import api from "../../services/api"; // Adjust path if needed
+import AppLoading from "../../components/spinners/AppPageLoading";
+import AppLoadError from "../../components/spinners/AppLoadError";
 
 const Dashboard = () => {
   const { childId } = useParams();
@@ -37,11 +39,11 @@ const Dashboard = () => {
     fetchDashboardData();
   }, [childId]);
 
-  if (loading) return <div className="container py-4">Loading dashboard...</div>;
-  if (error) return <div className="container py-4 text-danger">{error}</div>;
+  if (loading) return <AppLoading loadingText="Loading dashboard..." />;
+  if (error) return <AppLoadError errorText={error} />;
 
   return (
-    <div className="container py-4">
+    <div className="container p-4">
       <h2 className="mb-4">👩‍⚕️ Mother Dashboard</h2>
       <LastVisitSummaryCard visit={lastVisit} />
       <PregnancyStageCard stage={pregnancyStage} />

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import api from "../services/api";
-import ChildCard from "../components/ChildCard";
-import GrowthChart from "../components/GrowthChart";
-import AppointmentsList from "../components/AppointmentsList";
-import MilestoneTracker from "../components/MilestoneTracker";
-import HealthRecords from "../components/HealthRecords";
-import QuickLinks from "../components/QuickLinks";
+import api from "../../services/api";
+import ChildCard from "../../components/ChildCard";
+import GrowthChart from "../../components/GrowthChart";
+import AppointmentsList from "../../components/AppointmentsList";
+import MilestoneTracker from "../../components/MilestoneTracker";
+import HealthRecords from "../../components/HealthRecords";
+import QuickLinks from "../../components/QuickLinks";
+import AppLoading from "../../components/spinners/AppPageLoading";
+import AppLoadError from "../../components/spinners/AppLoadError";
+import AppCarousel from "../../components/AppCarousel";
 
 const CHILDREN_PER_PAGE = 3;
 
@@ -56,11 +59,16 @@ export default function Dashboard() {
         : null;
 
     if (loading)
-        return <p className="text-center py-5">Loading dashboard...</p>;
-    if (error) return <p className="text-center text-danger">{error}</p>;
+        return <AppLoading loadingText="Loading dashboard..."/>;
+    if (error) return <AppLoadError errorText={error} />;
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-4 space-y-6">
+            {/* carousel */}
+            <AppCarousel />
+
+            <hr />
+<h3>Your Childrens Wellness Analysis</h3>
             {/* Tabs */}
             {paginatedChildren.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
@@ -110,7 +118,9 @@ export default function Dashboard() {
                     </button>
                 </div>
             )}
-
+            
+            <hr />
+<h3>Active Child Monitor</h3>
             {/* Active Child Dashboard */}
             {activeChild ? (
                 <div className="space-y-6 border-t pt-6 mt-6">
@@ -130,6 +140,8 @@ export default function Dashboard() {
                 </p>
             )}
 
+            <hr />
+            <h3>Quick Links</h3>
             <QuickLinks links={links} />
         </div>
     );

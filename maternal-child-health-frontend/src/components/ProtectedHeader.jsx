@@ -13,34 +13,60 @@ const Header = ({ user, onLogout }) => {
         navigate("/login");
     }
 
+    const getProfileImage = (role) => {
+        switch (role.toLowerCase()) {
+            case "mother":
+                return "/icons/mother-avatar.png";
+            case "health worker":
+                return "/icons/health-worker-avatar.png";
+            case "admin":
+                return "/icons/admin-avatar.png";
+            default:
+                return "/icons/default-avatar.png";
+        }
+    };
+
+    const profileImageUrl = getProfileImage(role);
+
     return (
         <header className="header">
             <Link to="/" className="navbar-brand d-flex align-items-center">
                 <img
                     src="/gdoh.jpeg"
                     alt="health"
-                    className="rounded-4 shadow-sm"
-                    style={{ height: "80px", marginRight: "10px" }}
+                    className="rounded-4 shadow"
+                    style={{ height: "60px", marginRight: "10px" }}
                 />
                 <p
-                    className="mb-0 "
+                    className="mb-0 text-truncate"
                     style={{
-                        fontSize: "18px",
-                        color: "#1d4189",
+                        fontSize: "12px",
+                        color: "#fff",
                         fontWeight: "600",
                     }}
                 >
                     Maternal Child Health Portal
                 </p>
-                {/* <img src="/gdoh.jpeg" alt="health" style={{ height:'50px', width:'100px'}} /> */}
             </Link>
-            <h1>Maternal Child Health Portal</h1>
-            <nav className="nav">
-                <span>
-                    {userName} ({role === "mother" ? "👩‍🍼" : role})
-                </span>
-
-                <button onClick={onLogout} className="logout-button">
+            <nav className="nav justify-content-end align-items-center gap-3">
+                <div className="d-flex justify-content-end align-items-center gap-2">
+                    <span className="text-end" style={{fontSize: "12px"}}>{userName}</span>
+                    <img
+                        src={profileImageUrl}
+                        alt={`${userName}'s profile`}
+                        className="shadow"
+                        style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "50%",
+                            objectFit: "fit",
+                            backgroundColor: "#fff",
+                            padding: "3px",
+                        }}
+                    />
+                </div>
+                <span className="d-none d-lg-block">|</span>
+                <button onClick={onLogout} className="logout-button fw-bold">
                     Logout
                 </button>
             </nav>
