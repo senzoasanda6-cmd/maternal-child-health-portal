@@ -85,7 +85,7 @@ import BreastfeedingVideoResource from "./pages/Resources/BreastfeedingVideoReso
 import MentalHealth from "./components/MentalHealth.jsx";
 import EmergencyResources from "./components/EmergencyResources.jsx";
 import BreastfeedingFAQ from "./components/BreastfeedingFAQ.jsx";
-import PreNatalVisitForm from "./pages/PrenatalVisits/PrenatalVisitForm.jsx";
+import PreNatalVisitForm from "./pages/PrenatalVisits/PrenatalVisitForm.jsx"
 import PreNatalVisit from "./pages/PrenatalVisits/PrenatalVisits.jsx";
 import NotificationBell from "./pages/Notifications/NotificationBell.jsx";
 import NotificationItem from "./pages/Notifications/NotificationItem.jsx";
@@ -142,6 +142,20 @@ const AppRoutes = () => (
             />
             <Route path="/kids-corner" element={<KidsCorner />} />
         </Route>
+        
+        <Route path="/prenatalVisitForm" element={<PreNatalVisitForm/>} />
+        <Route path="/prenatalVisits" element={<PreNatalVisit/>} />
+        
+         <Route path="/notification" element={<Notification />} />
+        <Route path="/notificationBell" element={<NotificationBell />} />
+        <Route path="/notificationItem" element={<NotificationItem />} />
+        <Route path="/notificationList" element={<NotificationList />} />
+        <Route path="/Alerts" element={<Alerts/>} />
+
+        <Route path="/AccountSettings" element={<AccountSettings/>} />
+        <Route path="/NotificationPreferences" element={<NotificationPreferences/>} />
+        <Route path="/Settings" element={<Settings/>} />
+
 
         <Route path="/prenatalVisitForm" element={<PreNatalVisitForm />} />
         <Route path="/prenatalVisits" element={<PreNatalVisit />} />
