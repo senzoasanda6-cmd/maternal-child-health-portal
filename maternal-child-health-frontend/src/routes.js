@@ -54,6 +54,8 @@ import HealthDashboard from "./pages/HealthWorker/HealthDashboard.jsx";
 import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
 import UserList from "./pages/Admin/UserList.jsx";
 import HospitalList from "./pages/Admin/HospitalList.jsx";
+import UserEdit from "./pages/Admin/UserEdit.jsx";
+import AdminReports from "./pages/Admin/AdminReports.jsx";
 
 // Resources
 import NutritionResource from "./pages/Resources/NutritionResource";
@@ -62,7 +64,7 @@ import BreastfeedingVideoResource from "./pages/Resources/BreastfeedingVideoReso
 import MentalHealth from "./components/MentalHealth.jsx";
 import EmergencyResources from "./components/EmergencyResources.jsx";
 import BreastfeedingFAQ from "./components/BreastfeedingFAQ.jsx";
-import PreNatalVisitForm from "./pages/PrenatalVisits/PrenatalVisitForm.jsx"
+import PreNatalVisitForm from "./pages/PrenatalVisits/PrenatalVisitForm.jsx";
 import PreNatalVisit from "./pages/PrenatalVisits/PrenatalVisits.jsx";
 import NotificationBell from "./pages/Notifications/NotificationBell.jsx";
 import NotificationItem from "./pages/Notifications/NotificationItem.jsx";
@@ -71,8 +73,7 @@ import Notification from "./pages/Notifications/Alerts.jsx";
 import AccountSettings from "./pages/Settings/AccountSettings.jsx";
 import NotificationPreferences from "./pages/Settings/NotificationPreferences.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
-import Alerts from './pages/Notifications/Alerts'; // or wherever Alerts.jsx is located
-
+import Alerts from "./pages/Notifications/Alerts"; // or wherever Alerts.jsx is located
 
 const AppRoutes = () => (
     <Routes>
@@ -108,20 +109,22 @@ const AppRoutes = () => (
                 element={<BreastfeedingVideoResource />}
             />
         </Route>
-        
-        <Route path="/prenatalVisitForm" element={<PreNatalVisitForm/>} />
-        <Route path="/prenatalVisits" element={<PreNatalVisit/>} />
-        
-         <Route path="/notification" element={<Notification />} />
+
+        <Route path="/prenatalVisitForm" element={<PreNatalVisitForm />} />
+        <Route path="/prenatalVisits" element={<PreNatalVisit />} />
+
+        <Route path="/notification" element={<Notification />} />
         <Route path="/notificationBell" element={<NotificationBell />} />
         <Route path="/notificationItem" element={<NotificationItem />} />
         <Route path="/notificationList" element={<NotificationList />} />
-        <Route path="/Alerts" element={<Alerts/>} />
+        <Route path="/Alerts" element={<Alerts />} />
 
-        <Route path="/AccountSettings" element={<AccountSettings/>} />
-        <Route path="/NotificationPreferences" element={<NotificationPreferences/>} />
-        <Route path="/Settings" element={<Settings/>} />
-
+        <Route path="/AccountSettings" element={<AccountSettings />} />
+        <Route
+            path="/NotificationPreferences"
+            element={<NotificationPreferences />}
+        />
+        <Route path="/Settings" element={<Settings />} />
 
         {/* 🔐 Protected Routes */}
         <Route element={<ProtectedLayout />}>
@@ -189,9 +192,11 @@ const AppRoutes = () => (
 
             {/* 🛡️ Admin Routes */}
             <Route element={<AdminRoute />}>
+                <Route path="/admin/reports" element={<AdminReports />} />
                 <Route path="/admin/hospitals" element={<HospitalList />} />
                 <Route path="/admin/users" element={<UserList />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/users/:id/edit" element={<UserEdit />} />
             </Route>
         </Route>
 

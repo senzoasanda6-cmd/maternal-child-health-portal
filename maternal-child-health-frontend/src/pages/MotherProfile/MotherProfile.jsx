@@ -59,7 +59,7 @@ const MotherProfile = () => {
         e.preventDefault();
         setSaving(true);
         try {
-            await api.patch("/api/mother-profile", formData);
+            await api.put("/api/mother-profile", formData);
             alert("Profile updated successfully.");
             setMother(formData);
             setEditing(false);

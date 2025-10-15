@@ -6,12 +6,14 @@ import CookieConsentModal from "../components/CookieConsentModal";
 
 const PublicLayout = () => {
     return (
-        <main>
+        <div className="d-flex flex-column min-vh-100">
             <CookieConsentModal />
             <Navbar />
-            <Outlet />
+            <main className="flex-grow-1">
+                <Outlet />
+            </main>
             <Footer />
-        </main>
+        </div>
     );
 };
 
