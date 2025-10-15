@@ -3,7 +3,7 @@
 This application follows a common client-server architecture, separating the frontend user interface from the backend logic. Here's a breakdown:
 
 1.  **Client (Frontend):**
-    *   **Technology:** A React Single-Page Application (SPA) located in the `maternal-child-health-frontend/` directory.
+    *   **Technology:** A React Single-Page Application (SPA) located in the `mch-frontend/` directory.
     *   **Responsibility:** It renders the entire user interface that you see and interact with in your web browser. It manages the visual components, user input, and dynamic updates without needing to reload the page.
     *   **Communication:** It communicates with the backend server to get or send data (e.g., logging in a user, fetching patient data). This is done by making HTTP requests to specific API endpoints.
 
