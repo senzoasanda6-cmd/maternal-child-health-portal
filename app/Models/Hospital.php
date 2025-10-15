@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Patient;
-use App\Models\Appointment;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Hospital extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['name', 'location', 'contact_number'];
 
+    // Relationships
     public function users()
     {
         return $this->hasMany(User::class);
@@ -24,10 +26,9 @@ class Hospital extends Model
     {
         return $this->hasMany(Appointment::class);
     }
+
     public function children()
     {
         return $this->hasMany(Child::class);
     }
-
 }
-
