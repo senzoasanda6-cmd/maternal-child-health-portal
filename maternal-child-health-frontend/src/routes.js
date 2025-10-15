@@ -71,6 +71,8 @@ import Notification from "./pages/Notifications/Alerts.jsx";
 import AccountSettings from "./pages/Settings/AccountSettings.jsx";
 import NotificationPreferences from "./pages/Settings/NotificationPreferences.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
+import Alerts from './pages/Notifications/Alerts'; // or wherever Alerts.jsx is located
+
 
 const AppRoutes = () => (
     <Routes>
