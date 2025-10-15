@@ -27,8 +27,4 @@ class MotherProfile extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function children()
-    {
-        return $this->hasMany(Child::class);
-    }
 }
