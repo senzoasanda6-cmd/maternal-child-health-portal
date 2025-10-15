@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
     FaUserPlus,
@@ -9,12 +9,15 @@ import {
     FaBaby,
     FaCapsules,
     FaBookMedical,
+    FaChevronLeft,
+    FaChevronRight,
 } from "react-icons/fa";
 import { FaHome, FaUser, FaUsers } from "react-icons/fa";
 
 import "./_components.css";
 
 const Sidebar = ({ user }) => {
+    const [isOpen, setIsOpen] = useState(true);
     const role = user?.role?.toLowerCase() || "guest";
 
     const sharedLinks = [
@@ -96,27 +99,45 @@ const Sidebar = ({ user }) => {
     ];
 
     const getLinkClass = ({ isActive }) =>
-        `sidebar-link ${isActive ? "active-link" : ""}`;
+        `sidebar-link text-truncate ${isOpen ? "text-start" : "text-center"} ${isActive ? "active-link" : ""}`;
+
+    const toggleSidebar = () => {
+        setIsOpen((prev) => !prev);
+    };
 
     return (
-        <aside className="sidebar shadow">
-            <h2>Navigation</h2>
+        <aside
+            className={`sidebar shadow ${isOpen ? "expanded" : "collapsed"}`}
+            // onMouseEnter={() => !isOpen && setIsOpen(true)}
+            // onMouseLeave={() => !isOpen && setIsOpen(false)}
+        >
+            <div className="d-flex align-items-center mb-3z">
+                {isOpen && <div className="col-md-10">
+                    <h2 className="sidebar-title">Navigation</h2>
+                </div>}
+                <div className="col-md d-flex justify-content-end">
+                    {/* toggle sidebar */}
+                    <button className="button btn-light p-2 flex-fill text-custom-color-primary" onMouseDown={toggleSidebar}>
+                        {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
+                    </button>
+                </div>
+            </div>
             <hr />
             <ul>
                 {links.map((link) => (
                     <li key={link.path}>
                         <NavLink to={link.path} className={getLinkClass}>
                             {link.icon && (
-                                <span className="me-2">{link.icon}</span>
+                                <span>{link.icon}</span>
                             )}
-                            {link.label}
+                            {isOpen && (<span className="ms-2">{link.label}</span>)}
                         </NavLink>
                     </li>
                 ))}
             </ul>
             <hr />
-            <div className="pb-2">
-                <p style={{ fontSize: "12px", color: "#666" }}>
+            <div className={`pb-0 ${isOpen ? "" : "rotate-pos-90"}`}>
+                <p className="m-0 text-custom-color-primary" style={{ fontSize: "12px" }}>
                     &copy; {new Date().getFullYear()} Maternal Child Health
                     Portal.{" "}
                     <a

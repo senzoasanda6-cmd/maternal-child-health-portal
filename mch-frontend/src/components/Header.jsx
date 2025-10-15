@@ -7,14 +7,17 @@ const Header = () => {
   const handleLogout = () => {
     // Clear auth tokens or session here
     localStorage.removeItem("authToken");
+    // localStorage.removeItem("user");
     navigate("/login");
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-4 px-2">
       <div className="container">
-        <img src="/gpg.png" alt="health" style={{ height: "40px", marginRight: "10px" }} />
-        <Link className="navbar-brand fw-bold" to="/mother/home">PostnatalCare+</Link>
+        <Link className="fw-bold text-custom-color-primary" to="/mother/home" style={{ textDecoration: "none", fontSize: "20px" }}>
+          <img src="/gpg.png" alt="health" className="navbar-brand" style={{ height: "40px", marginRight: "12px" }} /> 
+          <span>PostnatalCare+</span>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
