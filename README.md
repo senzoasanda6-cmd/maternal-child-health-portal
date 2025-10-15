@@ -64,7 +64,7 @@ The Maternal and Child Health System is a web-based application designed to trac
 
 -   **Frontend (React):**
     ```bash
-    cd maternal-child-health-frontend
+    cd mch-frontend
     npm start
     ```
 
