@@ -31,12 +31,13 @@ const HealthEducationHome = () => {
     ];
 
     return (
-        <div className="container-fluid">
+        <div className="container-fluid p-4">
             <LanguageSwitcher />
             <div className="row" >
-                <aside className="col-md-3 bg-light border-end py-4" style={{backgroundColor: "Black", color:"#ccc"}}>
-                    <nav className="nav flex-column px-3" style={{backgroundColor: "Black", color:"#ccc"}}>
-                        <h5 className="mb-3">{t("health_education")}</h5>
+                <aside className="col-md-3 bg-light border-end py-4 rounded-4" style={{backgroundColor: "#ccccccff", color:"#ccc"}}>
+                    <nav className="nav flex-column px-3 py-4 rounded-4" style={{backgroundColor: "#ccccccff", color:"#1d4189"}}>
+                        <h5 className="text-center fs-2 mb-0">Topics</h5>
+                        <hr />
                         <Link to="/PregnancyStages" className="nav-link">
                             {t("pregnancy_stages")}
                         </Link>

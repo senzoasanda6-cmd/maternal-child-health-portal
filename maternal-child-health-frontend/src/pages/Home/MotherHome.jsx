@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <div>
+    <div className="w-100">
       {/* Navigation */}
       <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
         <div className="container">
-          <img src="/gpg.png" alt="health" srcset="" />
+          <img src="/gpg.png" alt="health" className="me-2" style={{maxWidth: "150px"}} />
           <Link className="navbar-brand fw-bold" to="/">PostnatalCare+</Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span className="navbar-toggler-icon"></span>
