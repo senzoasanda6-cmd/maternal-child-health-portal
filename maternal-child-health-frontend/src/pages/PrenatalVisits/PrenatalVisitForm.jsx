@@ -100,3 +100,4 @@ const PreNatalVisitForm = ({ onSubmit, initialData = {} }) => {
   );
 };
 
+export default PreNatalVisitForm
