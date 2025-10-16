@@ -60,7 +60,7 @@ const Header = ({ user, onLogout }) => {
                     Maternal Child <br /> Health Portal
                 </p>
             </Link>
-            <nav className="nav justify-content-end align-items-center gap-3 rounded-4 p-3 shadow -sm">
+            <nav className="nav justify-content-end align-items-center gap-3 rounded-4 p-3 shadow profile-tag">
                 <div className="d-flex justify-content-end align-items-center gap-2">
                     <p className="mb-0 text-center" style={{ lineHeight: "1.1" }}>
                         <span className="text-end" style={{ fontSize: "14px", fontWeight: "600" }}>{userName}</span><br />

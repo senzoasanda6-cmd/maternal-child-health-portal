@@ -1,5 +1,7 @@
 :root {
     --primary-color: #1d4189;
+    --primary-color-dark-1: #113274; 
+    --primary-color-dark-2: #003366;
     --accent-color: #ff9800;
     --secondary-color: #4497cb;
     --slight-secondary-color: radial-gradient(circle at top left, #F0F4F8, #D9E2EC);
@@ -162,7 +164,7 @@ h3 {
     /* background-color: #1d4189; */
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 10000;
     background-color: var(--primary-color);
     color: #ffffff;
     padding: 1rem 1.5rem;
@@ -175,6 +177,18 @@ h3 {
     font-size: 1.75rem;
     margin: 0;
     color: #ffffff;
+}
+
+.profile-tag {
+    background-color: var(--primary-color-dark-1);
+    /* color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px; */
 }
 
 .header-public {
@@ -412,3 +426,34 @@ h3 {
 .health-tip-banner strong {
     font-weight: 700;
 }
+
+/* scrollbar */
+*::-webkit-scrollbar {
+    width: 8px;
+    /* scrollbar-width: thin; */
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    /* border-radius: 6px 0 6px 0 !important; */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    /* background-color: var(--primary-color-dark-2); */
+    background-color: var(--accent-color);
+}
+
+*::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+.sq-scrollbar {
+    scrollbar-width: thin;
+}
+/* .sq-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+.sq-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 6px 0 6px 0 !important;
+} */
