@@ -23,6 +23,7 @@ use App\Http\Controllers\MotherProfileController;
 use App\Http\Controllers\ContactController;
 use app\Http\Controllers\HealthWorkerController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\RegistrationRequestController;
 
 // 🔐 Registration
 Route::post('/register', function (Request $request) {
@@ -50,6 +51,14 @@ Route::post('/register', function (Request $request) {
         'token' => $user->createToken('authToken')->plainTextToken,
         'user' => $user,
     ]);
+});
+// 🔐 Registration Request
+Route::post('/registration-request', [RegistrationRequestController::class, 'store']);
+
+Route::middleware(['auth:sanctum', 'can:admin'])->group(function () {
+    Route::get('/admin/registration-requests', [RegistrationRequestController::class, 'index']);
+    Route::post('/admin/registration-requests/{id}/approve', [RegistrationRequestController::class, 'approve']);
+    Route::post('/admin/registration-requests/{id}/reject', [RegistrationRequestController::class, 'reject']);
 });
 
 // 🔐 Login

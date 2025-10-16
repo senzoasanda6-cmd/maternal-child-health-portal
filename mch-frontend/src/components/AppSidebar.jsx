@@ -90,6 +90,8 @@ const Sidebar = ({ user }) => {
                 icon: <FaHospital />,
             },
             { label: "Reports", path: "/admin/reports", icon: <FaChartBar /> },
+            { label: "Approvals", path: "/admin/approvals", icon: <FaUserPlus /> },
+            { label: "Profile", path: "/profile", icon: <FaUser /> },
         ],
     };
 
