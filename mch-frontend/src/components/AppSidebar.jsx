@@ -108,46 +108,49 @@ const Sidebar = ({ user }) => {
     return (
         <aside
             className={`sidebar shadow ${isOpen ? "expanded" : "collapsed"}`}
-            // onMouseEnter={() => !isOpen && setIsOpen(true)}
-            // onMouseLeave={() => !isOpen && setIsOpen(false)}
+        // onMouseEnter={() => !isOpen && setIsOpen(true)}
+        // onMouseLeave={() => !isOpen && setIsOpen(false)}
         >
-            <div className="d-flex align-items-center mb-3z">
+            <div className="d-flex align-items-center mb-3z bg-white sticky-top border-bottom" style={{ padding: "20px" }}>
                 {isOpen && <div className="col-md-10">
                     <h2 className="sidebar-title">Navigation</h2>
                 </div>}
                 <div className="col-md d-flex justify-content-end">
                     {/* toggle sidebar */}
-                    <button className="button btn-light p-2 flex-fill text-custom-color-primary" onMouseDown={toggleSidebar}>
+                    <button className="button bg-custom-color-primary p-2 flex-fill text-white custom-color-primary" onMouseDown={toggleSidebar}>
                         {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
                     </button>
                 </div>
             </div>
-            <hr />
-            <ul>
-                {links.map((link) => (
-                    <li key={link.path}>
-                        <NavLink to={link.path} className={getLinkClass}>
-                            {link.icon && (
-                                <span>{link.icon}</span>
-                            )}
-                            {isOpen && (<span className="ms-2">{link.label}</span>)}
-                        </NavLink>
-                    </li>
-                ))}
-            </ul>
-            <hr />
-            <div className={`pb-0 ${isOpen ? "" : "rotate-pos-90"}`}>
-                <p className="m-0 text-custom-color-primary" style={{ fontSize: "12px" }}>
-                    &copy; {new Date().getFullYear()} Maternal Child Health
-                    Portal.{" "}
-                    <a
-                        href="mailto:senzo.dubazana@gauteng.gov.za"
-                        className="text-primary"
-                    >
-                        Need help?
-                    </a>
-                </p>
+            <div style={{ padding: "10px 20px 20px 20px" }}>
+                {/* <hr className="mt-0" /> */}
+                <ul>
+                    {links.map((link) => (
+                        <li key={link.path}>
+                            <NavLink to={link.path} className={getLinkClass}>
+                                {link.icon && (
+                                    <span>{link.icon}</span>
+                                )}
+                                {isOpen && (<span className="ms-2">{link.label}</span>)}
+                            </NavLink>
+                        </li>
+                    ))}
+                </ul>
+                <hr />
+                <div className={`pb-0 ${isOpen ? "" : "rotate-pos-90"}`}>
+                    <p className="m-0 text-custom-color-primary" style={{ fontSize: "12px" }}>
+                        &copy; {new Date().getFullYear()} Maternal Child Health
+                        Portal.{" "}
+                        <a
+                            href="mailto:senzo.dubazana@gauteng.gov.za"
+                            className="text-primary"
+                        >
+                            Need help?
+                        </a>
+                    </p>
+                </div>
             </div>
+
         </aside>
     );
 };

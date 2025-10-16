@@ -91,7 +91,7 @@
 .sidebar {
     transition: width 0.3s ease;
     position: relative;
-    padding: 20px;
+    /* padding: 20px; */
     /* z-index: 1000; */
     height: calc(100vh - 100px); /* Full height minus header */
     box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
