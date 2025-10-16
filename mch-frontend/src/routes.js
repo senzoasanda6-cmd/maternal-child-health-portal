@@ -21,6 +21,7 @@ import Terms from "./pages/Terms";
 import GDPR from "./pages/GDPR";
 import CookiePolicy from "./pages/CookiePolicy.jsx";
 import NotFoundPage from "./pages/NotFound/NotFoundPage";
+import Services from "./pages/Services.jsx";
 
 // Shared Authenticated Pages
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -86,6 +87,7 @@ const AppRoutes = () => (
             <Route path="/terms" element={<Terms />} />
             <Route path="/gdpr" element={<GDPR />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/services" element={<Services />} />
             <Route path="/main" element={<Main />} />
             <Route
                 path="/resources/breastfeeding"
