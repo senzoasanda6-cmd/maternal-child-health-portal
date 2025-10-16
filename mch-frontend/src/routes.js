@@ -57,6 +57,10 @@ import UserList from "./pages/Admin/UserList.jsx";
 import HospitalList from "./pages/Admin/HospitalList.jsx";
 import UserEdit from "./pages/Admin/UserEdit.jsx";
 import AdminReports from "./pages/Admin/AdminReports.jsx";
+//import RegistrationRequestList from "./pages/Admin/RegistrationRequestList.jsx";
+import UserApprovalDashboard from "./pages/Admin/UserApprovalDashboard.jsx";
+import AdminHomePage from "./pages/Admin/AdminHomePage.jsx";
+import AdminProfilePage from "./pages/Admin/AdminProfilePage.jsx";
 
 // Resources
 import NutritionResource from "./pages/Resources/NutritionResource";
@@ -132,7 +136,8 @@ const AppRoutes = () => (
         <Route element={<ProtectedLayout />}>
             {/* Shared Authenticated Routes */}
             <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/calendar" element={<CalendarView />} /> */} {/* Temporarily disabled */}
+            {/* <Route path="/calendar" element={<CalendarView />} /> */}{" "}
+            {/* Temporarily disabled */}
             <Route path="/care-timeline" element={<CareTimeline />} />
             <Route path="/timeline-event/:id" element={<TimelineEvent />} />
             <Route path="/postnatal-care" element={<PostNatalCare />} />
@@ -155,7 +160,6 @@ const AppRoutes = () => (
                     element={<PostnatalBookingPage />}
                 />
             </Route>
-
             {/* 🩺 Health Worker Routes */}
             <Route element={<HealthWorkerRoute />}>
                 <Route
@@ -191,14 +195,27 @@ const AppRoutes = () => (
                     />
                 </Route>
             </Route>
-
             {/* 🛡️ Admin Routes */}
             <Route element={<AdminRoute />}>
-                <Route path="/admin/reports" element={<AdminReports />} />
-                <Route path="/admin/hospitals" element={<HospitalList />} />
-                <Route path="/admin/users" element={<UserList />} />
+                <Route path="/admin/home" element={<AdminHomePage />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<UserList />} />
                 <Route path="/admin/users/:id/edit" element={<UserEdit />} />
+                <Route path="/admin/hospitals" element={<HospitalList />} />
+                <Route path="/admin/reports" element={<AdminReports />} />
+                <Route
+                    path="/admin/approvals"
+                    element={<UserApprovalDashboard />}
+                />
+                <Route path="/profile" element={<AdminProfilePage />} />
+                {/* <Route
+                    path="/admin/registration-requests"
+                    element={<RegistrationRequestList />}
+                />
+                <Route
+                    path="/admin/registration-requests/:id"
+                    element={<UserApprovalDetails />}
+                /> */}
             </Route>
         </Route>
 

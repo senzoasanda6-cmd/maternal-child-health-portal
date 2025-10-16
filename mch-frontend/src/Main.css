@@ -136,7 +136,6 @@ h3 {
 .button-fw-small {
     min-width: 80px;
     text-align: center;
-    text-justify: auto;
     padding: 8px 12px;
     font-size: 0.875rem;
 }
@@ -440,35 +439,22 @@ h3 {
 }
 
 /* scrollbar */
-*::-webkit-scrollbar {
+/* For Chrome, Safari, and other WebKit-based browsers */
+.sq-scrollbar::-webkit-scrollbar {
     width: 8px;
-    /* scrollbar-width: thin; */
 }
 
-*::-webkit-scrollbar-thumb {
-    background-color: var(--primary-color);
-    /* border-radius: 6px 0 6px 0 !important; */
-}
-
-*::-webkit-scrollbar-thumb:hover {
-    /* background-color: var(--primary-color-dark-2); */
-    background-color: var(--accent-color);
-}
-
-*::-webkit-scrollbar-track {
+.sq-scrollbar::-webkit-scrollbar-track {
     background-color: #f1f1f1;
 }
 
-.sq-scrollbar {
-    scrollbar-width: thin;
-}
-/* .sq-scrollbar::-webkit-scrollbar {
-    width: 8px;
-}
 .sq-scrollbar::-webkit-scrollbar-thumb {
     background-color: var(--primary-color);
-    border-radius: 6px 0 6px 0 !important;
-} */
+}
+
+.sq-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-color);
+}
 
 .services-container {
     padding: 2rem;
@@ -493,4 +479,59 @@ h3 {
     width: 100%;
     height: auto;
     border-radius: 6px;
+}
+
+.admin-home {
+  padding: 2rem;
+}
+
+.admin-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.admin-card {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.admin-card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+.admin-profile {
+  padding: 2rem;
+  max-width: 600px;
+  margin: auto;
+}
+
+.profile-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.profile-card label {
+  font-weight: bold;
+  margin-top: 1rem;
+  display: block;
+}
+
+.profile-card p,
+.profile-card input {
+  margin-bottom: 1rem;
+}
+
+.profile-actions {
+  margin-top: 1rem;
 }
