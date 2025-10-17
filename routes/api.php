@@ -24,6 +24,28 @@ use App\Http\Controllers\ContactController;
 use app\Http\Controllers\HealthWorkerController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegistrationRequestController;
+use App\Http\Controllers\ReportController;
+
+Route::get('/login', function () {
+    return response()->json(['message' => 'Please log in'], 401);
+});
+
+Route::post('/login', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (!Auth::attempt($request->only('email', 'password'))) {
+        return response()->json(['error' => 'Invalid credentials'], 401);
+    }
+
+    $request->session()->regenerate();
+
+    return response()->json([
+        'user' => Auth::user(),
+    ]);
+});
 
 // 🔐 Registration
 Route::post('/register', function (Request $request) {
@@ -52,41 +74,27 @@ Route::post('/register', function (Request $request) {
         'user' => $user,
     ]);
 });
+Route::post('/logout', function () {
+    Auth::guard('web')->logout();
+    return response()->json(['message' => 'Logged out']);
+});
 // 🔐 Registration Request
 Route::post('/registration-request', [RegistrationRequestController::class, 'store']);
 
-Route::middleware(['auth:sanctum', 'can:admin'])->group(function () {
+Route::middleware(['auth', 'can:admin'])->group(function () {
     Route::get('/admin/registration-requests', [RegistrationRequestController::class, 'index']);
     Route::post('/admin/registration-requests/{id}/approve', [RegistrationRequestController::class, 'approve']);
     Route::post('/admin/registration-requests/{id}/reject', [RegistrationRequestController::class, 'reject']);
 });
 
-// 🔐 Login
-Route::post('/login', function (Request $request) {
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
-
-    if (!Auth::attempt($request->only('email', 'password'))) {
-        return response()->json(['error' => 'Invalid credentials'], 401);
-    }
-
-    $user = Auth::user();
-
-    return response()->json([
-        'user' => $user,
-        'token' => $user->createToken('authToken')->plainTextToken,
-    ]);
-});
 
 // 🔒 Authenticated User Info
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 // 🏥 Admin Routes
-Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', fn() => response()->json(['message' => 'Welcome Admin']));
 
     // Hospital Management
@@ -99,6 +107,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::get('/hospitals/{id}/dashboard', [HospitalController::class, 'dashboard']);
     Route::get('/admin/hospitals/search', [HospitalController::class, 'search']);
     Route::get('/admin/hospitals/{id}/visit-trends', [HospitalController::class, 'visitTrends']);
+    Route::get('/hospitals/{id}/postnatal-visits', [ReportController::class, 'postnatalVisits']);
+    Route::get('/hospitals/{id}/vaccine-progress', [ReportController::class, 'vaccineProgress']);
 
     // Vaccine Schedule
     Route::get('/children/{childId}/vaccine-schedule', function ($childId) {
@@ -125,7 +135,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
 
 
 // 🩺 Health Worker Routes
-Route::middleware(['auth:sanctum', 'role:health_worker'])->get('/health/dashboard', function () {
+Route::middleware(['auth', 'role:health_worker'])->get('/health/dashboard', function () {
     $user = Auth::user();
     $hospital = Hospital::with(['patients', 'appointments'])->find($user->hospital_id);
     return response()->json($hospital);
@@ -134,18 +144,18 @@ Route::middleware(['auth:sanctum', 'role:health_worker'])->get('/health/dashboar
 // 👶 Child Health Routes
 Route::get('/admin/reschedule-requests', [AdminBookingController::class, 'pendingReschedules']);
 Route::patch('/admin/bookings/{id}/approve-reschedule', [AdminBookingController::class, 'approveReschedule']);
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/children', [ChildController::class, 'index']);
     Route::post('/children', [ChildController::class, 'store']);
     Route::patch('/children/{child}', [ChildController::class, 'update']);
     Route::delete('/children/{child}', [ChildController::class, 'destroy']);
 });
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/child-profile', [ChildController::class, 'show']);
 });
 Route::get('/events', [CalendarEventController::class, 'index']);
 Route::post('/postnatal-bookings', [PostnatalBookingController::class, 'store']);
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth')->group(function () {
     // Postnatal Visits
     Route::get('/children/{childId}/postnatal-visits', [PostnatalVisitController::class, 'index']);
     Route::post('/children/{childId}/postnatal-visits', [PostnatalVisitController::class, 'store']);
@@ -195,7 +205,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return $summary;
     });
     // Hospital Dashboard for Admin
-    Route::middleware(['auth:sanctum', 'role:admin'])->get('/hospitals/{id}/dashboard', function ($id) {
+    Route::middleware(['auth', 'role:admin'])->get('/hospitals/{id}/dashboard', function ($id) {
         $hospital = App\Models\Hospital::withCount(['patients', 'appointments'])
             ->findOrFail($id);
 
@@ -213,7 +223,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/events', [EventController::class, 'index']);
 
     // Monthly Visit Trends for Admin
-    Route::middleware(['auth:sanctum', 'role:admin'])->get('/hospitals/{id}/visit-trends', function (Request $request, $id) {
+    Route::middleware(['auth', 'role:admin'])->get('/hospitals/{id}/visit-trends', function (Request $request, $id) {
         $department = $request->query('department');
 
         $query = App\Models\PostnatalVisit::selectRaw('MONTH(visit_date) as month, COUNT(*) as count')
@@ -235,23 +245,23 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     });
     Route::post('/contact-message', [ContactController::class, 'send']);
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth')->group(function () {
         Route::get('/mother-profile', [MotherProfileController::class, 'show']);
         Route::put('/mother-profile', [MotherProfileController::class, 'update']);
         Route::delete('/mother-profile', [MotherProfileController::class, 'destroy']);
     });
 
-    Route::middleware(['auth:sanctum', 'role:health_worker'])->get('/health/patients', [HealthWorkerController::class, 'patients']);
+    Route::middleware(['auth', 'role:health_worker'])->get('/health/patients', [HealthWorkerController::class, 'patients']);
 
-    Route::middleware('auth:sanctum')->get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
-    Route::middleware('auth:sanctum')->get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
-    Route::middleware('auth:sanctum')->get('/dashboard/appointments', [DashboardController::class, 'appointments']);
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth')->get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
+    Route::middleware('auth')->get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
+    Route::middleware('auth')->get('/dashboard/appointments', [DashboardController::class, 'appointments']);
+    Route::middleware('auth')->group(function () {
         Route::get('/mother/{id}/dashboard', [MotherDashboardController::class, 'show']);
     });
 
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::middleware('auth:sanctum')->apiResource('children', ChildController::class);
+    Route::middleware('auth')->group(function () {
+        Route::middleware('auth')->apiResource('children', ChildController::class);
 
         Route::apiResource('mothers', MotherController::class);
     });

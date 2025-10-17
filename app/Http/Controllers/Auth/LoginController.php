@@ -19,9 +19,10 @@ class LoginController extends Controller
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        $token = $request->user()->createToken('api-token')->plainTextToken;
+        $request->session()->regenerate(); // ✅ Important for session tracking
 
-        return response()->json(['token' => $token]);
+        return response()->json([
+            'user' => Auth::user(), // ✅ Return user object for frontend
+        ]);
     }
 }
-
