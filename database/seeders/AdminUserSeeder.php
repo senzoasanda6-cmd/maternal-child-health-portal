@@ -11,10 +11,10 @@ class AdminUserSeeder extends Seeder
     public function run()
     {
         User::updateOrCreate(
-            ['email' => 'Senzo.Dubazana@gauteng.gov.za'],
+            ['email' => 'admin@gauteng.gov.za'],
             [
                 'name' => 'Admin User',
-                'password' => Hash::make('Travis@10'),
+                'password' => Hash::make('G@ut3ng'),
                 'role' => 'admin',
             ]
         );

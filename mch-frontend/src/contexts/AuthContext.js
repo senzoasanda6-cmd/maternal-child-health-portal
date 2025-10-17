@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
@@ -7,15 +7,18 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(localStorage.getItem("authToken"));
     const [loading, setLoading] = useState(true);
 
-    const logout = useCallback(() => {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("role");
-        setToken(null);
-        setUser(null);
-        navigate("/login");
+    const logout = useCallback(async () => {
+        try {
+            await api.post("/api/logout");
+        } catch (err) {
+            console.error("Logout error:", err);
+        } finally {
+            localStorage.removeItem("role");
+            setUser(null);
+            navigate("/login");
+        }
     }, [navigate]);
 
     const fetchUser = useCallback(async () => {
@@ -30,22 +33,16 @@ export const AuthProvider = ({ children }) => {
         }
     }, [logout]);
 
-    useEffect(() => {
-        if (token) {
-            api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-            fetchUser();
-        } else {
-            setLoading(false);
-        }
-    }, [token, fetchUser]);
-
     const login = async (credentials) => {
+        await api.get("/sanctum/csrf-cookie");
         const res = await api.post("/api/login", credentials);
-        const { token, user } = res.data;
-        localStorage.setItem("authToken", token);
+        console.log("Login response:", res.data);
+        const user = res.data.user;
+
         localStorage.setItem("role", user.role);
-        setToken(token);
         setUser(user);
+
+        await fetchUser(); // ✅ Now fetch user after session is established
 
         switch (user.role) {
             case "admin":
@@ -63,7 +60,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+        <AuthContext.Provider
+            value={{ user, role: user?.role, login, logout, loading }}
+        >
             {children}
         </AuthContext.Provider>
     );

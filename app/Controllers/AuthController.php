@@ -29,11 +29,11 @@ class AuthController extends Controller
             'token' => $user->createToken('api-token')->plainTextToken,
         ]);
     }
-    public function show(Appointment $appointment)
-    {
-        $this->authorize('view', $appointment);
+    // public function show(Appointment $appointment)
+    // {
+    //     $this->authorize('view', $appointment);
 
-        return response()->json($appointment);
-    }
+    //     return response()->json($appointment);
+    // }
 
 }
