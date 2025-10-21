@@ -3,6 +3,9 @@ import api from "../../services/api";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/spinners/Spinner";
 
+import AppPageLoading from "../../components/spinners/AppPageLoading";
+import AppLoadError from "../../components/spinners/AppLoadError";
+
 const UserList = () => {
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
@@ -77,11 +80,11 @@ const UserList = () => {
         }
     };
 
-    if (loading) return <p>Loading users...</p>;
-    if (error) return <p className="text-danger">{error}</p>;
+    if (loading) return <AppPageLoading loadingText="Loading users..." />;
+    if (error) return <AppLoadError message={error} />;
 
     return (
-        <div className="container py-4">
+        <div className="container p-4 space-y-6">
             <h2 className="mb-4">User Management</h2>
 
             <div className="row mb-3">

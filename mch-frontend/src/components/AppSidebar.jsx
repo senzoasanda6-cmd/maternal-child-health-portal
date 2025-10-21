@@ -85,18 +85,26 @@ const Sidebar = ({ user }) => {
                 icon: <FaTachometerAlt />,
             },
             {
-                label: "Create Health Worker",
+                label: "Facility Reports",
+                path: "/admin/reports",
+                icon: <FaChartBar />,
+            },
+            {
+                label: "Facility Management",
+                path: "/admin/facilities",
+                icon: <FaHospital />,
+            },
+            {
+                label: "Health Worker Accounts",
                 path: "/admin/users",
                 icon: <FaUserPlus />,
             },
             {
-                label: "Hospitals",
-                path: "/admin/hospitals",
-                icon: <FaHospital />,
+                label: "Acc. Request Approvals",
+                path: "/admin/approvals",
+                icon: <FaUserPlus />,
             },
-            { label: "Reports", path: "/admin/reports", icon: <FaChartBar /> },
-            { label: "Approvals", path: "/admin/approvals", icon: <FaUserPlus /> },
-            { label: "Profile", path: "/profile", icon: <FaUser /> },
+            { label: "My Profile", path: "/profile", icon: <FaUser /> },
         ],
     };
 
@@ -106,7 +114,9 @@ const Sidebar = ({ user }) => {
     ];
 
     const getLinkClass = ({ isActive }) =>
-        `sidebar-link text-truncate ${isOpen ? "text-start" : "text-center"} ${isActive ? "active-link" : ""}`;
+        `sidebar-link text-truncate ${isOpen ? "text-start" : "text-center"} ${
+            isActive ? "active-link" : ""
+        }`;
 
     const toggleSidebar = () => {
         setIsOpen((prev) => !prev);
@@ -115,16 +125,24 @@ const Sidebar = ({ user }) => {
     return (
         <aside
             className={`sidebar shadow ${isOpen ? "expanded" : "collapsed"}`}
-        // onMouseEnter={() => !isOpen && setIsOpen(true)}
-        // onMouseLeave={() => !isOpen && setIsOpen(false)}
+            // onMouseEnter={() => !isOpen && setIsOpen(true)}
+            // onMouseLeave={() => !isOpen && setIsOpen(false)}
         >
-            <div className="d-flex align-items-center mb-3z bg-white sticky-top border-bottom" style={{ padding: "20px" }}>
-                {isOpen && <div className="col-md-10">
-                    <h2 className="sidebar-title">Navigation</h2>
-                </div>}
+            <div
+                className="d-flex justify-content-between align-items-center mb-3z bg-white sticky-top border-bottom"
+                style={{ padding: "20px" }}
+            >
+                {isOpen && (
+                    <div className="col-md-10">
+                        <h2 className="sidebar-title">Navigation</h2>
+                    </div>
+                )}
                 <div className="col-md d-flex justify-content-end">
                     {/* toggle sidebar */}
-                    <button className="button bg-custom-color-primary p-2 flex-fill text-white custom-color-primary" onMouseDown={toggleSidebar}>
+                    <button
+                        className="button bg-custom-color-primary p-2 flex-fill text-white custom-color-primary"
+                        onMouseDown={toggleSidebar}
+                    >
                         {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
                     </button>
                 </div>
@@ -135,17 +153,20 @@ const Sidebar = ({ user }) => {
                     {links.map((link) => (
                         <li key={link.path}>
                             <NavLink to={link.path} className={getLinkClass}>
-                                {link.icon && (
-                                    <span>{link.icon}</span>
+                                {link.icon && <span>{link.icon}</span>}
+                                {isOpen && (
+                                    <span className="ms-2">{link.label}</span>
                                 )}
-                                {isOpen && (<span className="ms-2">{link.label}</span>)}
                             </NavLink>
                         </li>
                     ))}
                 </ul>
                 <hr />
                 <div className={`pb-0 ${isOpen ? "" : "rotate-pos-90"}`}>
-                    <p className="m-0 text-custom-color-primary" style={{ fontSize: "12px" }}>
+                    <p
+                        className="m-0 text-custom-color-primary"
+                        style={{ fontSize: "12px" }}
+                    >
                         &copy; {new Date().getFullYear()} Maternal Child Health
                         Portal.{" "}
                         <a
@@ -157,7 +178,6 @@ const Sidebar = ({ user }) => {
                     </p>
                 </div>
             </div>
-
         </aside>
     );
 };

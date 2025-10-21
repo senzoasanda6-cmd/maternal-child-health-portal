@@ -54,7 +54,7 @@ import HealthDashboard from "./pages/HealthWorker/HealthDashboard.jsx";
 // Admin Pages
 import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
 import UserList from "./pages/Admin/UserList.jsx";
-import HospitalList from "./pages/Admin/HospitalList.jsx";
+import FacilityList from "./pages/Admin/FacilityList.jsx";
 import UserEdit from "./pages/Admin/UserEdit.jsx";
 import AdminReports from "./pages/Admin/AdminReports.jsx";
 //import RegistrationRequestList from "./pages/Admin/RegistrationRequestList.jsx";
@@ -201,7 +201,7 @@ const AppRoutes = () => (
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/users" element={<UserList />} />
                 <Route path="/admin/users/:id/edit" element={<UserEdit />} />
-                <Route path="/admin/hospitals" element={<HospitalList />} />
+                <Route path="/admin/facilities" element={<FacilityList />} />
                 <Route path="/admin/reports" element={<AdminReports />} />
                 <Route
                     path="/admin/approvals"
