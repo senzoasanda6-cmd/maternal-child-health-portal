@@ -102,6 +102,34 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
+For developer notes about clearing caches after changing middleware or the HTTP kernel, see `CONTRIBUTING.md`.
+
+## Developer helpers
+
+Quick helper scripts are provided at the repository root to simplify common developer tasks: clearing and rebuilding Laravel caches, regenerating Composer autoload, and running the test suite. See `REBUILD_AND_TEST.md` for full details.
+
+- Windows (PowerShell):
+
+```powershell
+# clear caches and run tests
+.\rebuild_and_test.ps1
+
+# clear/rebuild caches and run tests
+.\rebuild_and_test.ps1 -RebuildCaches
+```
+
+- macOS / Linux (Bash):
+
+```bash
+# clear caches and run tests
+./rebuild_and_test.sh
+
+# clear/rebuild caches and run tests
+./rebuild_and_test.sh --rebuild-caches
+```
+
+If you run the application in a persistent process (e.g. Octane, Swoole, Docker, IIS), restart the process after running these scripts so changes are picked up by worker processes.
+
 ## Contributors
 
 -   *Your Name*
