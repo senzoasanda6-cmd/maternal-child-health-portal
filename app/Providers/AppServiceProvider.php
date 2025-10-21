@@ -26,5 +26,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Appointment::class, AppointmentPolicy::class);
         Gate::policy(RegistrationRequest::class, RegistrationRequestPolicy::class);
+        // Ensure the router has the 'checkrole' middleware alias registered.
+        // This avoids a "Target class [checkrole] does not exist" error when
+        // the router's alias map hasn't been populated from the kernel for
+        // some runtime configurations.
+        if ($this->app->bound('router')) {
+            $this->app->router->aliasMiddleware('checkrole', \App\Http\Middleware\RoleMiddleware::class);
+        }
     }
 }

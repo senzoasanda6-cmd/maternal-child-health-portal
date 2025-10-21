@@ -172,10 +172,20 @@ function RegisterForm() {
                     </div>
                 </div>
 
-                <div className="login-right">
-                    <div className="login-card">
+                <div className="login-right" style={{minWidth: '400px'}}>
+                    <div className="login-card h-100 overflow-y-auto pt-0">
                         {!selectedRole ? (
                             <>
+                                <div className="d-flex gap-2 justify-content-between align-items-center bg-white sticky-top" style={{paddingTop: '40px', paddingBottom: '20px', zIndex: '10'}}>
+                                    <button
+                                        className="btn btn-outline-secondary btn-sm d-flex align-items-center m-0"
+                                        onClick={() => navigate("/login")}
+                                        type="button"
+                                    >
+                                        <BsArrowLeft className="me-2" />
+                                        <span className="flex-fill" style={{fontSize: '10px'}}>Have an account? Login</span>
+                                    </button>
+                                </div>
                                 <h2>Select Your Role</h2>
                                 <div className="form-floating mb-3">
                                     <select
@@ -208,16 +218,17 @@ function RegisterForm() {
                             </>
                         ) : (
                             <>
-                                <div className="d-flex justify-content-between align-items-center mb-3">
+                                <div className="d-flex gap-2 justify-content-between align-items-center bg-white sticky-top" style={{paddingTop: '40px', paddingBottom: '20px', zIndex: '10'}}>
                                     <button
-                                        className="btn btn-outline-secondary btn-sm d-flex align-items-center"
+                                        className="btn button-secondary btn-smz d-flex align-items-center m-0"
                                         onClick={handleBackToRole}
+                                        style={{maxWidth: '80px'}}
                                         type="button"
                                     >
                                         <BsArrowLeft className="me-2" />
                                         <span>Back</span>
                                     </button>
-                                    <span className="badge rounded-pill bg-primary">
+                                    <span className="badge rounded-2 bg-custom-color-primary p-2">
                                         Role:{" "}
                                         {selectedRole
                                             .replace("_", " ")
