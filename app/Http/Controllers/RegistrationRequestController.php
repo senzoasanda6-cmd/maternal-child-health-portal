@@ -14,6 +14,7 @@ use App\Models\Hospital;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Facility;
 
 
 class RegistrationRequestController extends Controller
@@ -27,14 +28,16 @@ class RegistrationRequestController extends Controller
             'password' => 'required|string|min:6',
             'password_confirmation' => 'same:password',
             'role' => 'required|string',
-            'hospital_id' => 'nullable|integer',
+            'facility_id' => 'nullable|integer',
+            'district' => 'nullable|string',
             'comments' => 'nullable|string',
         ]);
 
-        // Optionally hash password before storing
-        $validated['password'] = Hash::make($validated['password']);
+        $registrationData = $validated;
+        unset($registrationData['password'], $registrationData['password_confirmation']);
+        $registrationData['status'] = 'pending';
 
-        RegistrationRequest::create($validated);
+        RegistrationRequest::create($registrationData);
 
         return response()->json(['message' => 'Request submitted'], 201);
     }
@@ -43,19 +46,38 @@ class RegistrationRequestController extends Controller
     {
         $this->authorize('viewAny', RegistrationRequest::class);
 
-        return RegistrationRequest::where('status', 'pending')->get();
+        return RegistrationRequest::with('facility')
+            ->where('status', 'pending')
+            ->get();
     }
+
 
     public function approve($id)
     {
         $request = RegistrationRequest::findOrFail($id);
+
+        // Determine facility assignment
+        $facilityId = match ($request->role) {
+            'central_admin' => Facility::where('type', 'central')->first()?->id,
+            'district_admin' => Facility::where('type', 'district')
+                ->where('district', $request->district ?? null)
+                ->first()?->id,
+            'clinic_staff' => Facility::where('type', 'clinic')
+                ->where('id', $request->facility_id)
+                ->first()?->id,
+            'hospital_staff' => Facility::where('type', 'hospital')
+                ->where('id', $request->facility_id)
+                ->first()?->id,
+            'mother' => Facility::where('id', $request->facility_id)->first()?->id,
+            default => null,
+        };
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
             'role' => $request->role,
-            'hospital_id' => $request->hospital_id,
+            'facility_id' => $facilityId,
         ]);
 
         $request->update(['status' => 'approved']);
@@ -65,13 +87,34 @@ class RegistrationRequestController extends Controller
 
         $hospital = Hospital::find($user->hospital_id);
         $hospitalName = $hospital ? $hospital->name : 'N/A';
-
-        Mail::to($user->email)->queue(new RegistrationApproved([
+        $details = [
             'name' => $user->name,
             'role' => $user->role,
-            'hospital' => $hospitalName,
             'reset_link' => $resetLink,
-        ]));
+            'location' => $user->facility?->name ?? $hospitalName ?? 'N/A',
+        ];
+
+        switch ($user->role) {
+            case 'central_admin':
+                $details['message'] = 'You now have access to the central administration dashboard.';
+                break;
+            case 'district_admin':
+                $details['message'] = 'You are responsible for managing district-level operations.';
+                break;
+            case 'clinic_staff':
+                $details['message'] = 'Welcome to the clinic team. You can now manage patient records and appointments.';
+                break;
+            case 'hospital_staff':
+                $details['message'] = 'You have access to hospital-level tools and reporting.';
+                break;
+            case 'mother':
+                $details['message'] = 'Your account has been approved. You can now track your child’s health journey.';
+                break;
+            default:
+                $details['message'] = 'Your account has been approved.';
+        }
+
+        Mail::to($user->email)->queue(new RegistrationApproved($details));
 
         Log::info("User {$request->email} approved by admin ID: " . Auth::id());
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import { Link } from "react-router-dom";
+import Spinner from "../../components/spinners/Spinner";
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
@@ -9,6 +10,7 @@ const UserList = () => {
     const [roleFilter, setRoleFilter] = useState("all");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [updatingUserId, setUpdatingUserId] = useState(null);
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this user?"))
@@ -17,7 +19,7 @@ const UserList = () => {
         try {
             await api.delete(`/api/admin/users/${id}`);
             setUsers(users.filter((u) => u.id !== id));
-        } catch (err) {
+        } catch (err) { 
             console.error("Delete failed:", err);
             alert("Failed to delete user.");
         }
@@ -58,6 +60,22 @@ const UserList = () => {
 
         setFilteredUsers(filtered);
     }, [searchTerm, roleFilter, users]);
+
+    const handleRoleChange = async (userId, newRole) => {
+        setUpdatingUserId(userId);
+        try {
+            // We only need to send the role for this update
+            await api.put(`/api/admin/users/${userId}`, { role: newRole });
+            setUsers(
+                users.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
+            );
+        } catch (err) {
+            console.error("Role update failed:", err);
+            alert("Failed to update user role.");
+        } finally {
+            setUpdatingUserId(null);
+        }
+    };
 
     if (loading) return <p>Loading users...</p>;
     if (error) return <p className="text-danger">{error}</p>;
@@ -112,7 +130,26 @@ const UserList = () => {
                             <tr key={user.id}>
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>
-                                <td>{user.role}</td>
+                                <td>
+                                    {updatingUserId === user.id ? (
+                                        <Spinner size="sm" />
+                                    ) : (
+                                        <select
+                                            className="form-select form-select-sm"
+                                            value={user.role}
+                                            onChange={(e) =>
+                                                handleRoleChange(
+                                                    user.id,
+                                                    e.target.value
+                                                )
+                                            }
+                                        >
+                                            <option value="mother">Mother</option>
+                                            <option value="health_worker">Health Worker</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    )}
+                                </td>
                                 <td>{user.hospital?.name || "—"}</td>
                                 <td>
                                     <Link
