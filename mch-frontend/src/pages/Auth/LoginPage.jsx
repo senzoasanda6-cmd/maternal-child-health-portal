@@ -57,7 +57,7 @@ function LoginPage() {
                         </div>{" "}
                     </div>{" "}
                 </div>{" "}
-                <div className="login-right">
+                <div className="login-right" style={{minWidth: "400px"}}>
                     {" "}
                     <div className="login-card">
                         {" "}
@@ -69,7 +69,8 @@ function LoginPage() {
                                 name="email"
                                 value={form.email}
                                 onChange={handleChange}
-                                placeholder="Email"
+                                style={{textAlign: 'center'}}
+                                placeholder="Email Address"
                                 required
                             />{" "}
                             <input
@@ -77,6 +78,7 @@ function LoginPage() {
                                 name="password"
                                 value={form.password}
                                 onChange={handleChange}
+                                style={{textAlign: 'center'}}
                                 placeholder="Password"
                                 required
                             />{" "}

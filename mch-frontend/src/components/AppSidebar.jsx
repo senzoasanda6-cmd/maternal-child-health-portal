@@ -75,6 +75,11 @@ const Sidebar = ({ user }) => {
         ],
         admin: [
             {
+                label: "Home",
+                path: "/admin/home",
+                icon: <FaHome />,
+            },
+            {
                 label: "Admin Dashboard",
                 path: "/admin/dashboard",
                 icon: <FaTachometerAlt />,
