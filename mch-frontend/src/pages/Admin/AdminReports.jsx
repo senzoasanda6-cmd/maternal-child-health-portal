@@ -20,7 +20,7 @@ const AdminReports = () => {
     useEffect(() => {
         const fetchHospitals = async () => {
             try {
-                const res = await api.get("/api/hospitals");
+                const res = await api.get("/api/admin/hospitals");
                 setHospitals(res.data);
             } catch (err) {
                 console.error("Failed to load hospitals:", err);
@@ -39,11 +39,11 @@ const AdminReports = () => {
 
                 const [vaccineRes, visitRes] = await Promise.all([
                     api.get(
-                        `/api/hospital/${selectedHospitalId}/vaccine-progress`,
+                        `/api/admin/hospitals/${selectedHospitalId}/vaccine-progress`,
                         { params }
                     ),
                     api.get(
-                        `/api/hospital/${selectedHospitalId}/postnatal-visits`,
+                        `/api/admin/hospitals/${selectedHospitalId}/postnatal-visits`,
                         { params }
                     ),
                 ]);

@@ -18,6 +18,8 @@ class User extends Authenticatable
         'password',
         'role',
         'hospital_id',
+        'facility_id',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -56,15 +58,32 @@ class User extends Authenticatable
         return $this->role === 'mother';
     }
 
+    public function isCentralAdmin(): bool
+    {
+        return $this->role === 'central_admin';
+    }
+
+    public function isDistrictAdmin(): bool
+    {
+        return $this->role === 'district_admin';
+    }
+
+    // Relationships
     public function hospital()
     {
         return $this->belongsTo(Hospital::class);
+    }
+
+    public function facility()
+    {
+        return $this->belongsTo(Facility::class);
     }
 
     public function children()
     {
         return $this->hasMany(Child::class);
     }
+
     public function motherProfile()
     {
         return $this->hasOne(MotherProfile::class);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/spinners/Spinner";
 
 const UserCreate = () => {
     const navigate = useNavigate();
@@ -8,19 +9,22 @@ const UserCreate = () => {
         name: "",
         email: "",
         password: "",
+        password_confirmation: "",
         role: "mother",
-        hospital_id: "",
+        facility_id: "",
     });
-    const [hospitals, setHospitals] = useState([]);
+    const [facilities, setFacilities] = useState([]);
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchHospitals = async () => {
             try {
-                const res = await api.get("/api/hospitals");
-                setHospitals(res.data);
+                const res = await api.get("/api/admin/facilities");
+                setFacilities(res.data);
             } catch (err) {
-                console.error("Failed to load hospitals:", err);
+                console.error("Failed to load facilities:", err);
+                setError("Failed to load facility data.");
             }
         };
 
@@ -33,14 +37,30 @@ const UserCreate = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         setError("");
+
+        if (form.password !== form.password_confirmation) {
+            setError("Passwords do not match.");
+            setLoading(false);
+            return;
+        }
+
+        if (form.role === "health_worker" && !form.facility_id) {
+            setError("A facility must be selected for Health Workers.");
+            setLoading(false);
+            return;
+        }
 
         try {
             await api.post("/api/admin/users", form);
             navigate("/admin/users");
         } catch (err) {
             console.error("User creation failed:", err);
-            setError("Failed to create user. Please check the form.");
+            const message = err.response?.data?.message || "Failed to create user. Please check the form.";
+            setError(message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -87,6 +107,31 @@ const UserCreate = () => {
                     />
                 </div>
 
+                <div className="row">
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            className="form-control"
+                            value={form.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label">Confirm Password</label>
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            className="form-control"
+                            value={form.password_confirmation}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
                 <div className="mb-3">
                     <label className="form-label">Role</label>
                     <select
@@ -101,26 +146,28 @@ const UserCreate = () => {
                     </select>
                 </div>
 
-                <div className="mb-3">
-                    <label className="form-label">Hospital</label>
-                    <select
-                        name="hospital_id"
-                        className="form-select"
-                        value={form.hospital_id}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Select a hospital</option>
-                        {hospitals.map((h) => (
-                            <option key={h.id} value={h.id}>
-                                {h.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                {form.role === "health_worker" && (
+                    <div className="mb-3">
+                        <label className="form-label">Facility</label>
+                        <select
+                            name="facility_id"
+                            className="form-select"
+                            value={form.facility_id}
+                            onChange={handleChange}
+                            required={form.role === "health_worker"}
+                        >
+                            <option value="">Select a facility</option>
+                            {facilities.map((facility) => (
+                                <option key={facility.id} value={facility.id}>
+                                    {facility.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
 
-                <button type="submit" className="btn btn-primary">
-                    Create User
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? <Spinner size="sm" /> : "Create User"}
                 </button>
             </form>
         </div>
