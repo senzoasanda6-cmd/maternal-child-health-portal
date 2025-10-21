@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 
+import AppPageLoading from "../../components/spinners/AppPageLoading";
+import AppLoadError from "../../components/spinners/AppLoadError";
 
 function UserApprovalDashboard() {
     const [requests, setRequests] = useState([]);
@@ -42,11 +44,11 @@ function UserApprovalDashboard() {
         }
     };
 
-    if (loading) return <p>Loading requests...</p>;
-    if (error) return <p>{error}</p>;
+    if (loading) return <AppPageLoading loadingText="Loading requests..." />;
+    if (error) return <AppLoadError message={error} />;
 
     return (
-        <div className="user-approval-dashboard">
+        <div className="user-approval-dashboard p-4 space-y-6">
             <h2>Pending Registration Requests</h2>
             {requests.length === 0 ? (
                 <p>No pending requests.</p>

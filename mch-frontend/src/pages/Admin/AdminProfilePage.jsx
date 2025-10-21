@@ -3,6 +3,9 @@ import api from "../../services/api";
 import "../../Main.css";
 import Spinner from "../../components/spinners/Spinner";
 
+import AppPageLoading from "../../components/spinners/AppPageLoading";
+import AppLoadError from "../../components/spinners/AppLoadError";
+
 function AdminProfilePage() {
     const [admin, setAdmin] = useState(null);
     const [editing, setEditing] = useState(false);
@@ -49,12 +52,14 @@ function AdminProfilePage() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    if (loading) return <p>Loading profile...</p>;
-    if (error) return <p className="text-danger text-center">{error}</p>;
+    if (loading) return <AppPageLoading loadingText="Loading profile..." />;
+    // if (saving) return <AppPageLoading loadingText="Saving changes..." />;
+    if (error) return <AppLoadError message={error} />;
     if (!admin) return <p className="text-center">Profile not found.</p>;
 
     return (
-        <div className="container py-4">
+        <div className="container p-4 space-y-6">
+            {saving && <Spinner />}
             <h2 className="mb-4">Admin Profile</h2>
             <div className="card p-4 shadow-sm">
                 <div className="mb-3">
