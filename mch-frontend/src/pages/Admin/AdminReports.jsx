@@ -85,14 +85,14 @@ const AdminReports = () => {
     };
 
     return (
-        <div className="container py-4">
-            <h2 className="mb-4">Hospital Reports</h2>
+        <div className="container p-4 space-y-6">
+            <h2 className="mb-4">Hospital &amp; PHC Facility Reports</h2>
 
             {/* Filters */}
             <div className="row mb-4">
                 <div className="col-md-4">
                     <label htmlFor="hospital-select" className="form-label">
-                        Select Hospital:
+                        Select Facility:
                     </label>
                     <select
                         id="hospital-select"

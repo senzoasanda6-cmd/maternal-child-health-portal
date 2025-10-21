@@ -65,7 +65,7 @@ const UserCreate = () => {
     };
 
     return (
-        <div className="container py-4">
+        <div className="container p-4 space-y-6">
             <h2 className="mb-4">Create New User</h2>
 
             {error && <p className="text-danger">{error}</p>}

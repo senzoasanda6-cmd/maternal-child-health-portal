@@ -522,6 +522,25 @@ select {
 .admin-card:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
+.admin-hero {
+    background: linear-gradient(90deg, rgba(29,65,137,0.05), rgba(68,151,203,0.03));
+    border: 1px solid rgba(29,65,137,0.06);
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.admin-card-accent {
+    background: linear-gradient(180deg, rgba(29,65,137,0.06), #ffffff);
+    border-left: 4px solid var(--primary-color);
+}
+
+.admin-hero h1 {
+    color: var(--primary-color);
+}
+
+.admin-hero .lead {
+    color: var(--primary-color-dark-1);
+}
 .admin-profile {
   padding: 2rem;
   max-width: 600px;

@@ -78,7 +78,7 @@ const UserEdit = () => {
     }
 
     return (
-        <div className="container py-4">
+        <div className="container p-4 space-y-6">
             <h2>Edit User</h2>
             {error && <p className="text-danger">{error}</p>}
 
