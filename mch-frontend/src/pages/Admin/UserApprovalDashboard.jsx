@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../services/api";
 
 
 function UserApprovalDashboard() {
@@ -7,15 +7,15 @@ function UserApprovalDashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    // Base URL of your backend API
+
     useEffect(() => {
         fetchRequests();
     }, []);
 
     const fetchRequests = async () => {
         try {
-            const response = await axios.get(
-                "/api/admin/registration-requests"
-            );
+            const response = await api.get("/api/admin/registration-requests");
             setRequests(response.data);
         } catch (err) {
             setError("Failed to load registration requests.");
@@ -26,7 +26,7 @@ function UserApprovalDashboard() {
 
     const handleApprove = async (id) => {
         try {
-            await axios.post(`/api/admin/registration-requests/${id}/approve`);
+            await api.post(`/api/admin/registration-requests/${id}/approve`);
             setRequests((prev) => prev.filter((r) => r.id !== id));
         } catch (err) {
             alert("Approval failed.");
@@ -35,7 +35,7 @@ function UserApprovalDashboard() {
 
     const handleReject = async (id) => {
         try {
-            await axios.post(`/api/admin/registration-requests/${id}/reject`);
+            await api.post(`/api/admin/registration-requests/${id}/reject`);
             setRequests((prev) => prev.filter((r) => r.id !== id));
         } catch (err) {
             alert("Rejection failed.");
@@ -57,7 +57,7 @@ function UserApprovalDashboard() {
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
-                            <th>Facility</th>
+                            <th>Requested Facility</th>
                             <th>Comments</th>
                             <th>Actions</th>
                         </tr>
@@ -68,7 +68,7 @@ function UserApprovalDashboard() {
                                 <td>{req.name}</td>
                                 <td>{req.email}</td>
                                 <td>{req.role}</td>
-                                <td>{req.hospital_id}</td>
+                                <td>{req.facility?.name || 'N/A'}</td>
                                 <td>{req.comments}</td>
                                 <td>
                                     <button
