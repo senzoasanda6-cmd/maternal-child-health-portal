@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import api from "../../services/api";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 import Spinner from "../../components/spinners/Spinner";
 
 const UserCreate = () => {
@@ -10,26 +10,23 @@ const UserCreate = () => {
         email: "",
         password: "",
         password_confirmation: "",
-        role: "mother",
+        role: "",
         facility_id: "",
     });
     const [facilities, setFacilities] = useState([]);
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
-        const fetchHospitals = async () => {
-            try {
-                const res = await api.get("/api/admin/facilities");
-                setFacilities(res.data);
-            } catch (err) {
-                console.error("Failed to load facilities:", err);
-                setError("Failed to load facility data.");
-            }
-        };
-
-        fetchHospitals();
+        api.get("/api/admin/facilities")
+            .then((res) => setFacilities(res.data))
+            .catch((err) => console.error("Failed to load facilities:", err));
     }, []);
+    useEffect(() => {
+        if (form.role !== "health_worker") {
+            setForm((prev) => ({ ...prev, facility_id: "" }));
+        }
+    }, [form.role]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -37,18 +34,18 @@ const UserCreate = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setSaving(true);
         setError("");
 
         if (form.password !== form.password_confirmation) {
             setError("Passwords do not match.");
-            setLoading(false);
+            setSaving(false);
             return;
         }
 
-        if (form.role === "health_worker" && !form.facility_id) {
-            setError("A facility must be selected for Health Workers.");
-            setLoading(false);
+        if (!form.facility_id) {
+            setError("A facility must be selected.");
+            setSaving(false);
             return;
         }
 
@@ -57,16 +54,23 @@ const UserCreate = () => {
             navigate("/admin/users");
         } catch (err) {
             console.error("User creation failed:", err);
-            const message = err.response?.data?.message || "Failed to create user. Please check the form.";
+            const message =
+                err.response?.data?.message || "Failed to create user.";
             setError(message);
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
 
     return (
         <div className="container p-4 space-y-6">
-            <h2 className="mb-4">Create New User</h2>
+            <h2>Create New User</h2>
+            <button
+                className="btn btn-outline-secondary mb-3"
+                onClick={() => navigate("/admin/users")}
+            >
+                ← Back to User List
+            </button>
 
             {error && <p className="text-danger">{error}</p>}
 
@@ -90,18 +94,6 @@ const UserCreate = () => {
                         name="email"
                         className="form-control"
                         value={form.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div className="mb-3">
-                    <label className="form-label">Password</label>
-                    <input
-                        type="password"
-                        name="password"
-                        className="form-control"
-                        value={form.password}
                         onChange={handleChange}
                         required
                     />
@@ -139,7 +131,9 @@ const UserCreate = () => {
                         className="form-select"
                         value={form.role}
                         onChange={handleChange}
+                        required
                     >
+                        <option value="">Select a role</option>
                         <option value="mother">Mother</option>
                         <option value="health_worker">Health Worker</option>
                         <option value="admin">Admin</option>
@@ -154,7 +148,7 @@ const UserCreate = () => {
                             className="form-select"
                             value={form.facility_id}
                             onChange={handleChange}
-                            required={form.role === "health_worker"}
+                            required
                         >
                             <option value="">Select a facility</option>
                             {facilities.map((facility) => (
@@ -165,9 +159,61 @@ const UserCreate = () => {
                         </select>
                     </div>
                 )}
+                <div className="mb-3">
+                    <label className="form-label">Facility</label>
+                    <select
+                        name="facility_id"
+                        className="form-select"
+                        value={form.facility_id}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select a facility</option>
+                        {facilities.map((facility) => (
+                            <option key={facility.id} value={facility.id}>
+                                {facility.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                {form.facility_id && (
+                    <div className="mt-2 p-3 border rounded bg-light">
+                        <strong>Selected Facility Details:</strong>
+                        <div>
+                            <strong>Name:</strong>{" "}
+                            {
+                                facilities.find(
+                                    (f) => f.id === Number(form.facility_id)
+                                )?.name
+                            }
+                        </div>
+                        <div>
+                            <strong>Type:</strong>{" "}
+                            {facilities.find(
+                                (f) => f.id === Number(form.facility_id)
+                            )?.type || "N/A"}
+                        </div>
+                        <div>
+                            <strong>District:</strong>{" "}
+                            {facilities.find(
+                                (f) => f.id === Number(form.facility_id)
+                            )?.district || "N/A"}
+                        </div>
+                        <div>
+                            <strong>Sub-District:</strong>{" "}
+                            {facilities.find(
+                                (f) => f.id === Number(form.facility_id)
+                            )?.sub_district || "N/A"}
+                        </div>
+                    </div>
+                )}
 
-                <button type="submit" className="btn btn-primary" disabled={loading}>
-                    {loading ? <Spinner size="sm" /> : "Create User"}
+                <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={saving}
+                >
+                    {saving ? <Spinner size="sm" /> : "Create User"}
                 </button>
             </form>
         </div>

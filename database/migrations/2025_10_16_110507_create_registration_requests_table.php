@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('role');
-            $table->unsignedBigInteger('hospital_id')->nullable();
+            $table->unsignedBigInteger('facility_id')->nullable();
             $table->text('comments')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();

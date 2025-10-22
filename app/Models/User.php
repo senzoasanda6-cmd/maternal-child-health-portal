@@ -17,7 +17,6 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'hospital_id',
         'facility_id',
         'is_active',
     ];
@@ -69,11 +68,6 @@ class User extends Authenticatable
     }
 
     // Relationships
-    public function hospital()
-    {
-        return $this->belongsTo(Hospital::class);
-    }
-
     public function facility()
     {
         return $this->belongsTo(Facility::class);

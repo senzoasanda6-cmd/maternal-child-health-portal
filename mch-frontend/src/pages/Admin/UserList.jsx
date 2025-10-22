@@ -22,7 +22,7 @@ const UserList = () => {
         try {
             await api.delete(`/api/admin/users/${id}`);
             setUsers(users.filter((u) => u.id !== id));
-        } catch (err) { 
+        } catch (err) {
             console.error("Delete failed:", err);
             alert("Failed to delete user.");
         }
@@ -70,7 +70,9 @@ const UserList = () => {
             // We only need to send the role for this update
             await api.put(`/api/admin/users/${userId}`, { role: newRole });
             setUsers(
-                users.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
+                users.map((u) =>
+                    u.id === userId ? { ...u, role: newRole } : u
+                )
             );
         } catch (err) {
             console.error("Role update failed:", err);
@@ -147,13 +149,34 @@ const UserList = () => {
                                                 )
                                             }
                                         >
-                                            <option value="mother">Mother</option>
-                                            <option value="health_worker">Health Worker</option>
+                                            <option value="mother">
+                                                Mother
+                                            </option>
+                                            <option value="health_worker">
+                                                Health Worker
+                                            </option>
                                             <option value="admin">Admin</option>
                                         </select>
                                     )}
                                 </td>
-                                <td>{user.hospital?.name || "—"}</td>
+                                <td>
+                                    {user.facility ? (
+                                        <>
+                                            <div>
+                                                <strong>
+                                                    {user.facility.name}
+                                                </strong>
+                                            </div>
+                                            <div className="text-muted small">
+                                                {user.facility.type} –{" "}
+                                                {user.facility.district}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        "—"
+                                    )}
+                                </td>
+
                                 <td>
                                     <Link
                                         to={`/admin/users/${user.id}/edit`}

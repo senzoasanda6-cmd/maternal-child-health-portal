@@ -57,6 +57,9 @@ import UserList from "./pages/Admin/UserList.jsx";
 import FacilityList from "./pages/Admin/FacilityList.jsx";
 import UserEdit from "./pages/Admin/UserEdit.jsx";
 import AdminReports from "./pages/Admin/AdminReports.jsx";
+import UserCreate from "./pages/Admin/UserCreate.jsx";
+import AdminSettings from "./pages/Settings/AdminSettings.jsx";
+
 //import RegistrationRequestList from "./pages/Admin/RegistrationRequestList.jsx";
 import UserApprovalDashboard from "./pages/Admin/UserApprovalDashboard.jsx";
 import AdminHomePage from "./pages/Admin/AdminHomePage.jsx";
@@ -200,9 +203,14 @@ const AppRoutes = () => (
                 <Route path="/admin/home" element={<AdminHomePage />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/users" element={<UserList />} />
-                <Route path="/admin/users/:id/edit" element={<UserEdit />} />
+                <Route
+                    path="/admin/users/:userId/edit"
+                    element={<UserEdit />}
+                />
                 <Route path="/admin/facilities" element={<FacilityList />} />
                 <Route path="/admin/reports" element={<AdminReports />} />
+                <Route path="/admin/users/create" element={<UserCreate />} />
+                <Route path="/admin/settings" element={<AdminSettings />} />
                 <Route
                     path="/admin/approvals"
                     element={<UserApprovalDashboard />}
