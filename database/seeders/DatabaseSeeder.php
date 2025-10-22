@@ -14,9 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminUserSeeder::class,
-            HospitalSeeder::class,
             MotherUserSeeder::class,
-            
+            AuditLogSeeder::class,
             // You can move the logic from the old run() method into a new seeder
             // and call it here, e.g., MotherAndChildSeeder::class
         ]);

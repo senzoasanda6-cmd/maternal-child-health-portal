@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/spinners/Spinner";
-import axios from "axios"; // Import axios
+import axios from "axios";
 import { BsArrowLeft } from "react-icons/bs";
 import "./LoginPage.css";
 
@@ -25,10 +25,8 @@ function RegisterForm() {
     const [loading, setLoading] = useState(false);
     const [facilities, setFacilities] = useState([]);
 
-    // Base URL of your backend API
     const API_BASE = "http://localhost:8000";
 
-    // Configure axios to include credentials (cookies) with every request
     axios.defaults.withCredentials = true;
     axios.defaults.withXSRFToken = true;
 
@@ -46,15 +44,12 @@ function RegisterForm() {
             url += `?district=${encodeURIComponent(form.district)}`;
         }
 
-        console.log("Fetching facilities from:", url);
-
-        axios.get(url)
+        axios
+            .get(url)
             .then((data) => {
-                console.log("Facilities fetched:", data.data);
                 setFacilities(data.data);
             })
-            .catch((err) => {
-                console.error("Fetch error:", err);
+            .catch(() => {
                 setFacilities([]);
             });
     }, [selectedRole, form.district]);
@@ -62,18 +57,31 @@ function RegisterForm() {
     const handleRoleSelect = (e) => {
         const role = e.target.value;
         setSelectedRole(role);
-        setForm((prev) => ({ ...prev, role, district: "", facility_id: "" }));
-        setFacilities([]); // Reset facilities when role changes
+        setForm((prev) => ({
+            ...prev,
+            role,
+            district: "",
+            facility_id: "",
+        }));
+        setFacilities([]);
         setError("");
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
 
-        // Reset facility if district changes to avoid stale selection
-        if (name === "district") {
-            setForm((prev) => ({ ...prev, facility_id: "" }));
+        if (name === "facility_id") {
+            const selectedFacility = facilities.find(
+                (facility) => facility.id.toString() === value
+            );
+
+            setForm((prev) => ({
+                ...prev,
+                facility_id: value,
+                district: selectedFacility ? selectedFacility.district : "",
+            }));
+        } else {
+            setForm((prev) => ({ ...prev, [name]: value }));
         }
     };
 
@@ -109,25 +117,24 @@ function RegisterForm() {
             return;
         }
 
-        if (form.role !== "mother" && !form.facility_id) {
-            setError("Facility is required for this role.");
+        if (!form.facility_id) {
+            setError("Facility is required.");
             setLoading(false);
             return;
         }
 
         const endpoint =
             form.role === "mother"
-                ? `${API_BASE}/api/register` 
+                ? `${API_BASE}/api/register`
                 : `${API_BASE}/api/registration-request`;
 
         try {
-            // Get CSRF cookie before POST request (Laravel Sanctum)
             await getCsrfCookie();
 
             const response = await axios.post(endpoint, form);
 
             if (response.status === 200 || response.status === 201) {
-                 if (form.role === "mother") {
+                if (form.role === "mother") {
                     navigate("/dashboard");
                 } else {
                     alert(
@@ -139,7 +146,9 @@ function RegisterForm() {
                 setError(response.data.message || "Submission failed.");
             }
         } catch (err) {
-            const errorMessage = err.response?.data?.message || "An error occurred. Please try again.";
+            const errorMessage =
+                err.response?.data?.message ||
+                "An error occurred. Please try again.";
             setError(errorMessage);
         } finally {
             setLoading(false);
@@ -172,18 +181,30 @@ function RegisterForm() {
                     </div>
                 </div>
 
-                <div className="login-right" style={{minWidth: '400px'}}>
+                <div className="login-right" style={{ minWidth: "400px" }}>
                     <div className="login-card h-100 overflow-y-auto pt-0">
                         {!selectedRole ? (
                             <>
-                                <div className="d-flex gap-2 justify-content-between align-items-center bg-white sticky-top" style={{paddingTop: '40px', paddingBottom: '20px', zIndex: '10'}}>
+                                <div
+                                    className="d-flex gap-2 justify-content-between align-items-center bg-white sticky-top"
+                                    style={{
+                                        paddingTop: "40px",
+                                        paddingBottom: "20px",
+                                        zIndex: "10",
+                                    }}
+                                >
                                     <button
                                         className="btn btn-outline-secondary btn-sm d-flex align-items-center m-0"
                                         onClick={() => navigate("/login")}
                                         type="button"
                                     >
                                         <BsArrowLeft className="me-2" />
-                                        <span className="flex-fill" style={{fontSize: '10px'}}>Have an account? Login</span>
+                                        <span
+                                            className="flex-fill"
+                                            style={{ fontSize: "10px" }}
+                                        >
+                                            Have an account? Login
+                                        </span>
                                     </button>
                                 </div>
                                 <h2>Select Your Role</h2>
@@ -218,11 +239,18 @@ function RegisterForm() {
                             </>
                         ) : (
                             <>
-                                <div className="d-flex gap-2 justify-content-between align-items-center bg-white sticky-top" style={{paddingTop: '40px', paddingBottom: '20px', zIndex: '10'}}>
+                                <div
+                                    className="d-flex gap-2 justify-content-between align-items-center bg-white sticky-top"
+                                    style={{
+                                        paddingTop: "40px",
+                                        paddingBottom: "20px",
+                                        zIndex: "10",
+                                    }}
+                                >
                                     <button
                                         className="btn button-secondary btn-smz d-flex align-items-center m-0"
                                         onClick={handleBackToRole}
-                                        style={{maxWidth: '80px'}}
+                                        style={{ maxWidth: "80px" }}
                                         type="button"
                                     >
                                         <BsArrowLeft className="me-2" />
@@ -306,19 +334,44 @@ function RegisterForm() {
                                         </label>
                                     </div>
 
-                                    {/* District input for manager and district_admin */}
-                                    {(form.role === "district_admin" ||
-                                        form.role === "manager") && (
+                                    {/* Facility Dropdown for all roles */}
+                                    <div className="form-floating mb-3">
+                                        <select
+                                            className="form-select"
+                                            id="floatingFacility"
+                                            name="facility_id"
+                                            value={form.facility_id}
+                                            onChange={handleChange}
+                                            required
+                                        >
+                                            <option value="">
+                                                Select Facility
+                                            </option>
+                                            {facilities.map((facility) => (
+                                                <option
+                                                    key={facility.id}
+                                                    value={facility.id}
+                                                >
+                                                    {facility.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <label htmlFor="floatingFacility">
+                                            Facility
+                                        </label>
+                                    </div>
+
+                                    {/* Auto-filled District */}
+                                    {form.district && (
                                         <div className="form-floating mb-3">
                                             <input
                                                 type="text"
                                                 className="form-control"
                                                 id="floatingDistrict"
                                                 name="district"
-                                                value={form.district || ""}
-                                                onChange={handleChange}
+                                                value={form.district}
+                                                readOnly
                                                 placeholder="District"
-                                                required
                                             />
                                             <label htmlFor="floatingDistrict">
                                                 District
@@ -326,37 +379,8 @@ function RegisterForm() {
                                         </div>
                                     )}
 
-                                    {/* Facility Dropdown for non-mother roles */}
-                                    {form.role !== "mother" && (
-                                        <div className="form-floating mb-3">
-                                            <select
-                                                className="form-select"
-                                                id="floatingFacility"
-                                                name="facility_id"
-                                                value={form.facility_id}
-                                                onChange={handleChange}
-                                                required
-                                            >
-                                                <option value="">
-                                                    Select Facility
-                                                </option>
-                                                {facilities.map((facility) => (
-                                                    <option
-                                                        key={facility.id}
-                                                        value={facility.id}
-                                                    >
-                                                        {facility.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <label htmlFor="floatingFacility">
-                                                Facility
-                                            </label>
-                                        </div>
-                                    )}
-
                                     {/* Registration Info & Errors */}
-                                    {form.role !== "mother" && (
+                                    {selectedRole !== "mother" && (
                                         <div className="alert alert-info">
                                             Your registration will be reviewed
                                             by an administrator before approval.

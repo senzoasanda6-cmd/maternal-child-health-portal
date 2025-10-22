@@ -80,4 +80,39 @@ class FacilityController extends Controller
 
         return response()->json(['message' => 'Facility deleted']);
     }
+    public function dashboard($id)
+    {
+        $facility = Facility::with(['patients', 'appointments'])->findOrFail($id);
+
+        $visitsCount = \App\Models\PostnatalVisit::where('facility_id', $id)->count();
+
+        return response()->json([
+            'id' => $facility->id,
+            'name' => $facility->name,
+            'district' => $facility->district,
+            'sub_district' => $facility->sub_district,
+            'patients_count' => $facility->patients->count(),
+            'appointments_count' => $facility->appointments->count(),
+            'visits_count' => $visitsCount,
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = Facility::query();
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('district')) {
+            $query->where('district', 'like', '%' . $request->district . '%');
+        }
+
+        if ($request->filled('sub_district')) {
+            $query->where('sub_district', 'like', '%' . $request->sub_district . '%');
+        }
+
+        return $query->withCount(['patients', 'appointments'])->get();
+    }
 }

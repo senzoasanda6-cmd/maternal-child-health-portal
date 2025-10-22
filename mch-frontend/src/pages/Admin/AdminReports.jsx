@@ -8,26 +8,51 @@ import {
     FaBabyCarriage,
 } from "react-icons/fa";
 import { Bar, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
 
 const AdminReports = () => {
-    const [hospitals, setHospitals] = useState([]);
-    const [selectedHospitalId, setSelectedHospitalId] = useState("1");
+    const [facilities, setFacilities] = useState([]);
+    const [selectedFacilityId, setSelectedFacilityId] = useState("1");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [summary, setSummary] = useState(null);
     const [visitStats, setVisitStats] = useState(null);
 
     useEffect(() => {
-        const fetchHospitals = async () => {
+        const fetchFacilities = async () => {
             try {
-                const res = await api.get("/api/admin/hospitals");
-                setHospitals(res.data);
+                const res = await api.get("/api/admin/facilities");
+                setFacilities(res.data);
             } catch (err) {
-                console.error("Failed to load hospitals:", err);
+                console.error("Failed to load facilities:", err);
             }
         };
 
-        fetchHospitals();
+        fetchFacilities();
     }, []);
 
     useEffect(() => {
@@ -39,11 +64,11 @@ const AdminReports = () => {
 
                 const [vaccineRes, visitRes] = await Promise.all([
                     api.get(
-                        `/api/admin/hospitals/${selectedHospitalId}/vaccine-progress`,
+                        `/api/admin/facilities/${selectedFacilityId}/vaccine-progress`,
                         { params }
                     ),
                     api.get(
-                        `/api/admin/hospitals/${selectedHospitalId}/postnatal-visits`,
+                        `/api/admin/facilities/${selectedFacilityId}/postnatal-visits`,
                         { params }
                     ),
                 ]);
@@ -55,10 +80,10 @@ const AdminReports = () => {
             }
         };
 
-        if (selectedHospitalId) {
+        if (selectedFacilityId) {
             fetchReport();
         }
-    }, [selectedHospitalId, startDate, endDate]);
+    }, [selectedFacilityId, startDate, endDate]);
 
     const vaccineChartData = summary && {
         labels: ["Completed", "Missed", "Upcoming"],
@@ -71,38 +96,42 @@ const AdminReports = () => {
         ],
     };
 
-    const visitTrendData = visitStats && {
-        labels: Object.keys(visitStats.visits_by_day),
-        datasets: [
-            {
-                label: "Postnatal Visits",
-                data: Object.values(visitStats.visits_by_day),
-                borderColor: "#007bff",
-                backgroundColor: "rgba(0,123,255,0.1)",
-                fill: true,
-            },
-        ],
-    };
+    const visitTrendData =
+        visitStats?.visits_by_day &&
+        Object.keys(visitStats.visits_by_day).length > 0
+            ? {
+                  labels: Object.keys(visitStats.visits_by_day),
+                  datasets: [
+                      {
+                          label: "Postnatal Visits",
+                          data: Object.values(visitStats.visits_by_day),
+                          borderColor: "#007bff",
+                          backgroundColor: "rgba(0,123,255,0.1)",
+                          fill: true,
+                      },
+                  ],
+              }
+            : null;
 
     return (
         <div className="container p-4 space-y-6">
-            <h2 className="mb-4">Hospital &amp; PHC Facility Reports</h2>
+            <h2 className="mb-4">Facility Reports</h2>
 
             {/* Filters */}
             <div className="row mb-4">
                 <div className="col-md-4">
-                    <label htmlFor="hospital-select" className="form-label">
+                    <label htmlFor="facility-select" className="form-label">
                         Select Facility:
                     </label>
                     <select
-                        id="hospital-select"
+                        id="facility-select"
                         className="form-select"
-                        value={selectedHospitalId}
-                        onChange={(e) => setSelectedHospitalId(e.target.value)}
+                        value={selectedFacilityId}
+                        onChange={(e) => setSelectedFacilityId(e.target.value)}
                     >
-                        {hospitals.map((h) => (
-                            <option key={h.id} value={h.id}>
-                                {h.name}
+                        {facilities.map((f) => (
+                            <option key={f.id} value={f.id}>
+                                {f.name}
                             </option>
                         ))}
                     </select>
@@ -193,7 +222,11 @@ const AdminReports = () => {
 
                     <div className="card shadow-sm p-4">
                         <h5 className="mb-3">Postnatal Visit Trends</h5>
-                        <Line data={visitTrendData} />
+                        {visitTrendData ? (
+                            <Line data={visitTrendData} />
+                        ) : (
+                            <p>No visit trend data available.</p>
+                        )}
                     </div>
                 </>
             )}

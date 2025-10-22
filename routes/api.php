@@ -5,14 +5,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
-use App\Models\Hospital;
+use App\Models\Facility;
+// use App\Models\Hospital;
 use App\Models\Child;
 use App\Http\Controllers\PostnatalVisitController;
 use App\Http\Controllers\VaccinationController;
 use App\Http\Controllers\EventController;
 use App\Helpers\VaccineHelper;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\HospitalController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\Api\MotherController;
 use App\Http\Controllers\Api\ChildController;
 use App\Http\Controllers\Api\MotherDashboardController;
@@ -70,7 +71,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|string|in:mother,child,health_worker',
-            'hospital_id' => 'nullable|exists:hospitals,id',
+            'facility_id' => 'nullable|exists:facilities,id',
         ]);
 
         // Prevent unauthorized role assignment
@@ -83,7 +84,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'hospital_id' => $request->hospital_id,
+            'facility_id' => $request->facility_id,
+            'must_reset_password' => true,
         ]);
 
         // Return user info only (no token)
@@ -146,13 +148,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
 
         // Reports and Trends
-        Route::get('/hospitals/{id}/dashboard', [HospitalController::class, 'dashboard']);
-        Route::get('/hospitals/search', [HospitalController::class, 'search']);
-        Route::get('/hospitals/{id}/visit-trends', function (Request $request, $id) {
+        Route::get('/facilities/{id}/dashboard', [FacilityController::class, 'dashboard']);
+        Route::get('/facilities/search', [FacilityController::class, 'search']);
+        Route::get('/facilities/{id}/visit-trends', function (Request $request, $id) {
             $department = $request->query('department');
 
             $query = App\Models\PostnatalVisit::selectRaw('MONTH(visit_date) as month, COUNT(*) as count')
-                ->where('hospital_id', $id)
+                ->where('facility_id', $id)
                 ->whereYear('visit_date', now()->year);
 
             if ($department && $department !== 'All') {
@@ -166,8 +168,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
             return response()->json(['months' => $months, 'counts' => $counts]);
         });
-        Route::get('/hospitals/{id}/postnatal-visits', [ReportController::class, 'postnatalVisits']);
-        Route::get('/hospitals/{id}/vaccine-progress', [ReportController::class, 'vaccineProgress']);
+        Route::get('/facilities/{id}/postnatal-visits', [ReportController::class, 'postnatalVisits']);
+        Route::get('/facilities/{id}/vaccine-progress', [ReportController::class, 'vaccineProgress']);
 
         // Admin Profile Management
         Route::get('/profile', [AdminController::class, 'profile']);
@@ -177,8 +179,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // 🩺 Health Worker Routes
     Route::middleware(['checkrole:health_worker'])->get('/health/dashboard', function () {
         $user = Auth::user();
-        $hospital = Hospital::with(['patients', 'appointments'])->find($user->hospital_id);
-        return response()->json($hospital);
+        $facility = Facility::with(['patients', 'appointments'])->find($user->facility_id);
+        return response()->json($facility);
     });
 
     // 👶 Child Health Routes
@@ -248,14 +250,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
             $query->whereDate('dob', $request->dob);
         }
 
-        if ($request->filled('hospital_id')) {
-            $query->where('hospital_id', $request->hospital_id);
+        if ($request->filled('facility_id')) {
+            $query->whereHas('motherProfile.user', function ($q) use ($request) {
+                $q->where('facility_id', $request->facility_id);
+            });
         }
 
         if ($request->filled('mother_id')) {
             $query->where('mother_id', $request->mother_id);
         }
 
-        return $query->with('hospital', 'mother')->orderBy('name')->get();
+        return $query->with('mother')->orderBy('name')->get();
     });
+});
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/admin/audit-logs', [AuditLogController::class, 'index']);
 });

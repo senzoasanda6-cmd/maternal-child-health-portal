@@ -1,14 +1,15 @@
+import api from "./api"; // uses your base Axios config
+
+// Fetch all users
 export const getUsers = async () => {
-  // Replace with real API call
-  return [
-    { id: 1, name: "Thandi M.", email: "thandi@example.com", role: "user" },
-    { id: 2, name: "Sipho K.", email: "sipho@example.com", role: "admin" },
-    { id: 3, name: "Amina R.", email: "amina@example.com", role: "user" },
-  ];
+    const res = await api.get("/api/admin/users"); // adjust route to match Laravel
+    return res.data;
 };
 
-export const updateUserRole = async (userId, newRole) => {
-  // Replace with real API call
-  console.log(`User ${userId} promoted to ${newRole}`);
-  return true;
+// Update a user's role
+export const updateUserRole = async (userId, role) => {
+    const res = await api.put(`/api/admin/users/${userId}/role`, {
+        role,
+    });
+    return res.data;
 };
