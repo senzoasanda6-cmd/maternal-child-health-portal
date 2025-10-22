@@ -14,7 +14,6 @@ class Child extends Model
         'name',
         'dob',
         'mother_id',
-        'hospital_id',
         // Add other relevant fields
     ];
 
@@ -49,10 +48,7 @@ class Child extends Model
         return $this->belongsTo(User::class, 'mother_id');
     }
 
-    public function hospital()
-    {
-        return $this->belongsTo(Hospital::class);
-    }
+
 
     // 📊 Age-based vaccine schedule logic
     public function getDueVaccines()

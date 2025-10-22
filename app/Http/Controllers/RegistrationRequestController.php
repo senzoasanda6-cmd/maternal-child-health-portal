@@ -4,37 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Models\RegistrationRequest;
 use App\Models\User;
+use App\Models\Facility;
+use App\Models\AuditLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\RegistrationApproved;
-use App\Mail\RegistrationRejected;
 use Illuminate\Support\Facades\Password;
-use App\Models\Hospital;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Facility;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Mail\RegistrationApproved;
+use App\Mail\RegistrationRejected;
+use Illuminate\Support\Str;
 
 
 class RegistrationRequestController extends Controller
 {
     use AuthorizesRequests;
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:registration_requests,email',
-            'password' => 'required|string|min:6',
-            'password_confirmation' => 'same:password',
             'role' => 'required|string',
             'facility_id' => 'nullable|integer',
             'district' => 'nullable|string',
-            'comments' => 'nullable|string',
+            'sub_district' => 'nullable|string',
         ]);
 
+
+
         $registrationData = $validated;
-        unset($registrationData['password'], $registrationData['password_confirmation']);
+
+        unset($registrationData['password_confirmation']);
         $registrationData['status'] = 'pending';
 
         RegistrationRequest::create($registrationData);
@@ -51,20 +54,20 @@ class RegistrationRequestController extends Controller
             ->get();
     }
 
-
     public function approve($id)
     {
         $request = RegistrationRequest::findOrFail($id);
 
-        // Determine facility assignment
         $facilityId = match ($request->role) {
             'central_admin' => Facility::where('type', 'central')->first()?->id,
             'district_admin' => Facility::where('type', 'district')
                 ->where('district', $request->district ?? null)
+                ->where('sub_district', $request->sub_district ?? null)
                 ->first()?->id,
             'clinic_staff' => Facility::where('type', 'clinic')
                 ->where('id', $request->facility_id)
                 ->first()?->id,
+
             'hospital_staff' => Facility::where('type', 'hospital')
                 ->where('id', $request->facility_id)
                 ->first()?->id,
@@ -72,27 +75,41 @@ class RegistrationRequestController extends Controller
             default => null,
         };
 
+        $generatedPassword = Str::random(12); // generates a secure 12-character password
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($generatedPassword),
             'role' => $request->role,
             'facility_id' => $facilityId,
+             'must_reset_password' => true,
         ]);
 
-        $request->update(['status' => 'approved']);
+
+        $request->update([
+            'status' => 'approved',
+            'approved_at' => now(),
+            'approved_by' => Auth::id(),
+        ]);
+
+        AuditLog::create([
+            'action' => 'registration_approved',
+            'details' => "Approved registration for {$request->email} (role: {$request->role})",
+            'performed_by' => Auth::id(),
+        ]);
 
         $token = Password::createToken($user);
         $resetLink = url("/password/reset/{$token}?email=" . urlencode($user->email));
 
-        $hospital = Hospital::find($user->hospital_id);
-        $hospitalName = $hospital ? $hospital->name : 'N/A';
         $details = [
             'name' => $user->name,
             'role' => $user->role,
+            'location' => $user->facility?->name ?? 'N/A',
             'reset_link' => $resetLink,
-            'location' => $user->facility?->name ?? $hospitalName ?? 'N/A',
         ];
+
+
 
         switch ($user->role) {
             case 'central_admin':
@@ -120,16 +137,22 @@ class RegistrationRequestController extends Controller
 
         return response()->json(['message' => 'User approved and notified']);
     }
+
     public function reject($id)
     {
         $request = RegistrationRequest::findOrFail($id);
         $request->update(['status' => 'rejected']);
 
-        // Send rejection email
         Mail::to($request->email)->send(new RegistrationRejected([
             'name' => $request->name,
             'role' => $request->role,
         ]));
+
+        AuditLog::create([
+            'action' => 'registration_rejected',
+            'details' => "Rejected registration for {$request->email} (role: {$request->role})",
+            'performed_by' => Auth::id(),
+        ]);
 
         Log::info("User {$request->email} rejected by admin ID: " . Auth::id());
 

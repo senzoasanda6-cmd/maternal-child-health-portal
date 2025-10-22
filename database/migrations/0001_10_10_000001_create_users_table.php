@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('role')->default('mother');
-            $table->unsignedBigInteger('hospital_id')->nullable();
-            $table->foreign('hospital_id')->references('id')->on('hospitals')->onDelete('set null');
+            $table->unsignedBigInteger('facility_id')->nullable();
+            $table->foreign('facility_id')->references('id')->on('facilities')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes(); // ✅ Add this if using SoftDeletes

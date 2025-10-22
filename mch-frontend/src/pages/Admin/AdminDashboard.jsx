@@ -1,70 +1,23 @@
 import { useEffect, useState } from "react";
 import { getUsers, updateUserRole } from "../../services/userService";
+import { getAuditLogs } from "../../services/auditLogService";
 
 import ScreenLoading from "../../components/spinners/ScreenLoading";
-
-// Small reusable stat card
-const StatCard = ({ title, value, delta }) => (
-    <div className="card text-center p-3">
-        <div className="card-body">
-            <h6 className="card-title text-muted">{title}</h6>
-            <h3 className="card-text">{value}</h3>
-            {delta !== undefined && (
-                <small className="text-muted">{delta}</small>
-            )}
-        </div>
-    </div>
-);
-
-// Simple bar chart using SVG. Data is array of {label, value}.
-const SimpleBarChart = ({ data = [], height = 120 }) => {
-    const max = Math.max(...data.map((d) => d.value), 1);
-    const barWidth = Math.floor(100 / Math.max(data.length, 1));
-
-    return (
-        <svg viewBox={`0 0 100 ${height}`} width="100%" height="${height}">
-            {data.map((d, i) => {
-                const h = (d.value / max) * (height - 20);
-                return (
-                    <g key={i} transform={`translate(${i * barWidth + 2}, ${height - h - 10})`}>
-                        <rect width={barWidth - 4} height={h} fill="#4e73df" rx="2" />
-                        <text x={(barWidth - 4) / 2} y={h + 12} fontSize="3" fill="#333" textAnchor="middle">
-                            {d.label}
-                        </text>
-                    </g>
-                );
-            })}
-        </svg>
-    );
-};
-
-// Simple line chart using SVG. Data is array of numbers.
-const SimpleLineChart = ({ data = [], height = 80 }) => {
-    const max = Math.max(...data, 1);
-    const step = data.length > 1 ? 100 / (data.length - 1) : 100;
-    const points = data
-        .map((v, i) => `${i * step},${height - (v / max) * height}`)
-        .join(" ");
-
-    return (
-        <svg viewBox={`0 0 100 ${height}`} width="100%" height="${height}">
-            <polyline
-                fill="none"
-                stroke="#1cc88a"
-                strokeWidth="1.5"
-                points={points}
-            />
-        </svg>
-    );
-};
+import StatCard from "../../components/cards/StatCard";
+import SimpleBarChart from "../../components/charts/SimpleBarChart";
+import SimpleLineChart from "../../components/charts/SimpleLineChart";
 
 const AdminDashboard = () => {
-    // Sample data arrays — replace these with axios/async responses.
     const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [auditLogs, setAuditLogs] = useState([]);
+    const [logLoading, setLogLoading] = useState(true);
+    const [updatingUserId, setUpdatingUserId] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const usersPerPage = 5;
 
-    // Example metrics for charts (hardcoded). Shape is intentional so
-    // you can swap these with fetched data quickly.
     const vaccinationCoverage = [
         { label: "Jan", value: 72 },
         { label: "Feb", value: 78 },
@@ -83,18 +36,15 @@ const AdminDashboard = () => {
     ];
 
     useEffect(() => {
-        // Fetch users — keep existing service usage so it can be swapped.
         getUsers()
             .then((data) => {
-                // For illustration, if the backend doesn't provide
-                // registration/login/interactions, we augment it here.
                 const augmented = data.map((u, idx) => {
                     const regDate = new Date();
                     regDate.setDate(regDate.getDate() - (10 + idx * 3));
                     const lastLogin = new Date();
                     lastLogin.setDate(lastLogin.getDate() - (idx % 7));
-                    const notifications = (idx % 5) + 1; // sample
-                    const messages = (idx % 3) + 0; // sample
+                    const notifications = (idx % 5) + 1;
+                    const messages = idx % 3;
                     return {
                         ...u,
                         registrationDate: regDate.toISOString(),
@@ -103,9 +53,9 @@ const AdminDashboard = () => {
                     };
                 });
                 setUsers(augmented);
+                setFilteredUsers(augmented);
             })
             .catch(() => {
-                // Fallback: sample users if request fails
                 const sample = [
                     {
                         id: 1,
@@ -127,29 +77,63 @@ const AdminDashboard = () => {
                     },
                 ];
                 setUsers(sample);
+                setFilteredUsers(sample);
             })
             .finally(() => setLoading(false));
     }, []);
 
+    useEffect(() => {
+        getAuditLogs()
+            .then((data) => setAuditLogs(data.data || []))
+            .catch((err) => console.error("Failed to load audit logs:", err))
+            .finally(() => setLogLoading(false));
+    }, []);
+
     const handleRoleChange = async (userId, newRole) => {
+        setUpdatingUserId(userId);
         try {
             await updateUserRole(userId, newRole);
             const updated = users.map((u) =>
                 u.id === userId ? { ...u, role: newRole } : u
             );
             setUsers(updated);
+            applySearch(searchTerm, updated);
         } catch (err) {
-            // ignore for sample — in real app show toast
             console.error(err);
+        } finally {
+            setUpdatingUserId(null);
         }
     };
 
     const daysSince = (isoDate) => {
         if (!isoDate) return "-";
         const d = new Date(isoDate);
-        const diff = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
+        const diff = Math.floor(
+            (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24)
+        );
         return diff;
     };
+
+    const applySearch = (term, data = users) => {
+        const filtered = data.filter(
+            (u) =>
+                u.name.toLowerCase().includes(term.toLowerCase()) ||
+                u.email.toLowerCase().includes(term.toLowerCase())
+        );
+        setFilteredUsers(filtered);
+        setCurrentPage(1);
+    };
+
+    const handleSearch = (e) => {
+        const term = e.target.value;
+        setSearchTerm(term);
+        applySearch(term);
+    };
+
+    const indexOfLast = currentPage * usersPerPage;
+    const indexOfFirst = indexOfLast - usersPerPage;
+    const currentUsers = filteredUsers.slice(indexOfFirst, indexOfLast);
+    const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
     if (loading) return <ScreenLoading />;
 
@@ -160,10 +144,18 @@ const AdminDashboard = () => {
 
             <div className="row g-3 mb-4">
                 <div className="col-6 col-md-3">
-                    <StatCard title="Active Mothers (30d)" value="82" delta="+5%" />
+                    <StatCard
+                        title="Active Mothers (30d)"
+                        value="82"
+                        delta="+5%"
+                    />
                 </div>
                 <div className="col-6 col-md-3">
-                    <StatCard title="Vaccination Coverage" value="90%" delta="+2%" />
+                    <StatCard
+                        title="Vaccination Coverage"
+                        value="90%"
+                        delta="+2%"
+                    />
                 </div>
                 <div className="col-6 col-md-3">
                     <StatCard title="Upcoming Appointments" value="14" />
@@ -173,12 +165,38 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
+            <div className="card p-3 mb-4">
+                <h6>Recent Admin Actions</h6>
+                {logLoading ? (
+                    <p>Loading logs...</p>
+                ) : auditLogs.length === 0 ? (
+                    <p>No recent actions found.</p>
+                ) : (
+                    <ul className="list-group list-group-flush">
+                        {auditLogs.map((log) => (
+                            <li key={log.id} className="list-group-item">
+                                <strong>{log.action.replace("_", " ")}</strong>{" "}
+                                — {log.details}
+                                <br />
+                                <small className="text-muted">
+                                    By {log.performer?.name || "Unknown"} on{" "}
+                                    {new Date(log.created_at).toLocaleString()}
+                                </small>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+
             <div className="row mb-4">
                 <div className="col-md-6 mb-3">
                     <div className="card p-3">
                         <h6>Vaccination Coverage (last 6 months)</h6>
                         <div style={{ height: 140 }}>
-                            <SimpleBarChart data={vaccinationCoverage} height={120} />
+                            <SimpleBarChart
+                                data={vaccinationCoverage}
+                                height={120}
+                            />
                         </div>
                     </div>
                 </div>
@@ -187,7 +205,10 @@ const AdminDashboard = () => {
                     <div className="card p-3">
                         <h6>Monthly Active Mothers</h6>
                         <div style={{ height: 100 }}>
-                            <SimpleLineChart data={monthlyActiveMothers} height={80} />
+                            <SimpleLineChart
+                                data={monthlyActiveMothers}
+                                height={80}
+                            />
                         </div>
                         <small className="text-muted">Past 6 months</small>
                     </div>
@@ -199,26 +220,44 @@ const AdminDashboard = () => {
                     <div className="card p-3">
                         <h6>Appointments by Type</h6>
                         <div style={{ height: 120 }}>
-                            <SimpleBarChart data={appointmentTypes} height={100} />
+                            <SimpleBarChart
+                                data={appointmentTypes}
+                                height={100}
+                            />
                         </div>
-                        <small className="text-muted">Counts of appointment types</small>
+                        <small className="text-muted">
+                            Counts of appointment types
+                        </small>
                     </div>
                 </div>
 
                 <div className="col-md-6">
                     <div className="card p-3">
                         <h6>Engagement Snapshot</h6>
-                        <p className="mb-1">Avg. notifications per mother: <strong>3.2</strong></p>
-                        <p className="mb-1">Avg. health worker replies: <strong>1.1</strong></p>
-                        <p className="mb-0 text-muted">These numbers are illustrative; swap the arrays above with your API data.</p>
+                        <p className="mb-1">
+                            Avg. notifications per mother: <strong>3.2</strong>
+                        </p>
+                        <p className="mb-1">
+                            Avg. health worker replies: <strong>1.1</strong>
+                        </p>
+                        <p className="mb-0 text-muted">
+                            These numbers are illustrative; swap the arrays
+                            above with your API data.
+                        </p>
                     </div>
                 </div>
             </div>
 
-            {/* Users table moved to bottom with extra columns */}
             <div className="card mt-3">
                 <div className="card-body">
                     <h5 className="card-title">Users</h5>
+                    <input
+                        type="text"
+                        placeholder="Search by name or email"
+                        className="form-control mb-3"
+                        value={searchTerm}
+                        onChange={handleSearch}
+                    />
                     <div className="table-responsive">
                         <table className="table table-bordered mt-2">
                             <thead>
@@ -234,29 +273,59 @@ const AdminDashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users.map((user) => (
+                                {currentUsers.map((user) => (
                                     <tr key={user.id}>
                                         <td>{user.name}</td>
                                         <td>{user.email}</td>
                                         <td>{user.role}</td>
-                                        <td>{new Date(user.registrationDate).toLocaleDateString()}</td>
-                                        <td>{new Date(user.lastLogin).toLocaleString()}</td>
+                                        <td>
+                                            {new Date(
+                                                user.registrationDate
+                                            ).toLocaleDateString()}
+                                        </td>
+                                        <td>
+                                            {new Date(
+                                                user.lastLogin
+                                            ).toLocaleString()}
+                                        </td>
                                         <td>{daysSince(user.lastLogin)}</td>
                                         <td>{user.interactions ?? 0}</td>
                                         <td>
                                             {user.role !== "admin" ? (
                                                 <button
                                                     className="btn btn-sm btn-success me-2"
-                                                    onClick={() => handleRoleChange(user.id, "admin")}
+                                                    onClick={() =>
+                                                        handleRoleChange(
+                                                            user.id,
+                                                            "admin"
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        updatingUserId ===
+                                                        user.id
+                                                    }
                                                 >
-                                                    Promote to Admin
+                                                    {updatingUserId === user.id
+                                                        ? "Updating..."
+                                                        : "Promote to Admin"}
                                                 </button>
                                             ) : (
                                                 <button
                                                     className="btn btn-sm btn-warning"
-                                                    onClick={() => handleRoleChange(user.id, "user")}
+                                                    onClick={() =>
+                                                        handleRoleChange(
+                                                            user.id,
+                                                            "user"
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        updatingUserId ===
+                                                        user.id
+                                                    }
                                                 >
-                                                    Demote to User
+                                                    {updatingUserId === user.id
+                                                        ? "Updating..."
+                                                        : "Demote to User"}
                                                 </button>
                                             )}
                                         </td>
@@ -265,6 +334,30 @@ const AdminDashboard = () => {
                             </tbody>
                         </table>
                     </div>
+
+                    {/* Pagination */}
+                    <nav className="mt-3">
+                        <ul className="pagination justify-content-center">
+                            {Array.from(
+                                { length: totalPages },
+                                (_, i) => i + 1
+                            ).map((num) => (
+                                <li
+                                    key={num}
+                                    className={`page-item ${
+                                        num === currentPage ? "active" : ""
+                                    }`}
+                                >
+                                    <button
+                                        className="page-link"
+                                        onClick={() => setCurrentPage(num)}
+                                    >
+                                        {num}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

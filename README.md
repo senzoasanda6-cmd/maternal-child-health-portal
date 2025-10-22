@@ -54,7 +54,14 @@ The Maternal and Child Health System is a web-based application designed to trac
     ```bash
     php artisan migrate
     ```
-
+6.  **Import the database**
+    ```bash
+    php artisan facilities:import
+    ```
+7. **Seed the test users**
+   ```bash
+   php artisan db:seed
+   ```
 ## Running the Application
 
 -   **Backend (Laravel):**
