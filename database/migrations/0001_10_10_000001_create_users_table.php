@@ -16,14 +16,26 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role')->default('mother');
+
+            // Role system
+            $table->string('role')->default('mother');       // 'mother' or 'health_worker'
+            $table->string('sub_role')->nullable();          // e.g., 'nurse', 'midwife'
+            $table->string('designation')->nullable();       // submitted during registration
+            $table->string('custom_designation')->nullable();
+
+            // Facility association
             $table->unsignedBigInteger('facility_id')->nullable();
             $table->foreign('facility_id')->references('id')->on('facilities')->onDelete('set null');
+
+            // Status and tokens
+            $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
-            $table->softDeletes(); // ✅ Add this if using SoftDeletes
+            $table->softDeletes();
         });
     }
+
+
 
     /**
      * Reverse the migrations.

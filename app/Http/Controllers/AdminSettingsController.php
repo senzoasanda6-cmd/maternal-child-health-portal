@@ -36,4 +36,28 @@ class AdminSettingsController extends Controller
 
         return redirect()->route('admin.settings.edit')->with('success', 'Settings updated successfully.');
     }
+    public function getSettings()
+    {
+        /** @var \App\Models\User $admin */
+        $admin = Auth::user();
+
+        return response()->json([
+            'name' => $admin->name,
+            'email' => $admin->email,
+        ]);
+    }
+    public function updateSettings(Request $request)
+    {
+        /** @var \App\Models\User $admin */ $admin = Auth::user();
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $admin->id,
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
+        $admin->name = $validated['name'];
+        $admin->email = $validated['email'];
+        $admin->password = Hash::make($validated['password']);
+        $admin->save();
+        return response()->json(['message' => 'Settings updated successfully.']);
+    }
 }

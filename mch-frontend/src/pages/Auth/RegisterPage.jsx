@@ -15,10 +15,11 @@ function RegisterForm() {
         password: "",
         password_confirmation: "",
         role: "",
-        hospital_id: "",
         comments: "",
         facility_id: "",
         district: "",
+        designation: "", 
+        custom_designation: "",
     });
 
     const [error, setError] = useState("");
@@ -93,7 +94,6 @@ function RegisterForm() {
             password: "",
             password_confirmation: "",
             role: "",
-            hospital_id: "",
             comments: "",
             facility_id: "",
             district: "",
@@ -107,53 +107,61 @@ function RegisterForm() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-        if (form.password !== form.password_confirmation) {
-            setError("Passwords do not match.");
-            setLoading(false);
-            return;
-        }
+    if (form.password !== form.password_confirmation) {
+        setError("Passwords do not match.");
+        setLoading(false);
+        return;
+    }
 
-        if (!form.facility_id) {
-            setError("Facility is required.");
-            setLoading(false);
-            return;
-        }
+    if (!form.facility_id) {
+        setError("Facility is required.");
+        setLoading(false);
+        return;
+    }
 
-        const endpoint =
-            form.role === "mother"
-                ? `${API_BASE}/api/register`
-                : `${API_BASE}/api/registration-request`;
-
-        try {
-            await getCsrfCookie();
-
-            const response = await axios.post(endpoint, form);
-
-            if (response.status === 200 || response.status === 201) {
-                if (form.role === "mother") {
-                    navigate("/dashboard");
-                } else {
-                    alert(
-                        "Your registration request has been submitted for review."
-                    );
-                    navigate("/login");
-                }
-            } else {
-                setError(response.data.message || "Submission failed.");
-            }
-        } catch (err) {
-            const errorMessage =
-                err.response?.data?.message ||
-                "An error occurred. Please try again.";
-            setError(errorMessage);
-        } finally {
-            setLoading(false);
-        }
+    // Adjust designation if "other" is selected
+    const submissionData = {
+        ...form,
+        designation:
+            form.designation === "other"
+                ? form.custom_designation
+                : form.designation,
     };
+
+    const endpoint =
+        form.role === "mother"
+            ? `${API_BASE}/api/register`
+            : `${API_BASE}/api/registration-request`;
+
+    try {
+        await getCsrfCookie();
+
+        const response = await axios.post(endpoint, submissionData);
+
+        if (response.status === 200 || response.status === 201) {
+            if (form.role === "mother") {
+                navigate("/dashboard");
+            } else {
+                alert("Your registration request has been submitted for review.");
+                navigate("/login");
+            }
+        } else {
+            setError(response.data.message || "Submission failed.");
+        }
+    } catch (err) {
+        const errorMessage =
+            err.response?.data?.message ||
+            "An error occurred. Please try again.";
+        setError(errorMessage);
+    } finally {
+        setLoading(false);
+    }
+};
+
 
     return (
         <div className="login-page">
@@ -220,16 +228,9 @@ function RegisterForm() {
                                             Choose a role to continue
                                         </option>
                                         <option value="mother">Mother</option>
-                                        <option value="child">Child</option>
+
                                         <option value="health_worker">
                                             Health Worker
-                                        </option>
-                                        <option value="manager">Manager</option>
-                                        <option value="clinical_manager">
-                                            Clinical Manager
-                                        </option>
-                                        <option value="district_admin">
-                                            District Admin
                                         </option>
                                     </select>
                                     <label htmlFor="floatingRoleSelect">
@@ -379,6 +380,60 @@ function RegisterForm() {
                                         </div>
                                     )}
 
+                                    {/* Designation (only for health workers) */}
+                                    {selectedRole === "health_worker" && (
+                                        <div className="form-floating mb-3">
+                                            <select
+                                                className="form-select"
+                                                id="floatingDesignation"
+                                                name="designation"
+                                                value={form.designation}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="">
+                                                    Select Designation
+                                                </option>
+                                                <option value="nurse">
+                                                    Nurse
+                                                </option>
+                                                <option value="midwife">
+                                                    Midwife
+                                                </option>
+                                                <option value="community_health_worker">
+                                                    Community Health Worker
+                                                </option>
+                                                <option value="doctor">
+                                                    Doctor
+                                                </option>
+                                                <option value="clinical_manager">
+                                                    Clinical Manager
+                                                </option>
+                                                <option value="other">
+                                                    Other
+                                                </option>
+                                            </select>
+                                            <label htmlFor="floatingDesignation">
+                                                Designation
+                                            </label>
+                                        </div>
+                                    )}
+                                    {selectedRole === "health_worker" && form.designation === "other" && (
+  <div className="form-floating mb-3">
+    <input
+      type="text"
+      className="form-control"
+      id="floatingCustomDesignation"
+      name="custom_designation"
+      value={form.custom_designation}
+      onChange={handleChange}
+      placeholder="Specify your role"
+      required
+    />
+    <label htmlFor="floatingCustomDesignation">Specify Your Role</label>
+  </div>
+)}
+
                                     {/* Registration Info & Errors */}
                                     {selectedRole !== "mother" && (
                                         <div className="alert alert-info">
@@ -392,7 +447,6 @@ function RegisterForm() {
                                             {error}
                                         </div>
                                     )}
-
                                     {/* Submit */}
                                     <button
                                         type="submit"

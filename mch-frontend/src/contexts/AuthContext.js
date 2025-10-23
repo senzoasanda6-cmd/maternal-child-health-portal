@@ -50,14 +50,12 @@ export const AuthProvider = ({ children }) => {
                 }
 
                 // small delay before retrying (simple backoff)
-                await new Promise((res) => setTimeout(res, 500 * attempt));
-            } finally {
-                // if we exit loop with a user set, ensure loading still becomes false
-                if (attempt > maxRetries || user) {
-                    setLoading(false);
-                }
+                const delay = 500 * attempt;
+                await new Promise((res) => setTimeout(res, delay));
             }
         }
+        // ensure loading becomes false after attempts complete
+        setLoading(false);
     }, [logout]);
 
     // Attempt to fetch user on provider mount so auth state is available

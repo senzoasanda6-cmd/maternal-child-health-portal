@@ -12,8 +12,9 @@ class RegistrationRequest extends Model
         'role',
         'facility_id',
         'district',
-        'comments',
+        'designation',
         'status',
+        
     ];
     // app/Models/RegistrationRequest.php
 
