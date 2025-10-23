@@ -17,6 +17,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'sub_role',
+        'designation',
         'facility_id',
         'is_active',
     ];
@@ -81,5 +83,14 @@ class User extends Authenticatable
     public function motherProfile()
     {
         return $this->hasOne(MotherProfile::class);
+    }
+    public function isMidwife(): bool
+    {
+        return $this->role === 'health_worker' && $this->sub_role === 'midwife';
+    }
+
+    public function isNurse(): bool
+    {
+        return $this->role === 'health_worker' && $this->sub_role === 'nurse';
     }
 }
