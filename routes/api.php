@@ -29,6 +29,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminSettingsController;
+
 
 // Publicly accessible route to get a list of all facilities
 Route::get('/facilities', [FacilityController::class, 'index']);
@@ -122,6 +124,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/registration-requests/{id}/approve', [RegistrationRequestController::class, 'approve']);
         Route::post('/registration-requests/{id}/reject', [RegistrationRequestController::class, 'reject']);
 
+        // Admin Settings Management
+        Route::get('/settings', [AdminSettingsController::class, 'getSettings']);
+        Route::post('/settings', [AdminSettingsController::class, 'updateSettings']);
         // User Management
         Route::apiResource('/users', App\Http\Controllers\UserController::class);
 

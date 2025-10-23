@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../services/api";
 
 export default function AdminSettings() {
     const [form, setForm] = useState({
@@ -11,7 +11,7 @@ export default function AdminSettings() {
     const [message, setMessage] = useState(null);
 
     useEffect(() => {
-        axios
+        api
             .get("/api/admin/settings")
             .then((res) => {
                 setForm(f => ({
@@ -29,7 +29,7 @@ export default function AdminSettings() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios
+        api
             .post("/api/admin/settings", form)
             .then((res) => setMessage("Settings updated successfully."))
             .catch((err) => setMessage("Update failed."));

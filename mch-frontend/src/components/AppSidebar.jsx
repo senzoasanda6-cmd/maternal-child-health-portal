@@ -11,6 +11,9 @@ import {
     FaBookMedical,
     FaChevronLeft,
     FaChevronRight,
+    FaUserNurse,
+    FaUserCheck,
+    FaCog,
 } from "react-icons/fa";
 import { FaHome, FaUser, FaUsers } from "react-icons/fa";
 
@@ -105,6 +108,48 @@ const Sidebar = ({ user }) => {
                 icon: <FaUserPlus />,
             },
             { label: "My Profile", path: "/profile", icon: <FaUser /> },
+        ],
+        districtAdmin: [
+            {
+                label: "Home",
+                path: "/district/home",
+                icon: <FaHome />,
+            },
+            {
+                label: "District Dashboard",
+                path: "/district/dashboard",
+                icon: <FaTachometerAlt />,
+            },
+            {
+                label: "My Facilities",
+                path: "/district/facilities",
+                icon: <FaHospital />,
+            },
+            {
+                label: "Facility Reports",
+                path: "/district/reports",
+                icon: <FaChartBar />,
+            },
+            {
+                label: "Health Worker Accounts",
+                path: "/district/users",
+                icon: <FaUserNurse />,
+            },
+            {
+                label: "Account Requests",
+                path: "/district/approvals",
+                icon: <FaUserCheck />,
+            },
+            {
+                label: "District Settings",
+                path: "/district/settings",
+                icon: <FaCog />,
+            },
+            {
+                label: "My Profile",
+                path: "/profile",
+                icon: <FaUser />,
+            },
         ],
     };
 

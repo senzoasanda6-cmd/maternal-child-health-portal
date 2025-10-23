@@ -106,9 +106,19 @@ const UserList = () => {
                         onChange={(e) => setRoleFilter(e.target.value)}
                     >
                         <option value="all">All Roles</option>
-                        <option value="admin">Admin</option>
-                        <option value="health_worker">Health Worker</option>
                         <option value="mother">Mother</option>
+                        <option value="health_worker">Health Worker</option>
+                        <option value="admin">Admin</option>
+                        <option value="dstrict_admin">District Admin</option>
+                        <option value="hospital_admin">Hospital Admin</option>
+                        <option value="facility_admin">Facility Admin</option>
+                        <option value="facility_manager">
+                            Facility Manager
+                        </option>
+                        <option value="facility_worker">Facility Worker</option>
+                        <option value="facility_nurse">Facility Nurse</option>
+                        <option value="facility_doctor">Facility Doctor</option>
+                        <option value="midwife">Midwife</option>
                     </select>
                 </div>
             </div>
@@ -156,6 +166,30 @@ const UserList = () => {
                                                 Health Worker
                                             </option>
                                             <option value="admin">Admin</option>
+                                            <option value="dstrict_admin">
+                                                District Admin
+                                            </option>
+                                            <option value="hospital_admin">
+                                                Hospital Admin
+                                            </option>
+                                            <option value="facility_admin">
+                                                Facility Admin
+                                            </option>
+                                            <option value="facility_manager">
+                                                Facility Manager
+                                            </option>
+                                            <option value="facility_worker">
+                                                Facility Worker
+                                            </option>
+                                            <option value="facility_nurse">
+                                                Facility Nurse
+                                            </option>
+                                            <option value="facility_doctor">
+                                                Facility Doctor
+                                            </option>
+                                            <option value="midwife">
+                                                Midwife
+                                            </option>
                                         </select>
                                     )}
                                 </td>
