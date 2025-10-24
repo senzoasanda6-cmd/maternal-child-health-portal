@@ -7,84 +7,64 @@ use Illuminate\Http\Request;
 
 class FacilityController extends Controller
 {
+    // List all facilities with optional filters
     public function index(Request $request)
     {
         $query = Facility::query();
 
-        if ($request->has('type')) {
+        if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
 
-        if ($request->has('district')) {
+        if ($request->filled('district')) {
             $query->where('district', $request->district);
         }
 
-        return response()->json($query->orderBy('name')->get());
+        return response()->json(
+            $query->withCount(['mothers', 'appointments'])
+                ->orderBy('name')
+                ->get()
+        );
     }
-    public function show($id)
+
+    // Show a single facility with related data
+    public function show(Facility $facility)
     {
-        $facility = Facility::findOrFail($id);
-
-        if (!$facility) {
-            return response()->json(['error' => 'Facility not found'], 404);
-        }
-
+        $facility->load(['mothers', 'appointments']);
         return response()->json($facility);
     }
+
+    // Store a new facility
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'title' => 'nullable|string|max:255',
-            'district' => 'required|string|max:255',
-            'sub_district' => 'nullable|string|max:255',
-            'type' => 'required|string|max:255',
-            'level_of_care' => 'nullable|string|max:255',
-        ]);
-
+        $validated = $this->validateRequest($request);
         $facility = Facility::create($validated);
 
         return response()->json($facility, 201);
     }
 
-    public function update(Request $request, $id)
+    // Update a facility
+    public function update(Request $request, Facility $facility)
     {
-        $facility = Facility::findOrFail($id);
-
-        if (!$facility) {
-            return response()->json(['error' => 'Facility not found'], 404);
-        }
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'title' => 'nullable|string|max:255',
-            'district' => 'required|string|max:255',
-            'sub_district' => 'nullable|string|max:255',
-            'type' => 'required|string|max:255',
-            'level_of_care' => 'nullable|string|max:255',
-        ]);
-
+        $validated = $this->validateRequest($request, true);
         $facility->update($validated);
 
         return response()->json($facility);
     }
-    public function destroy($id)
+
+    // Delete a facility
+    public function destroy(Facility $facility)
     {
-        $facility = Facility::findOrFail($id);
-
-        if (!$facility) {
-            return response()->json(['error' => 'Facility not found'], 404);
-        }
-
         $facility->delete();
-
-        return response()->json(['message' => 'Facility deleted']);
+        return response()->json(['message' => 'Facility deleted successfully']);
     }
-    public function dashboard($id)
-    {
-        $facility = Facility::with(['patients', 'appointments'])->findOrFail($id);
 
-        $visitsCount = \App\Models\PostnatalVisit::where('facility_id', $id)->count();
+    // Dashboard: summary for a facility
+    public function dashboard(Facility $facility)
+    {
+        $facility->load(['mothers', 'appointments']);
+
+        $visitsCount = \App\Models\PostnatalVisit::where('facility_id', $facility->id)->count();
 
         return response()->json([
             'id' => $facility->id,
@@ -97,6 +77,7 @@ class FacilityController extends Controller
         ]);
     }
 
+    // Search facilities by name, district, sub_district
     public function search(Request $request)
     {
         $query = Facility::query();
@@ -113,6 +94,21 @@ class FacilityController extends Controller
             $query->where('sub_district', 'like', '%' . $request->sub_district . '%');
         }
 
-        return $query->withCount(['patients', 'appointments'])->get();
+        return $query->withCount(['mothers', 'appointments'])->get();
+    }
+
+    // Private method for validation
+    private function validateRequest(Request $request, bool $update = false): array
+    {
+        $rules = [
+            'name' => $update ? 'sometimes|string|max:255' : 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'district' => $update ? 'sometimes|string|max:255' : 'required|string|max:255',
+            'sub_district' => 'nullable|string|max:255',
+            'type' => $update ? 'sometimes|string|max:255' : 'required|string|max:255',
+            'level_of_care' => 'nullable|string|max:255',
+        ];
+
+        return $request->validate($rules);
     }
 }

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('mothers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('facility_id')->nullable()->constrained()->onDelete('set null');
         });
     }
 

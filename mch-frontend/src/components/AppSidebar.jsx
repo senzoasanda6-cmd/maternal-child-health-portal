@@ -14,8 +14,10 @@ import {
     FaUserNurse,
     FaUserCheck,
     FaCog,
+    FaHome,
+    FaUser,
+    FaUsers,
 } from "react-icons/fa";
-import { FaHome, FaUser, FaUsers } from "react-icons/fa";
 
 import "./_components.css";
 
@@ -26,131 +28,58 @@ const Sidebar = ({ user }) => {
     const sharedLinks = [
         { label: "Appointments", path: "/calendar", icon: <FaCalendarAlt /> },
         { label: "Postnatal Care", path: "/postnatal-care", icon: <FaBaby /> },
-        {
-            label: "Pregnancy Stages",
-            path: "/pregnancy-stages",
-            icon: <FaBaby />,
-        },
-        {
-            label: "Safe Medicines",
-            path: "/safe-medicines",
-            icon: <FaCapsules />,
-        },
-        {
-            label: "Health Education",
-            path: "/health-education",
-            icon: <FaBookMedical />,
-        },
+        { label: "Pregnancy Stages", path: "/pregnancy-stages", icon: <FaBaby /> },
+        { label: "Safe Medicines", path: "/safe-medicines", icon: <FaCapsules /> },
+        { label: "Health Education", path: "/health-education", icon: <FaBookMedical /> },
+    ];
+
+    const motherRoutes = [
+        { label: "Home", path: "/mother/home", icon: <FaHome /> },
+        { label: "Dashboard", path: "/mother/dashboard", icon: <FaTachometerAlt /> },
+        { label: "My Profile", path: "/mother/mom-profile", icon: <FaUser /> },
+        { label: "My Children", path: "/mother/children", icon: <FaUsers /> },
+        ...sharedLinks,
+    ];
+
+    const healthWorkerRoutes = [
+        { label: "Dashboard", path: "/health/dashboard", icon: <FaTachometerAlt /> },
+        { label: "My Patients", path: "/health/patients", icon: <FaUsers /> },
+        ...sharedLinks,
+    ];
+
+    const adminRoutes = [
+        { label: "Home", path: "/admin/home", icon: <FaHome /> },
+        { label: "Admin Dashboard", path: "/admin/dashboard", icon: <FaTachometerAlt /> },
+        { label: "Facility Reports", path: "/admin/reports", icon: <FaChartBar /> },
+        { label: "Facility Management", path: "/admin/facilities", icon: <FaHospital /> },
+        { label: "Health Worker Accounts", path: "/admin/users", icon: <FaUserPlus /> },
+        { label: "Acc. Request Approvals", path: "/admin/approvals", icon: <FaUserPlus /> },
+        { label: "My Profile", path: "/profile", icon: <FaUser /> },
+    ];
+
+    const districtAdminRoutes = [
+        { label: "Home", path: "/district/home", icon: <FaHome /> },
+        { label: "District Dashboard", path: "/district/dashboard", icon: <FaTachometerAlt /> },
+        { label: "My Facilities", path: "/district/facilities", icon: <FaHospital /> },
+        { label: "Facility Reports", path: "/district/reports", icon: <FaChartBar /> },
+        { label: "Health Worker Accounts", path: "/district/users", icon: <FaUserNurse /> },
+        { label: "Account Requests", path: "/district/approvals", icon: <FaUserCheck /> },
+        { label: "District Settings", path: "/district/settings", icon: <FaCog /> },
+        { label: "My Profile", path: "/profile", icon: <FaUser /> },
     ];
 
     const routesByRole = {
-        mother: [
-            { label: "Home", path: "/mother/home", icon: <FaHome /> },
-            {
-                label: "Dashboard",
-                path: "/mother/dashboard",
-                icon: <FaTachometerAlt />,
-            },
-            {
-                label: "My Profile",
-                path: "/mother/mom-profile",
-                icon: <FaUser />,
-            },
-            {
-                label: "My Children",
-                path: "/mother/children",
-                icon: <FaUsers />,
-            },
-            ...sharedLinks,
-        ],
-        health_worker: [
-            {
-                label: "Dashboard",
-                path: "/health/dashboard",
-                icon: <FaTachometerAlt />,
-            },
-            {
-                label: "My Patients",
-                path: "/health/patients",
-                icon: <FaUsers />,
-            },
-            ...sharedLinks,
-        ],
-        admin: [
-            {
-                label: "Home",
-                path: "/admin/home",
-                icon: <FaHome />,
-            },
-            {
-                label: "Admin Dashboard",
-                path: "/admin/dashboard",
-                icon: <FaTachometerAlt />,
-            },
-            {
-                label: "Facility Reports",
-                path: "/admin/reports",
-                icon: <FaChartBar />,
-            },
-            {
-                label: "Facility Management",
-                path: "/admin/facilities",
-                icon: <FaHospital />,
-            },
-            {
-                label: "Health Worker Accounts",
-                path: "/admin/users",
-                icon: <FaUserPlus />,
-            },
-            {
-                label: "Acc. Request Approvals",
-                path: "/admin/approvals",
-                icon: <FaUserPlus />,
-            },
-            { label: "My Profile", path: "/profile", icon: <FaUser /> },
-        ],
-        districtAdmin: [
-            {
-                label: "Home",
-                path: "/district/home",
-                icon: <FaHome />,
-            },
-            {
-                label: "District Dashboard",
-                path: "/district/dashboard",
-                icon: <FaTachometerAlt />,
-            },
-            {
-                label: "My Facilities",
-                path: "/district/facilities",
-                icon: <FaHospital />,
-            },
-            {
-                label: "Facility Reports",
-                path: "/district/reports",
-                icon: <FaChartBar />,
-            },
-            {
-                label: "Health Worker Accounts",
-                path: "/district/users",
-                icon: <FaUserNurse />,
-            },
-            {
-                label: "Account Requests",
-                path: "/district/approvals",
-                icon: <FaUserCheck />,
-            },
-            {
-                label: "District Settings",
-                path: "/district/settings",
-                icon: <FaCog />,
-            },
-            {
-                label: "My Profile",
-                path: "/profile",
-                icon: <FaUser />,
-            },
-        ],
+        mother: motherRoutes,
+        health_worker: healthWorkerRoutes,
+        midwife: healthWorkerRoutes,
+        facility_worker: healthWorkerRoutes,
+        facility_nurse: healthWorkerRoutes,
+        facility_doctor: healthWorkerRoutes,
+        admin: adminRoutes,
+        hospital_admin: adminRoutes,
+        facility_admin: adminRoutes,
+        facility_manager: adminRoutes,
+        district_admin: districtAdminRoutes,
     };
 
     const links = routesByRole[role] || [
@@ -168,11 +97,7 @@ const Sidebar = ({ user }) => {
     };
 
     return (
-        <aside
-            className={`sidebar shadow ${isOpen ? "expanded" : "collapsed"}`}
-            // onMouseEnter={() => !isOpen && setIsOpen(true)}
-            // onMouseLeave={() => !isOpen && setIsOpen(false)}
-        >
+        <aside className={`sidebar shadow ${isOpen ? "expanded" : "collapsed"}`}>
             <div
                 className="d-flex justify-content-between align-items-center mb-3z bg-white sticky-top border-bottom"
                 style={{ padding: "20px" }}
@@ -183,7 +108,6 @@ const Sidebar = ({ user }) => {
                     </div>
                 )}
                 <div className="col-md d-flex justify-content-end">
-                    {/* toggle sidebar */}
                     <button
                         className="button bg-custom-color-primary p-2 flex-fill text-white custom-color-primary"
                         onMouseDown={toggleSidebar}
@@ -193,31 +117,21 @@ const Sidebar = ({ user }) => {
                 </div>
             </div>
             <div style={{ padding: "10px 20px 20px 20px" }}>
-                {/* <hr className="mt-0" /> */}
                 <ul>
                     {links.map((link) => (
                         <li key={link.path}>
                             <NavLink to={link.path} className={getLinkClass}>
                                 {link.icon && <span>{link.icon}</span>}
-                                {isOpen && (
-                                    <span className="ms-2">{link.label}</span>
-                                )}
+                                {isOpen && <span className="ms-2">{link.label}</span>}
                             </NavLink>
                         </li>
                     ))}
                 </ul>
                 <hr />
                 <div className={`pb-0 ${isOpen ? "" : "rotate-pos-90"}`}>
-                    <p
-                        className="m-0 text-custom-color-primary"
-                        style={{ fontSize: "12px" }}
-                    >
-                        &copy; {new Date().getFullYear()} Maternal Child Health
-                        Portal.{" "}
-                        <a
-                            href="mailto:senzo.dubazana@gauteng.gov.za"
-                            className="text-primary"
-                        >
+                    <p className="m-0 text-custom-color-primary" style={{ fontSize: "12px" }}>
+                        &copy; {new Date().getFullYear()} Maternal Child Health Portal.{" "}
+                        <a href="mailto:senzo.dubazana@gauteng.gov.za" className="text-primary">
                             Need help?
                         </a>
                     </p>
