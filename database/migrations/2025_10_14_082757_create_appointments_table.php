@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('type');
             $table->string('location');
             $table->timestamps();
+            $table->foreignId('facility_id')->nullable()->constrained()->onDelete('set null');
+
         });
     }
 

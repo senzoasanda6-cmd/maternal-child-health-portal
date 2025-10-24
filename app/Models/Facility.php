@@ -38,4 +38,9 @@ class Facility extends Model
     {
         return $this->hasMany(Child::class);
     }
+    public function mothers()
+    {
+        return $this->hasMany(Mother::class);
+    }
+    
 }
