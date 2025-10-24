@@ -6,75 +6,87 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Child;
 
-
 class ChildController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // List all children with optional filters and related counts
+    public function index(Request $request)
     {
-        //
+        $query = Child::with('mother');
+
+        if ($request->filled('mother_id')) {
+            $query->where('mother_id', $request->mother_id);
+        }
+
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        return response()->json(
+            $query->withCount(['vaccinations', 'appointments', 'postnatalVisits'])
+                ->orderBy('name')
+                ->get()
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Store a new child
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'dob' => 'required|date',
-            'gender' => 'required|in:male,female',
-            'mother_id' => 'required|exists:mothers,id',
-        ]);
-
-        $child = Child::create([
-            'name' => $request->name,
-            'dob' => $request->dob,
-            'gender' => $request->gender,
-            'mother_id' => $request->mother_id,
-        ]);
-
+        $child = Child::create($this->validateRequest($request));
         return response()->json($child, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Show a single child with related data
+    public function show(Child $child)
     {
-        $child = Child::with('mother')->findOrFail($id);
+        $child->load(['mother', 'vaccinations', 'appointments', 'postnatalVisits']);
         return response()->json($child);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Update a child
+    public function update(Request $request, Child $child)
     {
-        $request->validate([
-            'name' => 'string',
-            'dob' => 'date',
-            'gender' => 'in:male,female',
-            'mother_id' => 'exists:mothers,id',
-        ]);
-
-        $child = Child::findOrFail($id);
-        $child->update($request->only(['name', 'dob', 'gender', 'mother_id']));
-
+        $child->update($this->validateRequest($request, $update = true));
         return response()->json($child);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // Delete a child
+    public function destroy(Child $child)
     {
-        $child = Child::findOrFail($id);
         $child->delete();
-
         return response()->json(['message' => 'Child deleted successfully']);
+    }
+
+    // Dashboard: summary for a child
+    public function dashboard(Child $child)
+    {
+        $child->load(['mother']);
+
+        return response()->json([
+            'id' => $child->id,
+            'name' => $child->name,
+            'dob' => $child->dob,
+            'gender' => $child->gender,
+            'mother' => $child->mother,
+            'vaccinations_count' => $child->vaccinations()->count(),
+            'appointments_count' => $child->appointments()->count(),
+            'postnatal_visits_count' => $child->postnatalVisits()->count(),
+        ]);
+    }
+
+    // Private method for validation
+    private function validateRequest(Request $request, bool $update = false): array
+    {
+        $rules = [
+            'name' => $update ? 'sometimes|string' : 'required|string',
+            'dob' => $update ? 'sometimes|date' : 'required|date',
+            'gender' => $update ? 'sometimes|in:male,female' : 'required|in:male,female',
+            'mother_id' => $update ? 'sometimes|exists:mothers,id' : 'required|exists:mothers,id',
+        ];
+
+        return $request->validate($rules);
     }
 }

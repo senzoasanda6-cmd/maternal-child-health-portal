@@ -1,17 +1,18 @@
-<!DOCTYPE html>
-<html>
+@component('mail::message')
+# Welcome, {{ $name }}!
 
-<head>
-    <title>Registration Approved</title>
-</head>
+Your registration as a **{{ $role }}** has been approved.
 
-<body>
-    <h2>Dear {{ $userData['name'] }},</h2>
-    <p>Your registration as a <strong>{{ $userData['role'] }}</strong> at <strong>{{ $userData['hospital'] }}</strong> has been approved.</p>
-    <p>To set your password and access your account, click the link below:</p>
-    <p><a href="{{ $userData['reset_link'] }}">Set Your Password</a></p>
-    <p>Thank you for joining the Maternal & Child Health Portal.</p>
+**Assigned Facility:** {{ $location }}
 
-</body>
+{{ $messageText }}
 
-</html>
+@component('mail::button', ['url' => $reset_link])
+Set Your Password
+@endcomponent
+
+Please click the button above to set your password and access your account.
+
+Thanks,<br>
+{{ config('app.name') }}
+@endcomponent

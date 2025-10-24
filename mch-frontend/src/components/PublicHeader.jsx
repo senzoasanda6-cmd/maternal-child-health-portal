@@ -1,5 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 
 import mch_logo_transp from "../assets/logos/mch_ai_v1_logo_transp.png";
 
@@ -9,6 +10,22 @@ const hamburgerSvgDataUri = `data:image/svg+xml;utf8,${encodeURIComponent(
 )}`;
 
 function PublicHeader() {
+    const navigate = useNavigate();
+    const { user, loading } = useContext(AuthContext);
+
+    const goToPortal = () => {
+        if (!user) return navigate('/login');
+        switch (user.role) {
+            case 'admin':
+                return navigate('/admin/home');
+            case 'health_worker':
+                return navigate('/health/dashboard');
+            case 'mother':
+                return navigate('/mother/home');
+            default:
+                return navigate('/');
+        }
+    };
     return (
         <header
             className="navbar header-public px-2"
@@ -81,62 +98,70 @@ function PublicHeader() {
                                 style={{ minHeight: "50px" }}
                             >
                                 <li className="nav-item d-flex justify-content-start">
-                                    <Link
+                                    <NavLink
                                         to="/"
-                                        className="nav-link px-3 pt-3 active"
+                                        end
+                                        className={({ isActive }) =>
+                                            `nav-link px-3 pt-3 ${isActive ? "active" : ""}`
+                                        }
                                         aria-current="page"
                                     >
                                         <span className=" anim-link">Home</span>
-                                    </Link>
+                                    </NavLink>
                                 </li>
                                 <li className="nav-item d-flex justify-content-end">
-                                    <Link
+                                    <NavLink
                                         to="/services"
-                                        className="nav-link px-3 pt-3"
+                                        className={({ isActive }) =>
+                                            `nav-link px-3 pt-3 ${isActive ? "active" : ""}`
+                                        }
                                     >
                                         <span className=" anim-link">
                                             Services
                                         </span>
-                                    </Link>
+                                    </NavLink>
                                 </li>
                                 <li className="nav-item d-flex justify-content-end">
-                                    <Link
+                                    <NavLink
                                         to="/resources/nutrition"
-                                        className="nav-link px-3 pt-3"
+                                        className={({ isActive }) =>
+                                            `nav-link px-3 pt-3 ${isActive ? "active" : ""}`
+                                        }
                                     >
                                         <span className=" anim-link">
                                             Resources
                                         </span>
-                                    </Link>
+                                    </NavLink>
                                 </li>
                                 <li className="nav-item d-flex justify-content-end">
-                                    <Link
+                                    <NavLink
                                         to="/terms"
-                                        className="nav-link px-3 pt-3"
+                                        className={({ isActive }) =>
+                                            `nav-link px-3 pt-3 ${isActive ? "active" : ""}`
+                                        }
                                     >
                                         <span className=" anim-link">
                                             Terms
                                         </span>
-                                    </Link>
+                                    </NavLink>
                                 </li>
                             </ul>
                         </div>
                         {/* Auth Links */}
                         <div className="col-md">
-                            <div className="nav-item d-flex justify-content-end gap-2 m-0">
-                                <Link
-                                    to="/login"
-                                    className="button button-primary"
-                                >
-                                    Login
-                                </Link>
-                                <Link
-                                    to="/register"
-                                    className="button button-primary"
-                                >
-                                    Register
-                                </Link>
-                            </div>
+                                <div className="nav-item d-flex justify-content-end gap-2 m-0">
+                                    {/* If a user session exists, show Access Portal instead of Login/Register */}
+                                    {!loading && user ? (
+                                        <button className="button button-primary" onClick={goToPortal}>
+                                            Access Portal
+                                        </button>
+                                    ) : (
+                                        <>
+                                            <Link to="/login" className="button button-primary">Login</Link>
+                                            <Link to="/register" className="button button-primary">Register</Link>
+                                        </>
+                                    )}
+                                </div>
                         </div>
                     </div>
                 </div>

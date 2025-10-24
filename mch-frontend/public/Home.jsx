@@ -23,7 +23,7 @@ const Home = () => {
                 <Link className="nav-link" to="/visit-list">Visit List</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/hospital-dashboard">Hospital Dashboard</Link>
+                <Link className="nav-link" to="/facility-dashboard">Facility Dashboard</Link>
               </li>
             </ul>
           </div>
@@ -33,7 +33,7 @@ const Home = () => {
       {/* Welcome Section */}
       <div className="container py-5 text-center">
         <h1 className="mb-4">Welcome to the Postnatal Care Portal</h1>
-        <p className="lead">Track visits, explore pregnancy stages, and manage hospital insights — all in one place.</p>
+        <p className="lead">Track visits, explore pregnancy stages, and manage facility insights — all in one place.</p>
         <Link to="/pregnancy-stages" className="btn btn-primary mt-3">Get Started</Link>
       </div>
     </div>

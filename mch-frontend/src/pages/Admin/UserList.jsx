@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import { Link } from "react-router-dom";
+import Spinner from "../../components/spinners/Spinner";
+
+import AppPageLoading from "../../components/spinners/AppPageLoading";
+import AppLoadError from "../../components/spinners/AppLoadError";
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
@@ -9,6 +13,7 @@ const UserList = () => {
     const [roleFilter, setRoleFilter] = useState("all");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [updatingUserId, setUpdatingUserId] = useState(null);
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this user?"))
@@ -59,11 +64,29 @@ const UserList = () => {
         setFilteredUsers(filtered);
     }, [searchTerm, roleFilter, users]);
 
-    if (loading) return <p>Loading users...</p>;
-    if (error) return <p className="text-danger">{error}</p>;
+    const handleRoleChange = async (userId, newRole) => {
+        setUpdatingUserId(userId);
+        try {
+            // We only need to send the role for this update
+            await api.put(`/api/admin/users/${userId}`, { role: newRole });
+            setUsers(
+                users.map((u) =>
+                    u.id === userId ? { ...u, role: newRole } : u
+                )
+            );
+        } catch (err) {
+            console.error("Role update failed:", err);
+            alert("Failed to update user role.");
+        } finally {
+            setUpdatingUserId(null);
+        }
+    };
+
+    if (loading) return <AppPageLoading loadingText="Loading users..." />;
+    if (error) return <AppLoadError message={error} />;
 
     return (
-        <div className="container py-4">
+        <div className="container p-4 space-y-6">
             <h2 className="mb-4">User Management</h2>
 
             <div className="row mb-3">
@@ -83,9 +106,19 @@ const UserList = () => {
                         onChange={(e) => setRoleFilter(e.target.value)}
                     >
                         <option value="all">All Roles</option>
-                        <option value="admin">Admin</option>
-                        <option value="health_worker">Health Worker</option>
                         <option value="mother">Mother</option>
+                        <option value="health_worker">Health Worker</option>
+                        <option value="admin">Admin</option>
+                        <option value="dstrict_admin">District Admin</option>
+                        <option value="hospital_admin">Hospital Admin</option>
+                        <option value="facility_admin">Facility Admin</option>
+                        <option value="facility_manager">
+                            Facility Manager
+                        </option>
+                        <option value="facility_worker">Facility Worker</option>
+                        <option value="facility_nurse">Facility Nurse</option>
+                        <option value="facility_doctor">Facility Doctor</option>
+                        <option value="midwife">Midwife</option>
                     </select>
                 </div>
             </div>
@@ -112,8 +145,72 @@ const UserList = () => {
                             <tr key={user.id}>
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>
-                                <td>{user.role}</td>
-                                <td>{user.hospital?.name || "—"}</td>
+                                <td>
+                                    {updatingUserId === user.id ? (
+                                        <Spinner size="sm" />
+                                    ) : (
+                                        <select
+                                            className="form-select form-select-sm"
+                                            value={user.role}
+                                            onChange={(e) =>
+                                                handleRoleChange(
+                                                    user.id,
+                                                    e.target.value
+                                                )
+                                            }
+                                        >
+                                            <option value="mother">
+                                                Mother
+                                            </option>
+                                            <option value="health_worker">
+                                                Health Worker
+                                            </option>
+                                            <option value="admin">Admin</option>
+                                            <option value="dstrict_admin">
+                                                District Admin
+                                            </option>
+                                            <option value="hospital_admin">
+                                                Hospital Admin
+                                            </option>
+                                            <option value="facility_admin">
+                                                Facility Admin
+                                            </option>
+                                            <option value="facility_manager">
+                                                Facility Manager
+                                            </option>
+                                            <option value="facility_worker">
+                                                Facility Worker
+                                            </option>
+                                            <option value="facility_nurse">
+                                                Facility Nurse
+                                            </option>
+                                            <option value="facility_doctor">
+                                                Facility Doctor
+                                            </option>
+                                            <option value="midwife">
+                                                Midwife
+                                            </option>
+                                        </select>
+                                    )}
+                                </td>
+                                <td>
+                                    {user.facility ? (
+                                        <>
+                                            <div>
+                                                <strong>
+                                                    {user.facility.name}
+                                                </strong>
+                                            </div>
+                                            <div className="text-muted small">
+                                                {user.facility.type} –{" "}
+                                                {user.facility.district}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        "—"
+                                    )}
+                                </td>
+
                                 <td>
                                     <Link
                                         to={`/admin/users/${user.id}/edit`}

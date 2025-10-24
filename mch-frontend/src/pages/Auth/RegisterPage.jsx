@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/spinners/Spinner";
+import axios from "axios";
 import { BsArrowLeft } from "react-icons/bs";
 import "./LoginPage.css";
 
 function RegisterForm() {
     const navigate = useNavigate();
+
     const [selectedRole, setSelectedRole] = useState("");
     const [form, setForm] = useState({
         name: "",
@@ -13,11 +15,45 @@ function RegisterForm() {
         password: "",
         password_confirmation: "",
         role: "",
-        hospital_id: "",
         comments: "",
+        facility_id: "",
+        district: "",
+        designation: "", 
+        custom_designation: "",
     });
+
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [facilities, setFacilities] = useState([]);
+
+    const API_BASE = "http://localhost:8000";
+
+    axios.defaults.withCredentials = true;
+    axios.defaults.withXSRFToken = true;
+
+    useEffect(() => {
+        if (!selectedRole) return;
+
+        let url = `${API_BASE}/api/facilities`;
+
+        if (selectedRole === "health_worker") {
+            url += "?type=clinic";
+        } else if (
+            (selectedRole === "manager" || selectedRole === "district_admin") &&
+            form.district
+        ) {
+            url += `?district=${encodeURIComponent(form.district)}`;
+        }
+
+        axios
+            .get(url)
+            .then((data) => {
+                setFacilities(data.data);
+            })
+            .catch(() => {
+                setFacilities([]);
+            });
+    }, [selectedRole, form.district]);
 
     const handleRoleSelect = (e) => {
         const role = e.target.value;
@@ -25,67 +61,107 @@ function RegisterForm() {
         setForm((prev) => ({
             ...prev,
             role,
+            district: "",
+            facility_id: "",
         }));
+        setFacilities([]);
+        setError("");
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setForm((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+
+        if (name === "facility_id") {
+            const selectedFacility = facilities.find(
+                (facility) => facility.id.toString() === value
+            );
+
+            setForm((prev) => ({
+                ...prev,
+                facility_id: value,
+                district: selectedFacility ? selectedFacility.district : "",
+            }));
+        } else {
+            setForm((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleBackToRole = () => {
         setSelectedRole("");
-        setForm((prev) => ({
-            ...prev,
+        setForm({
+            name: "",
+            email: "",
+            password: "",
+            password_confirmation: "",
             role: "",
-        }));
+            comments: "",
+            facility_id: "",
+            district: "",
+        });
         setError("");
+        setFacilities([]);
+    };
+
+    const getCsrfCookie = async () => {
+        await axios.get(`${API_BASE}/sanctum/csrf-cookie`);
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-        if (form.role !== "mother" && !form.hospital_id) {
-            setError("Facility is required for this role.");
-            setLoading(false);
-            return;
-        }
+    if (form.password !== form.password_confirmation) {
+        setError("Passwords do not match.");
+        setLoading(false);
+        return;
+    }
 
-        const endpoint =
-            form.role === "mother"
-                ? "/api/register"
-                : "/api/registration-request";
+    if (!form.facility_id) {
+        setError("Facility is required.");
+        setLoading(false);
+        return;
+    }
 
-        try {
-            const response = await fetch(endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form),
-            });
-
-            if (response.ok) {
-                if (form.role === "mother") {
-                    navigate("/dashboard");
-                } else {
-                    alert(
-                        "Your registration request has been submitted for review."
-                    );
-                }
-            } else {
-                const errorData = await response.json();
-                setError(errorData.message || "Submission failed.");
-            }
-        } catch (err) {
-            setError("Network error. Please try again.");
-        } finally {
-            setLoading(false);
-        }
+    // Adjust designation if "other" is selected
+    const submissionData = {
+        ...form,
+        designation:
+            form.designation === "other"
+                ? form.custom_designation
+                : form.designation,
     };
+
+    const endpoint =
+        form.role === "mother"
+            ? `${API_BASE}/api/register`
+            : `${API_BASE}/api/registration-request`;
+
+    try {
+        await getCsrfCookie();
+
+        const response = await axios.post(endpoint, submissionData);
+
+        if (response.status === 200 || response.status === 201) {
+            if (form.role === "mother") {
+                navigate("/dashboard");
+            } else {
+                alert("Your registration request has been submitted for review.");
+                navigate("/login");
+            }
+        } else {
+            setError(response.data.message || "Submission failed.");
+        }
+    } catch (err) {
+        const errorMessage =
+            err.response?.data?.message ||
+            "An error occurred. Please try again.";
+        setError(errorMessage);
+    } finally {
+        setLoading(false);
+    }
+};
+
 
     return (
         <div className="login-page">
@@ -113,10 +189,32 @@ function RegisterForm() {
                     </div>
                 </div>
 
-                <div className="login-right">
-                    <div className="login-card">
+                <div className="login-right" style={{ minWidth: "400px" }}>
+                    <div className="login-card h-100 overflow-y-auto pt-0">
                         {!selectedRole ? (
                             <>
+                                <div
+                                    className="d-flex gap-2 justify-content-between align-items-center bg-white sticky-top"
+                                    style={{
+                                        paddingTop: "40px",
+                                        paddingBottom: "20px",
+                                        zIndex: "10",
+                                    }}
+                                >
+                                    <button
+                                        className="btn btn-outline-secondary btn-sm d-flex align-items-center m-0"
+                                        onClick={() => navigate("/login")}
+                                        type="button"
+                                    >
+                                        <BsArrowLeft className="me-2" />
+                                        <span
+                                            className="flex-fill"
+                                            style={{ fontSize: "10px" }}
+                                        >
+                                            Have an account? Login
+                                        </span>
+                                    </button>
+                                </div>
                                 <h2>Select Your Role</h2>
                                 <div className="form-floating mb-3">
                                     <select
@@ -130,13 +228,9 @@ function RegisterForm() {
                                             Choose a role to continue
                                         </option>
                                         <option value="mother">Mother</option>
-                                        <option value="child">Child</option>
+
                                         <option value="health_worker">
                                             Health Worker
-                                        </option>
-                                        <option value="manager">Manager</option>
-                                        <option value="clinical_manager">
-                                            Clinical Manager
                                         </option>
                                     </select>
                                     <label htmlFor="floatingRoleSelect">
@@ -146,16 +240,24 @@ function RegisterForm() {
                             </>
                         ) : (
                             <>
-                                <div className="d-flex justify-content-between align-items-center mb-3">
+                                <div
+                                    className="d-flex gap-2 justify-content-between align-items-center bg-white sticky-top"
+                                    style={{
+                                        paddingTop: "40px",
+                                        paddingBottom: "20px",
+                                        zIndex: "10",
+                                    }}
+                                >
                                     <button
-                                        className="btn btn-outline-secondary btn-sm d-flex align-items-center"
+                                        className="btn button-secondary btn-smz d-flex align-items-center m-0"
                                         onClick={handleBackToRole}
+                                        style={{ maxWidth: "80px" }}
                                         type="button"
                                     >
                                         <BsArrowLeft className="me-2" />
                                         <span>Back</span>
                                     </button>
-                                    <span className="badge rounded-pill bg-primary">
+                                    <span className="badge rounded-2 bg-custom-color-primary p-2">
                                         Role:{" "}
                                         {selectedRole
                                             .replace("_", " ")
@@ -165,6 +267,7 @@ function RegisterForm() {
 
                                 <h2>Create an Account</h2>
                                 <form onSubmit={handleSubmit}>
+                                    {/* Name */}
                                     <div className="form-floating mb-3">
                                         <input
                                             type="text"
@@ -181,6 +284,7 @@ function RegisterForm() {
                                         </label>
                                     </div>
 
+                                    {/* Email */}
                                     <div className="form-floating mb-3">
                                         <input
                                             type="email"
@@ -197,6 +301,7 @@ function RegisterForm() {
                                         </label>
                                     </div>
 
+                                    {/* Password */}
                                     <div className="form-floating mb-3">
                                         <input
                                             type="password"
@@ -213,6 +318,7 @@ function RegisterForm() {
                                         </label>
                                     </div>
 
+                                    {/* Confirm Password */}
                                     <div className="form-floating mb-3">
                                         <input
                                             type="password"
@@ -229,329 +335,131 @@ function RegisterForm() {
                                         </label>
                                     </div>
 
-                                    {form.role !== "mother" && (
+                                    {/* Facility Dropdown for all roles */}
+                                    <div className="form-floating mb-3">
+                                        <select
+                                            className="form-select"
+                                            id="floatingFacility"
+                                            name="facility_id"
+                                            value={form.facility_id}
+                                            onChange={handleChange}
+                                            required
+                                        >
+                                            <option value="">
+                                                Select Facility
+                                            </option>
+                                            {facilities.map((facility) => (
+                                                <option
+                                                    key={facility.id}
+                                                    value={facility.id}
+                                                >
+                                                    {facility.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <label htmlFor="floatingFacility">
+                                            Facility
+                                        </label>
+                                    </div>
+
+                                    {/* Auto-filled District */}
+                                    {form.district && (
                                         <div className="form-floating mb-3">
-                                            <select
-                                                className="form-select"
-                                                id="floatingHospital"
-                                                name="hospital_id"
-                                                value={form.hospital_id}
-                                                onChange={handleChange}
-                                                required
-                                            >
-                                                <option value="">
-                                                    Select Hospital
-                                                </option>
-                                                <option value="1">
-                                                    Alexandra Health Clinic
-                                                </option>
-                                                <option value="2">
-                                                    Alexandra Municipal Clinic
-                                                </option>
-                                                <option value="3">
-                                                    Eastbank Municipal Clinic
-                                                </option>
-                                                <option value="4">
-                                                    Fourth Avenue Municipal
-                                                    Clinic{" "}
-                                                </option>
-                                                <option value="5">
-                                                    Bedfordview Municipal Clinic{" "}
-                                                </option>
-                                                <option value="6">
-                                                    Bergbron Medicross Centre
-                                                </option>
-                                                <option value="7">
-                                                    Bez Valley Municipal Clinic
-                                                </option>
-                                                <option value="8">
-                                                    Birchleigh Municipal Clinic
-                                                </option>
-                                                <option value="9">
-                                                    Birchleigh North Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="10">
-                                                    Sonto Tobela Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="11">
-                                                    Zamani Municipal Clinic{" "}
-                                                </option>
-                                                <option value="12">
-                                                    Teddy Bear Clinic{" "}
-                                                </option>
-                                                <option value="13">
-                                                    Johannesburg Hospital
-                                                </option>
-                                                <option value="14">
-                                                    Brackenhurst Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="15">
-                                                    Chiawelo Municipal Clinic
-                                                </option>
-                                                <option value="16">
-                                                    Crosby Municipal Clinic
-                                                </option>
-                                                <option value="17">
-                                                    Crown Gardens
-                                                </option>
-                                                <option value="18">
-                                                    Charles Hurwitz SANTA Centre
-                                                </option>
-                                                <option value="19">
-                                                    Chris Hani Baragwanath
-                                                    Hospital
-                                                </option>
-                                                <option value="20">
-                                                    Diepkloof Municipal Clinic
-                                                </option>
-                                                <option value="21">
-                                                    Discovery Community Health
-                                                    Centre
-                                                </option>
-                                                <option value="22">
-                                                    Dobsonville Itereleng
-                                                    Community Health Clinic
-                                                </option>
-                                                <option value="23">
-                                                    Nokuphila Municipal Clinic
-                                                </option>
-                                                <option value="24">
-                                                    Tshepo Themba Clinic
-                                                </option>
-                                                <option value="25">
-                                                    Eden Park Municipal Clinic
-                                                </option>
-                                                <option value="26">
-                                                    Eldorado Park Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="27">
-                                                    Kliptown Municipal Clinic
-                                                </option>
-                                                <option value="28">
-                                                    Fleurhof Municipal Clinic
-                                                </option>
-                                                <option value="29">
-                                                    Mayo Clinic
-                                                </option>
-                                                <option value="30">
-                                                    West Rand Clinic
-                                                </option>
-                                                <option value="31">
-                                                    Fordsburg Clinic
-                                                </option>
-                                                <option value="32">
-                                                    Halfway House Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="33">
-                                                    Esselen Clinic
-                                                </option>
-                                                <option value="34">
-                                                    Joubert Park Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="35">
-                                                    Helderkruin Municipal Clinic
-                                                </option>
-                                                <option value="36">
-                                                    Johannesburg Hospice
-                                                </option>
-                                                <option value="37">
-                                                    Bophelong Municipal Clinic
-                                                </option>
-                                                <option value="38">
-                                                    Hikensile Municipal Clinic
-                                                </option>
-                                                <option value="39">
-                                                    Mpumelelo Municipal Clinic
-                                                </option>
-                                                <option value="40">
-                                                    Thuthukani Municipal Clinic{" "}
-                                                </option>
-                                                <option value="41">
-                                                    Jeppe Municipal Clinic
-                                                </option>
-                                                <option value="42">
-                                                    Klipspruit West Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="43">
-                                                    Kliptown Health Centre
-                                                </option>
-                                                <option value="44">
-                                                    Klopperpark Municipal Clinic
-                                                </option>
-                                                <option value="45">
-                                                    Lenasia Municipal Clinic
-                                                </option>
-                                                <option value="46">
-                                                    Lenasia South Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="47">
-                                                    Lenmed Clinic
-                                                </option>
-                                                <option value="48">
-                                                    Luipaardsvlei Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="49">
-                                                    Malvern Municipal Clinic
-                                                </option>
-                                                <option value="50">
-                                                    Marlboro Municipal Clinic
-                                                </option>
-                                                <option value="51">
-                                                    Mayfair Municipal Clinic
-                                                </option>
-                                                <option value="52">
-                                                    Meadowlands Clinic
-                                                </option>
-                                                <option value="53">
-                                                    Meldene Medicross Centre
-                                                </option>
-                                                <option value="54">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="55">
-                                                    Mofolo South Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="56">
-                                                    Mohlakeng Municipal Clinic
-                                                </option>
-                                                <option value="57">
-                                                    Coronation Hospital
-                                                </option>
-                                                <option value="58">
-                                                    Noordheuwel Municipal Clinic
-                                                </option>
-                                                <option value="59">
-                                                    Johannesburg Eye Hospital
-                                                </option>
-                                                <option value="60">
-                                                    Parkhurst Municipal Clinic
-                                                </option>
-                                                <option value="61">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="62">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="63">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="64">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="65">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="66">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="67">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="68">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="69">
-                                                    Mid-Ennerdale Municipal
-                                                    Clinic
-                                                </option>
-                                                <option value="70">
-                                                    Montclare Municipal Clinic
-                                                </option>
-                                                <option value="71">
-                                                    Newtown Clinic
-                                                </option>
-                                                <option value="72">
-                                                    Northcliff Medicross Centre
-                                                </option>
-                                                <option value="73">
-                                                    Orlando East Clinic
-                                                </option>
-                                                <option value="74">
-                                                    Orlando West Clinic
-                                                </option>
-                                                <option value="75">
-                                                    Parktown Hospital
-                                                </option>
-                                                <option value="76">
-                                                    Phomolong Clinic
-                                                </option>
-                                                <option value="77">
-                                                    Poortjie Clinic
-                                                </option>
-                                                <option value="78">
-                                                    Primrose Clinic
-                                                </option>
-                                                <option value="79">
-                                                    Roodepoort Hospital
-                                                </option>
-                                                <option value="80">
-                                                    Soweto Health Centre
-                                                </option>
-                                                <option value="81">
-                                                    South Rand Hospital
-                                                </option>
-                                                <option value="82">
-                                                    Tembisa Hospital
-                                                </option>
-                                                <option value="83">
-                                                    Thelle Mogoerane Regional
-                                                    Hospital
-                                                </option>
-                                                <option value="84">
-                                                    Thokoza Clinic
-                                                </option>
-                                                <option value="85">
-                                                    Turffontein Clinic
-                                                </option>
-                                                <option value="86">
-                                                    Westbury Clinic
-                                                </option>
-                                                <option value="87">
-                                                    Westgate Clinic
-                                                </option>
-                                                <option value="88">
-                                                    Witkoppen Health and Welfare
-                                                    Centre
-                                                </option>
-                                            </select>
-                                            <label htmlFor="floatingHospital">
-                                                Facility
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="floatingDistrict"
+                                                name="district"
+                                                value={form.district}
+                                                readOnly
+                                                placeholder="District"
+                                            />
+                                            <label htmlFor="floatingDistrict">
+                                                District
                                             </label>
                                         </div>
                                     )}
 
-                                    {form.role !== "mother" && (
+                                    {/* Designation (only for health workers) */}
+                                    {selectedRole === "health_worker" && (
+                                        <div className="form-floating mb-3">
+                                            <select
+                                                className="form-select"
+                                                id="floatingDesignation"
+                                                name="designation"
+                                                value={form.designation}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="">
+                                                    Select Designation
+                                                </option>
+                                                <option value="nurse">
+                                                    Nurse
+                                                </option>
+                                                <option value="midwife">
+                                                    Midwife
+                                                </option>
+                                                <option value="community_health_worker">
+                                                    Community Health Worker
+                                                </option>
+                                                <option value="doctor">
+                                                    Doctor
+                                                </option>
+                                                <option value="clinical_manager">
+                                                    Clinical Manager
+                                                </option>
+                                                <option value="other">
+                                                    Other
+                                                </option>
+                                            </select>
+                                            <label htmlFor="floatingDesignation">
+                                                Designation
+                                            </label>
+                                        </div>
+                                    )}
+                                    {selectedRole === "health_worker" && form.designation === "other" && (
+  <div className="form-floating mb-3">
+    <input
+      type="text"
+      className="form-control"
+      id="floatingCustomDesignation"
+      name="custom_designation"
+      value={form.custom_designation}
+      onChange={handleChange}
+      placeholder="Specify your role"
+      required
+    />
+    <label htmlFor="floatingCustomDesignation">Specify Your Role</label>
+  </div>
+)}
+
+                                    {/* Registration Info & Errors */}
+                                    {selectedRole !== "mother" && (
                                         <div className="alert alert-info">
                                             Your registration will be reviewed
                                             by an administrator before approval.
                                         </div>
                                     )}
 
-                                    {error && <p className="error">{error}</p>}
-                                    <button type="submit">Register</button>
-                                    <p className="mt-3 mb-0">
+                                    {error && (
+                                        <div className="alert alert-danger">
+                                            {error}
+                                        </div>
+                                    )}
+                                    {/* Submit */}
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary w-100"
+                                    >
+                                        Register
+                                    </button>
+
+                                    <p className="mt-3 mb-0 text-center">
                                         Already have an account?{" "}
                                         <span
                                             className="link-primary"
+                                            style={{ cursor: "pointer" }}
                                             onClick={() => navigate("/login")}
                                         >
                                             Login

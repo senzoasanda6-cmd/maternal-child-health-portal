@@ -4,6 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import Navbar from "../components/ProtectedHeader.jsx";
 import Sidebar from "../components/AppSidebar.jsx";
 import CookieConsentModal from "../components/CookieConsentModal";
+import ScreenLoading from "../components/spinners/ScreenLoading.jsx";
 
 const ProtectedLayout = () => {
     const context = useContext(AuthContext);
@@ -15,7 +16,7 @@ const ProtectedLayout = () => {
     const { user, loading } = context;
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <ScreenLoading />;
     }
 
     if (!user) {

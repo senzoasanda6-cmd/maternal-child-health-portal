@@ -11,7 +11,7 @@ class ReportController extends Controller
 {
     public function postnatalVisits($id)
     {
-        $visits = PostnatalVisit::where('hospital_id', $id)
+        $visits = PostnatalVisit::where('facility_id', $id)
             ->with(['mother', 'child']) // optional: eager load relationships
             ->orderBy('visit_date', 'desc')
             ->get();
@@ -21,7 +21,7 @@ class ReportController extends Controller
 
     public function vaccineProgress($id)
     {
-        $vaccines = Vaccination::where('hospital_id', $id)
+        $vaccines = Vaccination::where('facility_id', $id)
             ->with(['child']) // optional: eager load child info
             ->get();
 

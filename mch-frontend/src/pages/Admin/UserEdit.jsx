@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import { useParams, useNavigate } from "react-router-dom";
+import Spinner from "../../components/spinners/Spinner";
 
 const UserEdit = () => {
     const { userId } = useParams();
@@ -8,29 +9,47 @@ const UserEdit = () => {
     const [form, setForm] = useState({
         name: "",
         email: "",
+        password: "",
+        password_confirmation: "",
         role: "",
-        hospital_id: "",
+        facility_id: "",
     });
-    const [hospitals, setHospitals] = useState([]);
+    const [facilities, setFacilities] = useState([]);
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [selectedDistrict, setSelectedDistrict] = useState("");
+    const [selectedSubDistrict, setSelectedSubDistrict] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
-                const [userRes, hospitalRes] = await Promise.all([
+                const [userRes, facilityRes] = await Promise.all([
                     api.get(`/api/admin/users/${userId}`),
-                    api.get("/api/hospitals"),
+                    api.get("/api/admin/facilities"),
                 ]);
-                setForm(userRes.data);
-                setHospitals(hospitalRes.data);
+                setForm({
+                    ...userRes.data,
+                    password: "",
+                    password_confirmation: "",
+                });
+                setFacilities(facilityRes.data);
             } catch (err) {
-                console.error("Failed to load user:", err);
+                console.error("Failed to load user or facility data:", err);
                 setError("Unable to load user data.");
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchData();
     }, [userId]);
+
+    useEffect(() => {
+        setSelectedDistrict("");
+        setSelectedSubDistrict("");
+    }, [form.role]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,20 +57,70 @@ const UserEdit = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSaving(true);
         setError("");
+
+        if (form.password && form.password !== form.password_confirmation) {
+            setError("Passwords do not match.");
+            setSaving(false);
+            return;
+        }
+
+        if (form.role === "health_worker" && !form.facility_id) {
+            setError("A facility must be selected for Health Workers.");
+            setSaving(false);
+            return;
+        }
 
         try {
             await api.put(`/api/admin/users/${userId}`, form);
             navigate("/admin/users");
         } catch (err) {
             console.error("Update failed:", err);
-            setError("Failed to update user.");
+            const message =
+                err.response?.data?.message || "Failed to update user.";
+            setError(message);
+        } finally {
+            setSaving(false);
         }
     };
 
+    const districts = [
+        ...new Set(facilities.map((f) => f.district).filter(Boolean)),
+    ];
+
+    const subDistricts = [
+        ...new Set(
+            facilities
+                .filter(
+                    (f) => !selectedDistrict || f.district === selectedDistrict
+                )
+                .map((f) => f.sub_district)
+                .filter(Boolean)
+        ),
+    ];
+
+    const filteredFacilities = facilities.filter((f) => {
+        return (
+            (!selectedDistrict || f.district === selectedDistrict) &&
+            (!selectedSubDistrict || f.sub_district === selectedSubDistrict)
+        );
+    });
+
+    if (loading) {
+        return <p>Loading user data...</p>;
+    }
+
     return (
-        <div className="container py-4">
+        <div className="container p-4 space-y-6">
             <h2>Edit User</h2>
+            <button
+                className="btn btn-outline-secondary mb-3"
+                onClick={() => navigate("/admin/users")}
+            >
+                ← Back to User List
+            </button>
+
             {error && <p className="text-danger">{error}</p>}
 
             <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
@@ -79,6 +148,35 @@ const UserEdit = () => {
                     />
                 </div>
 
+                <div className="row">
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label">New Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            className="form-control"
+                            value={form.password}
+                            onChange={handleChange}
+                            placeholder="Leave blank to keep current password"
+                            autoComplete="new-password"
+                            minLength={6}
+                        />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label">
+                            Confirm New Password
+                        </label>
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            className="form-control"
+                            value={form.password_confirmation}
+                            onChange={handleChange}
+                            autoComplete="new-password"
+                        />
+                    </div>
+                </div>
+
                 <div className="mb-3">
                     <label className="form-label">Role</label>
                     <select
@@ -93,25 +191,114 @@ const UserEdit = () => {
                     </select>
                 </div>
 
+                {/* Facility Selection for ALL Roles */}
                 <div className="mb-3">
-                    <label className="form-label">Hospital</label>
+                    <label className="form-label">
+                        {form.role === "health_worker"
+                            ? "Assigned Facility (Required)"
+                            : "Facility (Recommended)"}
+                    </label>
                     <select
-                        name="hospital_id"
+                        name="facility_id"
                         className="form-select"
-                        value={form.hospital_id}
-                        onChange={handleChange}
+                        value={form.facility_id || ""}
+                        onChange={(e) => {
+                            const selectedId = Number(e.target.value);
+                            const selectedFacility = facilities.find(
+                                (f) => f.id === selectedId
+                            );
+                            setForm({
+                                ...form,
+                                facility_id: selectedId,
+                            });
+                            if (selectedFacility) {
+                                setSelectedDistrict(
+                                    selectedFacility.district || ""
+                                );
+                                setSelectedSubDistrict(
+                                    selectedFacility.sub_district || ""
+                                );
+                            }
+                        }}
                     >
-                        <option value="">Select a hospital</option>
-                        {hospitals.map((h) => (
-                            <option key={h.id} value={h.id}>
-                                {h.name}
+                        <option value="">Select a facility</option>
+                        {filteredFacilities.map((facility) => (
+                            <option key={facility.id} value={facility.id}>
+                                {facility.name}
                             </option>
                         ))}
                     </select>
                 </div>
 
-                <button type="submit" className="btn btn-primary">
-                    Update User
+                {/* Filters: Only shown when facilities exist */}
+                {facilities.length > 0 && (
+                    <div className="row mb-3 align-items-end">
+                        <div className="col-md-5">
+                            <label className="form-label">
+                                Filter by District
+                            </label>
+                            <select
+                                className="form-select"
+                                value={selectedDistrict}
+                                onChange={(e) => {
+                                    setSelectedDistrict(e.target.value);
+                                    setSelectedSubDistrict("");
+                                }}
+                            >
+                                <option value="">All Districts</option>
+                                {districts.map((d, i) => (
+                                    <option key={i} value={d}>
+                                        {d}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="col-md-5">
+                            <label className="form-label">
+                                Filter by Sub-District
+                            </label>
+                            <select
+                                className="form-select"
+                                value={selectedSubDistrict}
+                                onChange={(e) =>
+                                    setSelectedSubDistrict(e.target.value)
+                                }
+                            >
+                                <option value="">All Sub-Districts</option>
+                                {subDistricts.map((sd, i) => (
+                                    <option key={i} value={sd}>
+                                        {sd}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="col-md-2">
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary w-100"
+                                onClick={() => {
+                                    setSelectedDistrict("");
+                                    setSelectedSubDistrict("");
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        facility_id: "",
+                                    }));
+                                }}
+                            >
+                                Reset Filters
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={saving}
+                >
+                    {saving ? <Spinner size="sm" /> : "Update User"}
                 </button>
             </form>
         </div>

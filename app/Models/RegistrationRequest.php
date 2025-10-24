@@ -10,8 +10,16 @@ class RegistrationRequest extends Model
         'name',
         'email',
         'role',
-        'hospital_id',
-        'comments',
+        'facility_id',
+        'district',
+        'designation',
         'status',
+        
     ];
+    // app/Models/RegistrationRequest.php
+
+    public function facility()
+    {
+        return $this->belongsTo(Facility::class);
+    }
 }

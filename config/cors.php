@@ -2,11 +2,11 @@
 
 return [
 
-    'paths' => ['api/*', 'api/login', 'api/logout', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'login', 'logout', 'register', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000','http://10.147.249.115:3000'], // your React frontend
+    'allowed_origins' => ['http://localhost:3000', 'http://10.147.249.115:3000'],
 
     'allowed_origins_patterns' => [],
 

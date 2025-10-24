@@ -10,16 +10,25 @@ class RegistrationApproved extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $userData;
+    public $details;
 
-    public function __construct($userData)
+    public function __construct($details)
     {
-        $this->userData = $userData;
+        $this->details = $details;
     }
 
     public function build()
     {
-        return $this->subject('Your Registration Has Been Approved')
-            ->view('emails.registration_approved');
+        $role = $this->details['role'] ?? 'default';
+        $template = "emails.registration.approved." . $role;
+
+        // Fallback if template doesn't exist
+        if (!view()->exists($template)) {
+            $template = "emails.registration.approved.default";
+        }
+
+        return $this->subject('Your Account Has Been Approved')
+            ->markdown($template)
+            ->with($this->details);
     }
 }

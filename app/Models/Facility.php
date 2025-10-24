@@ -5,11 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Hospital extends Model
+class Facility extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'location', 'contact_number'];
+    protected $fillable = [
+        'name',
+        'title',
+        'district',
+        'sub_district',
+        'type',
+        'level_of_care',
+    ];
 
     // Relationships
     public function users()
@@ -31,4 +38,9 @@ class Hospital extends Model
     {
         return $this->hasMany(Child::class);
     }
+    public function mothers()
+    {
+        return $this->hasMany(Mother::class);
+    }
+    
 }

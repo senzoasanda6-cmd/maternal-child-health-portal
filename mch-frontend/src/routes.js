@@ -9,7 +9,7 @@ import ProtectedLayout from "./layouts/ProtectedLayout";
 
 // Route Guards
 import MotherRoute from "./components/protected/MotherRoute.jsx";
-import AdminRoute from "./components/protected/AdminRoute.jsx";
+import RoleProtectedRoute from "./components/protected/RoleProtectedRoute.jsx";
 import HealthWorkerRoute from "./components/protected/HealthWorkerRoute.jsx";
 
 // Public Pages
@@ -54,9 +54,12 @@ import HealthDashboard from "./pages/HealthWorker/HealthDashboard.jsx";
 // Admin Pages
 import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
 import UserList from "./pages/Admin/UserList.jsx";
-import HospitalList from "./pages/Admin/HospitalList.jsx";
+import FacilityList from "./pages/Admin/FacilityList.jsx";
 import UserEdit from "./pages/Admin/UserEdit.jsx";
 import AdminReports from "./pages/Admin/AdminReports.jsx";
+import UserCreate from "./pages/Admin/UserCreate.jsx";
+import AdminSettings from "./pages/Settings/AdminSettings.jsx";
+
 //import RegistrationRequestList from "./pages/Admin/RegistrationRequestList.jsx";
 import UserApprovalDashboard from "./pages/Admin/UserApprovalDashboard.jsx";
 import AdminHomePage from "./pages/Admin/AdminHomePage.jsx";
@@ -79,6 +82,11 @@ import AccountSettings from "./pages/Settings/AccountSettings.jsx";
 import NotificationPreferences from "./pages/Settings/NotificationPreferences.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
 import Alerts from "./pages/Notifications/Alerts"; // or wherever Alerts.jsx is located
+
+//District 
+import District from "./pages/District/Dashboard.jsx";
+import Home from "./pages/District/Home.jsx";
+import Facilities from "./pages/District/Facilities.jsx";
 
 const AppRoutes = () => (
     <Routes>
@@ -196,13 +204,18 @@ const AppRoutes = () => (
                 </Route>
             </Route>
             {/* 🛡️ Admin Routes */}
-            <Route element={<AdminRoute />}>
+            <Route element={<RoleProtectedRoute allowedRoles={["admin"]} />}>
                 <Route path="/admin/home" element={<AdminHomePage />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/users" element={<UserList />} />
-                <Route path="/admin/users/:id/edit" element={<UserEdit />} />
-                <Route path="/admin/hospitals" element={<HospitalList />} />
+                <Route
+                    path="/admin/users/:userId/edit"
+                    element={<UserEdit />}
+                />
+                <Route path="/admin/facilities" element={<FacilityList />} />
                 <Route path="/admin/reports" element={<AdminReports />} />
+                <Route path="/admin/users/create" element={<UserCreate />} />
+                <Route path="/admin/settings" element={<AdminSettings />} />
                 <Route
                     path="/admin/approvals"
                     element={<UserApprovalDashboard />}
@@ -216,6 +229,13 @@ const AppRoutes = () => (
                     path="/admin/registration-requests/:id"
                     element={<UserApprovalDetails />}
                 /> */}
+            </Route>
+
+            {/* 🏢 District Admin Routes */}
+            <Route element={<RoleProtectedRoute allowedRoles={["district_admin"]} />}>
+                <Route path="/district/dashboard" element={<District />} />
+                <Route path="/district/home" element={<Home />} />
+                <Route path="/district/facilities" element={<Facilities />} />
             </Route>
         </Route>
 
