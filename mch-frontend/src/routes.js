@@ -9,7 +9,7 @@ import ProtectedLayout from "./layouts/ProtectedLayout";
 
 // Route Guards
 import MotherRoute from "./components/protected/MotherRoute.jsx";
-import AdminRoute from "./components/protected/AdminRoute.jsx";
+import RoleProtectedRoute from "./components/protected/RoleProtectedRoute.jsx";
 import HealthWorkerRoute from "./components/protected/HealthWorkerRoute.jsx";
 
 // Public Pages
@@ -82,6 +82,11 @@ import AccountSettings from "./pages/Settings/AccountSettings.jsx";
 import NotificationPreferences from "./pages/Settings/NotificationPreferences.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
 import Alerts from "./pages/Notifications/Alerts"; // or wherever Alerts.jsx is located
+
+//District 
+import District from "./pages/District/Dashboard.jsx";
+import Home from "./pages/District/Home.jsx";
+import Facilities from "./pages/District/Facilities.jsx";
 
 const AppRoutes = () => (
     <Routes>
@@ -199,7 +204,7 @@ const AppRoutes = () => (
                 </Route>
             </Route>
             {/* 🛡️ Admin Routes */}
-            <Route element={<AdminRoute />}>
+            <Route element={<RoleProtectedRoute allowedRoles={["admin"]} />}>
                 <Route path="/admin/home" element={<AdminHomePage />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/users" element={<UserList />} />
@@ -224,6 +229,13 @@ const AppRoutes = () => (
                     path="/admin/registration-requests/:id"
                     element={<UserApprovalDetails />}
                 /> */}
+            </Route>
+
+            {/* 🏢 District Admin Routes */}
+            <Route element={<RoleProtectedRoute allowedRoles={["district_admin"]} />}>
+                <Route path="/district/dashboard" element={<District />} />
+                <Route path="/district/home" element={<Home />} />
+                <Route path="/district/facilities" element={<Facilities />} />
             </Route>
         </Route>
 

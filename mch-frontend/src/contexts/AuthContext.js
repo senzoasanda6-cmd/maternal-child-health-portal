@@ -9,6 +9,20 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const roleRedirects = {
+        admin: "/admin/home",
+        health_worker: "/health/dashboard",
+        mother: "/mother/home",
+        district_admin: "/district/home",
+        hospital_admin: "/admin/home",
+        facility_admin: "/admin/home",
+        facility_manager: "/admin/home",
+        midwife: "/health/dashboard",
+        facility_worker: "/health/dashboard",
+        facility_nurse: "/health/dashboard",
+        facility_doctor: "/health/dashboard",
+    };
+
     const logout = useCallback(async () => {
         try {
             await api.post("/api/logout");
@@ -21,6 +35,20 @@ export const AuthProvider = ({ children }) => {
         }
     }, [navigate]);
 
+    const refreshToken = useCallback(async () => {
+        try {
+            await api.get("/sanctum/csrf-cookie");
+            const res = await api.post("/api/refresh");
+            const refreshedUser = res.data.user;
+            setUser(refreshedUser);
+            localStorage.setItem("role", refreshedUser.role);
+            return true;
+        } catch (err) {
+            console.error("Token refresh failed:", err);
+            return false;
+        }
+    }, []);
+
     const fetchUser = useCallback(async () => {
         const maxRetries = 2;
         let attempt = 0;
@@ -32,63 +60,44 @@ export const AuthProvider = ({ children }) => {
             } catch (err) {
                 attempt += 1;
                 console.error(`Auth error (attempt ${attempt}):`, err);
-                // If unauthorized, immediately logout and stop retrying
+
                 if (err?.response?.status === 401) {
-                    try {
+                    const refreshed = await refreshToken();
+                    if (!refreshed) {
                         await logout();
-                    } catch (e) {
-                        console.error("Logout failed:", e);
-                        setUser(null);
+                        break;
                     }
-                    break;
+                    continue; // retry fetchUser after refresh
                 }
 
                 if (attempt > maxRetries) {
-                    // After retries, give up and clear user (network might be down)
                     setUser(null);
                     break;
                 }
 
-                // small delay before retrying (simple backoff)
                 const delay = 500 * attempt;
                 await new Promise((res) => setTimeout(res, delay));
             }
         }
-        // ensure loading becomes false after attempts complete
         setLoading(false);
-    }, [logout]);
+    }, [logout, refreshToken]);
 
-    // Attempt to fetch user on provider mount so auth state is available
-    // when users navigate between public and protected routes.
     useEffect(() => {
         fetchUser();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [fetchUser]);
 
     const login = async (credentials) => {
         await api.get("/sanctum/csrf-cookie");
         const res = await api.post("/api/login", credentials);
-        console.log("Login response:", res.data);
         const user = res.data.user;
 
         localStorage.setItem("role", user.role);
         setUser(user);
 
-        await fetchUser(); // ✅ Now fetch user after session is established
+        await fetchUser();
 
-        switch (user.role) {
-            case "admin":
-                navigate("/admin/home");
-                break;
-            case "health_worker":
-                navigate("/health/dashboard");
-                break;
-            case "mother":
-                navigate("/mother/home");
-                break;
-            default:
-                navigate("/");
-        }
+        const redirectPath = roleRedirects[user.role] || "/";
+        navigate(redirectPath);
     };
 
     return (
@@ -99,3 +108,4 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+export default AuthContext;

@@ -21,4 +21,8 @@ class Mother extends Model
     {
         return $this->hasMany(Milestone::class);
     }
+    public function facility()
+    {
+        return $this->belongsTo(Facility::class);
+    }
 }

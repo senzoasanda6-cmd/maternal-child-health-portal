@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('registration_requests', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('role');
-            $table->unsignedBigInteger('facility_id')->nullable();
-            $table->text('comments')->nullable();
+            $table->foreignId('facility_id')->nullable()->constrained()->onDelete('set null');
+            $table->string('district')->nullable();
+            $table->string('sub_district')->nullable(); // ✅ fixed
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });
