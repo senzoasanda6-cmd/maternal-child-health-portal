@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ServiceCard from "../../components/ServiceCard.jsx";
+import LevelOfCareHospitalCard from "../../components/LevelOfCareHospitalCard.jsx";
 
 const LandingPage = () => {
     const services = [
@@ -9,18 +10,146 @@ const LandingPage = () => {
             title: "Prenatal Care",
             description:
                 "Comprehensive support throughout your pregnancy journey, from the first trimester to delivery.",
+            navigateTo: `/mch-services/prenatal-care`,
         },
         {
-            imageUrl: "/Child-Wellness.png",
-            title: "Child Wellness",
+            imageUrl: "/sample_images/Picture2.jpg",
+            title: "Labour & Delivery",
             description:
-                "Track your child's growth, vaccinations, and developmental milestones with our expert guidance.",
+                "Support and clinical care during labour and delivery to ensure safe childbirth.",
+            navigateTo: `/mch-services/labour-delivery`,
         },
         {
             imageUrl: "/sample_images/Picture3.jpg",
             title: "Postnatal Support",
             description:
                 "Guidance and care for mothers and newborns in the critical weeks after birth.",
+            navigateTo: `/mch-services/postnatal-support`,
+        },
+        {
+            imageUrl: "/Child-Wellness.png",
+            title: "Child Wellness",
+            description:
+                "Track your child's growth, vaccinations, and developmental milestones with our expert guidance.",
+            navigateTo: `/mch-services/child-wellness`,
+        },
+        {
+            imageUrl: "/sample_images/thumbnail_AdobeStock_527959482.jpg.webp",
+            title: "Immunisations",
+            description:
+                "Keep your child protected with recommended vaccinations and immunisation schedules.",
+            navigateTo: `/mch-services/immunisations`,
+        },
+    ];
+
+    const perHospMaternalServices = [
+        {
+            imageUrl: "/hospital_images/dgmah/dgmah.jpg",
+            title: "Central Hospitals",
+            description:
+                "Comprehensive support throughout your pregnancy journey, from the first trimester to delivery.",
+            hospitals: {
+                imageUrl: "/hospital_images/dgmah/dgmah.jpg",
+                title: "Chris Hani Baragwanath Academic Hospital",
+                summary:
+                    "Offers comprehensive maternal services including prenatal care, delivery, and postnatal support. Known for its large capacity and skilled staff.",
+                fblink: "#",
+                top3services: [
+                    "Prenatal Care",
+                    "Labour & Delivery",
+                    "Postnatal Support",
+                ],
+            },
+        },
+        {
+            imageUrl: "/sample_images/Picture1.jpg",
+            title: "Tertiary Hospitals",
+            description:
+                "Comprehensive support throughout your pregnancy journey, from the first trimester to delivery.",
+            hospitals: {
+                imageUrl: "/sample_images/Picture1.jpg",
+                title: "Charlotte Maxeke Academic Hospital",
+                summary:
+                    "Renowned for expert maternity services with compassionate care and advanced facilities.",
+                fblink: "#",
+                top3services: [
+                    "Prenatal Screening",
+                    "Emergency Obstetrics",
+                    "Postnatal Care",
+                ],
+            },
+        },
+        {
+            imageUrl: "/sample_images/Picture1.jpg",
+            title: "Regional Hospitals",
+            description:
+                "Accessible maternal care for communities, with a focus on safe childbirth and wellness.",
+            hospitals: {
+                imageUrl: "/sample_images/Picture1.jpg",
+                title: "Rahima Moosa Mother and Child Hospital",
+                summary:
+                    "Specialized care for mothers and babies, including neonatal services and high-risk pregnancy management.",
+                fblink: "#",
+                top3services: [
+                    "High-Risk Pregnancy Care",
+                    "Neonatal Services",
+                    "Midwifery",
+                ],
+            },
+        },
+        {
+            imageUrl: "/sample_images/Picture1.jpg",
+            title: "District Hospitals",
+            description:
+                "Community-focused maternal health services for safe and supported childbirth.",
+            hospitals: {
+                imageUrl: "/sample_images/Picture1.jpg",
+                title: "Edenvale Regional Hospital",
+                summary:
+                    "Offers community-centric maternity care with modern facilities and attentive staff.",
+                fblink: "#",
+                top3services: [
+                    "Prenatal Care",
+                    "Labour Monitoring",
+                    "Postnatal Support",
+                ],
+            },
+        },
+        {
+            imageUrl: "/sample_images/Picture1.jpg",
+            title: "Community Health Centres (CHCs)",
+            description:
+                "Accessible maternal care for communities, with a focus on safe childbirth and wellness.",
+            hospitals: {
+                imageUrl: "/sample_images/Picture1.jpg",
+                title: "Helen Joseph Hospital",
+                summary:
+                    "Provides personalized maternity services including prenatal and postnatal care in a supportive environment.",
+                fblink: "#",
+                top3services: [
+                    "Prenatal Care",
+                    "Postnatal Support",
+                    "Counseling",
+                ],
+            },
+        },
+        {
+            imageUrl: "/sample_images/Picture1.jpg",
+            title: "Private Maternity Clinics",
+            description:
+                "Accessible maternal care for communities, with a focus on safe childbirth and wellness.",
+            hospitals: {
+                imageUrl: "/sample_images/Picture1.jpg",
+                title: "Helen Joseph Hospital",
+                summary:
+                    "Provides personalized maternity services including prenatal and postnatal care in a supportive environment.",
+                fblink: "#",
+                top3services: [
+                    "Prenatal Care",
+                    "Postnatal Support",
+                    "Counseling",
+                ],
+            },
         },
     ];
 
@@ -105,132 +234,15 @@ const LandingPage = () => {
                         </h5>
                         <p></p>
                         <div className="services-grid">
-                            <div className="card card-institutions">
-                                <img
-                                    src={`${process.env.PUBLIC_URL}/sample_images/Picture1.jpg`}
-                                    alt="Prenatal Care"
-                                    className="w-100"
-                                    style={{
-                                        height: "200px",
-                                        objectFit: "cover",
-                                        borderRadius: "8px",
-                                    }}
-                                    onError={(e) =>
-                                        (e.target.src = "/fallback.jpg")
-                                    }
+                            {perHospMaternalServices.map((inst, idx) => (
+                                <LevelOfCareHospitalCard
+                                    key={`${inst.title}-${idx}`}
+                                    imageUrl={inst.imageUrl}
+                                    title={inst.title}
+                                    description={inst.description}
+                                    hospitals={inst.hospitals}
                                 />
-                                <h3>Central Hospitals</h3>
-                                <p>
-                                    Comprehensive support throughout your
-                                    pregnancy journey, from the first trimester
-                                    to delivery.
-                                </p>
-                            </div>
-                            <div className="card card-institutions">
-                                <img
-                                    src={`${process.env.PUBLIC_URL}/sample_images/Picture1.jpg`}
-                                    alt="Prenatal Care"
-                                    className="w-100"
-                                    style={{
-                                        height: "200px",
-                                        objectFit: "cover",
-                                        borderRadius: "8px",
-                                    }}
-                                    onError={(e) =>
-                                        (e.target.src = "/fallback.jpg")
-                                    }
-                                />
-                                <h3>Tertiary Hospitals</h3>
-                                <p>
-                                    Comprehensive support throughout your
-                                    pregnancy journey, from the first trimester
-                                    to delivery.
-                                </p>
-                            </div>
-                            <div className="card card-institutions">
-                                <img
-                                    src={`${process.env.PUBLIC_URL}/sample_images/Picture1.jpg`}
-                                    alt="Prenatal Care"
-                                    className="w-100"
-                                    style={{
-                                        height: "200px",
-                                        objectFit: "cover",
-                                        borderRadius: "8px",
-                                    }}
-                                    onError={(e) =>
-                                        (e.target.src = "/fallback.jpg")
-                                    }
-                                />
-                                <h3>Regional Hospitals</h3>
-                                <p>
-                                    Comprehensive support throughout your
-                                    pregnancy journey, from the first trimester
-                                    to delivery.
-                                </p>
-                            </div>
-                            <div className="card card-institutions">
-                                <img
-                                    src={`${process.env.PUBLIC_URL}/sample_images/Picture1.jpg`}
-                                    alt="Prenatal Care"
-                                    className="w-100"
-                                    style={{
-                                        height: "200px",
-                                        objectFit: "cover",
-                                        borderRadius: "8px",
-                                    }}
-                                    onError={(e) =>
-                                        (e.target.src = "/fallback.jpg")
-                                    }
-                                />
-                                <h3>District Hospitals</h3>
-                                <p>
-                                    Comprehensive support throughout your
-                                    pregnancy journey, from the first trimester
-                                    to delivery.
-                                </p>
-                            </div>
-                            <div className="card card-institutions">
-                                <img
-                                    src={`${process.env.PUBLIC_URL}/sample_images/Picture1.jpg`}
-                                    alt="Prenatal Care"
-                                    className="w-100"
-                                    style={{
-                                        height: "200px",
-                                        objectFit: "cover",
-                                        borderRadius: "8px",
-                                    }}
-                                    onError={(e) =>
-                                        (e.target.src = "/fallback.jpg")
-                                    }
-                                />
-                                <h3>Specialized Hospitals</h3>
-                                <p>
-                                    Comprehensive support throughout your
-                                    pregnancy journey, from the first trimester
-                                    to delivery.
-                                </p>
-                            </div>
-                            <div className="card card-institutions">
-                                <img
-                                    src={`${process.env.PUBLIC_URL}/sample_images/Picture1.jpg`}
-                                    alt="Prenatal Care"
-                                    className="w-100"
-                                    style={{
-                                        height: "200px",
-                                        objectFit: "cover",
-                                        borderRadius: "8px",
-                                    }}
-                                    onError={(e) =>
-                                        (e.target.src = "/fallback.jpg")
-                                    }
-                                />
-                                <h3>Clinics/CHCs</h3>
-                                <p>
-                                    Comprehensive support throughout your
-                                    pregnancy journey, from the first trimester
-                                    to delivery.
-                                </p>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </section>
@@ -241,11 +253,14 @@ const LandingPage = () => {
                         <div className="row">
                             <div className="col-md-5 mb-4">
                                 <img
-                                    src={`${process.env.PUBLIC_URL}/sample_images/Picture4.jpg`}
+                                    src={`${process.env.PUBLIC_URL}/ai_images/Designer.png`}
                                     alt="Doctor with patient"
                                     className="img-fluid"
                                     style={{
                                         borderRadius: "8px",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                        objectPosition: "center",
                                     }}
                                     onError={(e) =>
                                         (e.target.src = "/fallback.jpg")
