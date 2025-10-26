@@ -3,6 +3,9 @@
     --primary-color-dark-1: #113274;
     --primary-color-dark-2: #003366;
     --accent-color: #ff9800;
+    --danger-color: #e53935;
+    --success-color: #4caf50;
+    --warning-color: #ffeb3b;
     --secondary-color: #4497cb;
     --slight-secondary-color: radial-gradient(
         circle at top left,
@@ -49,6 +52,10 @@ h2 {
 }
 h3 {
     font-size: 1.5rem;
+}
+
+a {
+   align-items: center;
 }
 
 /* inputs background styling - silver bg */
@@ -100,6 +107,8 @@ select {
         0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.2s ease-in-out;
     text-decoration: none;
+    align-items: center;
+    text-align: center;
 }
 .button:hover {
     box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
@@ -128,6 +137,24 @@ select {
 .button-secondary {
     background-color: var(--secondary-color);
     color: #ffffff !important;
+    text-decoration: none;
+}
+
+.button-danger {
+    background-color: var(--danger-color);
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+.button-success {
+    background-color: var(--success-color);
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+.button-warning {
+    background-color: var(--warning-color);
+    color: #333333 !important;
     text-decoration: none;
 }
 
