@@ -14,6 +14,7 @@ import HealthWorkerRoute from "./components/protected/HealthWorkerRoute.jsx";
 
 // Public Pages
 import LandingPage from "./pages/Landing/LandingPage.jsx";
+import HospitalDetails from "./pages/HospitalDetails/HospitalDetails.jsx";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import Privacy from "./pages/Privacy";
@@ -22,6 +23,8 @@ import GDPR from "./pages/GDPR";
 import CookiePolicy from "./pages/CookiePolicy.jsx";
 import NotFoundPage from "./pages/NotFound/NotFoundPage";
 import Services from "./pages/Services.jsx";
+import MchServicePage from "./pages/MchServices/MchServicePage.jsx";
+import AppointmentBooking from "./pages/MchServices/AppointmentBooking.jsx";
 
 // Shared Authenticated Pages
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -100,6 +103,9 @@ const AppRoutes = () => (
             <Route path="/gdpr" element={<GDPR />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/mch-services/:slug" element={<MchServicePage />} />
+            <Route path="/mch-services/:slug/appointment" element={<AppointmentBooking />} />
+            <Route path="/hospital-details" element={<HospitalDetails />} />
             <Route path="/main" element={<Main />} />
             <Route
                 path="/resources/breastfeeding"

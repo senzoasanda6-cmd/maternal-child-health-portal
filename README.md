@@ -63,6 +63,8 @@ The Maternal and Child Health System is a web-based application designed to trac
    php artisan db:seed
    ```
 ## Running the Application
+-   **Utility Scripts:**
+    Use the `./start_dev.bat` utility script to launch isolated floating terminals OR
 
 -   **Backend (Laravel):**
     ```bash
@@ -139,4 +141,6 @@ If you run the application in a persistent process (e.g. Octane, Swoole, Docker,
 
 ## Contributors
 
--   *Your Name*
+-   Mr. Senzo Dubazana **[ Lead Developer (Backend) ]**:
+-   Mr. Inga Kubalo **[ Support Developer (Frontend) ]**:
+-   Mr. Thabang Mposula **[ Code Review + Support Developer (Fullstack) ]**:
