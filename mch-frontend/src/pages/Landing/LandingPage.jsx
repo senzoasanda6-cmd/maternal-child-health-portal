@@ -457,6 +457,8 @@ const LandingPage = () => {
                                 />
                             ))}
                         </div>
+
+                        <hr />
                     </div>
                 </section>
 
