@@ -173,6 +173,41 @@
 
 .facebook-icon svg{width:14px;height:14px}
 
+/* Tip rotator styles */
+.tip-rotator{
+    display:inline-block;
+    font-weight:600;
+}
+.tip-rotator .tip-text{
+    margin-left:8px;
+    display:inline-block;
+}
+.tip-rotator .caret{
+    display:inline-block;
+    margin-left:4px;
+    color:rgba(0,0,0,0.6);
+    animation: blink 1s steps(2,start) infinite;
+}
+
+@keyframes blink{
+    to { visibility: hidden; }
+}
+
+/* Slide rotator styles */
+.tip-rotator-slide .tip-slide-viewport{
+    display:inline-block;
+    vertical-align:middle;
+    overflow:hidden;
+    height:1.2em; /* single line height */
+    margin-left:8px;
+}
+.tip-slide-inner{
+    transition: transform 400ms ease;
+}
+.tip-slide-item{
+    height:1.2em;
+}
+
 .sidebar-title {
     font-size: 0.9rem;
     font-weight: bold;
