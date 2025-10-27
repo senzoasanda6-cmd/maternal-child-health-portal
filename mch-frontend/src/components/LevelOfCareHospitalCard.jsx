@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 
 const LevelOfCareHospitalCard = ({ imageUrl, title, description, hospitals }) => {
     return (
-        <div className="card service-card rounded-4 shadow card-institutions">
-            <img
+        <div className="card service-card rounded-4 shadow card-institutions d-flex flex-column justify-content-between p-3 h-100">
+            <div>
+                <img
                 src={`${process.env.PUBLIC_URL}${imageUrl}`}
                 alt={title}
                 className="w-100 mb-3"
@@ -17,6 +18,7 @@ const LevelOfCareHospitalCard = ({ imageUrl, title, description, hospitals }) =>
             />
             <h3>{title}</h3>
             <p className="mb-3">{description}</p>
+            </div>
 
             <div className="d-flex gap-2 mt-2 justify-content-center">
                 {/* Pass the selected hospital details via location.state */}

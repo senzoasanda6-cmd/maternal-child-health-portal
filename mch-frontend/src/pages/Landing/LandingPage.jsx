@@ -2,6 +2,34 @@ import React from "react";
 import { Link } from "react-router-dom";
 import ServiceCard from "../../components/ServiceCard.jsx";
 import LevelOfCareHospitalCard from "../../components/LevelOfCareHospitalCard.jsx";
+import TipRotator from "../../components/TipRotator.jsx";
+
+import chbahImg from "../../assets/hospital_images/chbah/chbah.jpg";
+import cmjahImg from "../../assets/hospital_images/cmjah/cmjah.webp";
+import dgmahImg from "../../assets/hospital_images/dgmah/dgmah.jpg";
+import sbahImg from "../../assets/hospital_images/sbah/sbah.jpg";
+
+import tembisaImg from "../../assets/hospital_images/tembisa/tembisa.jpg";
+import kalafongImg from "../../assets/hospital_images/kalafong/kalafong.jpg";
+import helenJosephImg from "../../assets/hospital_images/helenjoseph/helenjoseph.jpg";
+
+import rahimaImg from "../../assets/hospital_images/rahima/rahima.jpg";
+import pholosongImg from "../../assets/hospital_images/pholosong/pholosong.jpg";
+import sebokengImg from "../../assets/hospital_images/sebokeng/sebokeng.jpg";
+import thelleImg from "../../assets/hospital_images/thelle/thelle.jpg";
+
+import edenvaleImg from "../../assets/hospital_images/edenvale/edenvale.jpg";
+import jubileeImg from "../../assets/hospital_images/jubilee/Jubilee.jpg";
+import taraImg from "../../assets/hospital_images/tara/tara.jpg";
+import weskoppiesImg from "../../assets/hospital_images/weskoppies/weskoppies.jpg";
+import pretoriaWestImg from "../../assets/hospital_images/pretoriawest/pretoriawest.jpg";
+import sizweImg from "../../assets/hospital_images/sizwe/sizwe.jpg";
+
+// import centralImg from "../../assets/hospital_images/central.jpg";
+// import tertiaryImg from "../../assets/hospital_images/tertiary.jpg";
+// import regionalImg from "../../assets/hospital_images/regional.jpg";
+
+
 
 const LandingPage = () => {
     const services = [
@@ -44,13 +72,13 @@ const LandingPage = () => {
 
     const perHospMaternalServices = [
         {
-            imageUrl: "/hospital_images/central.jpg",
+            imageUrl: dgmahImg,
             title: "Central Hospitals",
             description:
                 "Comprehensive support throughout your pregnancy journey, from the first trimester to delivery.",
             hospitals: [
                 {
-                    imageUrl: "/hospital_images/chbah/chbah.jpg",
+                    imageUrl: chbahImg,
                     title: "Chris Hani Baragwanath Academic Hospital",
                     summary:
                         "Offers comprehensive maternal services including prenatal care, delivery, and postnatal support. Known for its large capacity and skilled staff.",
@@ -62,7 +90,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/cmjah/cmjah.jpg",
+                    imageUrl: cmjahImg,
                     title: "Charlotte Maxeke Academic Hospital",
                     summary:
                         "Renowned for expert maternity services with compassionate care and advanced facilities.",
@@ -74,7 +102,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/dgmah/dgmah.jpg",
+                    imageUrl: dgmahImg,
                     title: "Dr George Mukhari Academic Hospital",
                     summary:
                         "Provides high-level maternal care including neonatal ICU and specialist obstetric services.",
@@ -86,7 +114,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/sbah/sbah.jpg",
+                    imageUrl: sbahImg,
                     title: "Steve Biko Academic Hospital",
                     summary:
                         "Advanced maternal care with a focus on critical cases and research-based practices.",
@@ -100,13 +128,13 @@ const LandingPage = () => {
             ],
         },
         {
-            imageUrl: "/hospital_images/tertiary.jpg",
+            imageUrl: kalafongImg,
             title: "Tertiary Hospitals",
             description:
                 "Advanced maternal care for complex cases and referrals.",
             hospitals: [
                 {
-                    imageUrl: "/hospital_images/tembisa/tembisa.jpg",
+                    imageUrl: tembisaImg,
                     title: "Tembisa Hospital",
                     summary:
                         "Offers full-spectrum maternity services including emergency obstetrics and neonatal care.",
@@ -118,7 +146,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/kalafong/kalafong.jpg",
+                    imageUrl: kalafongImg,
                     title: "Kalafong Hospital",
                     summary:
                         "Provides maternal care with a focus on community outreach and education.",
@@ -130,7 +158,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/helenjoseph/helenjoseph.jpg",
+                    imageUrl: helenJosephImg,
                     title: "Helen Joseph Hospital",
                     summary:
                         "Personalized maternity services including prenatal and postnatal care.",
@@ -144,13 +172,13 @@ const LandingPage = () => {
             ],
         },
         {
-            imageUrl: "/hospital_images/regional.jpg",
+            imageUrl: rahimaImg,
             title: "Regional Hospitals",
             description:
                 "Accessible maternal care for communities, with a focus on safe childbirth and wellness.",
             hospitals: [
                 {
-                    imageUrl: "/hospital_images/rahima/rahima.jpg",
+                    imageUrl: rahimaImg,
                     title: "Rahima Moosa Mother and Child Hospital",
                     summary:
                         "Specialized care for mothers and babies, including neonatal services and high-risk pregnancy management.",
@@ -162,7 +190,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/pholosong/pholosong.jpg",
+                    imageUrl: pholosongImg,
                     title: "Pholosong Hospital",
                     summary:
                         "Community-focused maternal care with emergency obstetric services.",
@@ -174,7 +202,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/sebokeng/sebokeng.jpg",
+                    imageUrl: sebokengImg,
                     title: "Sebokeng Hospital",
                     summary:
                         "Provides maternal services with a focus on safe delivery and newborn care.",
@@ -186,7 +214,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/thelle/thelle.jpg",
+                    imageUrl: thelleImg,
                     title: "Thelle Mogoerane Hospital",
                     summary:
                         "Offers full maternity services including antenatal clinics and delivery units.",
@@ -200,13 +228,13 @@ const LandingPage = () => {
             ],
         },
         {
-            imageUrl: "/hospital_images/district.jpg",
+            imageUrl: pretoriaWestImg,
             title: "District Hospitals",
             description:
                 "Community-focused maternal health services for safe and supported childbirth.",
             hospitals: [
                 {
-                    imageUrl: "/hospital_images/edenvale/edenvale.jpg",
+                    imageUrl: edenvaleImg,
                     title: "Edenvale Hospital",
                     summary:
                         "Offers community-centric maternity care with modern facilities and attentive staff.",
@@ -218,7 +246,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/jubilee/jubilee.jpg",
+                    imageUrl: jubileeImg,
                     title: "Jubilee District Hospital",
                     summary:
                         "Provides maternal services including antenatal care and delivery support.",
@@ -230,7 +258,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/pretoriawest/pretoriawest.jpg",
+                    imageUrl: pretoriaWestImg,
                     title: "Pretoria West District Hospital",
                     summary:
                         "Supports maternal health with a focus on safe delivery and community outreach.",
@@ -244,13 +272,13 @@ const LandingPage = () => {
             ],
         },
         {
-            imageUrl: "/hospital_images/specialised.jpg",
+            imageUrl: sizweImg,
             title: "Specialised Hospitals",
             description:
                 "Focused maternal care for specific needs including rehabilitation and tropical diseases.",
             hospitals: [
                 {
-                    imageUrl: "/hospital_images/sizwe/sizwe.jpg",
+                    imageUrl: sizweImg,
                     title: "Sizwe Tropical Disease Hospital",
                     summary:
                         "Provides maternal care in the context of infectious disease management.",
@@ -262,7 +290,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/tara/tara.jpg",
+                    imageUrl: taraImg,
                     title: "Tara The H Moross Centre",
                     summary:
                         "Offers psychiatric support for mothers during and after pregnancy.",
@@ -274,7 +302,7 @@ const LandingPage = () => {
                     ],
                 },
                 {
-                    imageUrl: "/hospital_images/weskoppies/weskoppies.jpg",
+                    imageUrl: weskoppiesImg,
                     title: "Weskoppies Psychiatric Hospital",
                     summary:
                         "Specialized psychiatric care for maternal mental health.",
@@ -286,6 +314,54 @@ const LandingPage = () => {
                     ],
                 },
             ],
+        },
+    ];
+
+    const motherChildCareTips = [
+        {
+            tip: "Breastfeeding within the first hour boosts immunity.",
+        },
+        {
+            tip: "Attend all scheduled antenatal visits to monitor your health and your baby’s development.",
+        },
+        {
+            tip: "Take prenatal vitamins, especially folic acid, to prevent birth defects.",
+        },
+        {
+            tip: "Skin-to-skin contact immediately after birth promotes bonding and regulates the baby’s temperature.",
+        },
+        {
+            tip: "Exclusive breastfeeding for the first six months supports optimal growth and development.",
+        },
+        {
+            tip: "Practice safe sleeping habits: place your baby on their back to sleep, on a firm surface.",
+        },
+        {
+            tip: "Wash hands before handling your baby to prevent infections.",
+        },
+        {
+            tip: "Seek help if you feel overwhelmed or anxious—maternal mental health is vital for both mother and child.",
+        },
+        {
+            tip: "Ensure your baby receives all recommended immunizations on time.",
+        },
+        {
+            tip: "Avoid smoking, alcohol, and drugs during pregnancy and breastfeeding.",
+        },
+        {
+            tip: "Eat a balanced diet rich in iron, calcium, and protein during pregnancy and lactation.",
+        },
+        {
+            tip: "Monitor fetal movements daily during the third trimester and report any decrease to your healthcare provider.",
+        },
+        {
+            tip: "Practice kangaroo care for premature babies to improve survival and bonding.",
+        },
+        {
+            tip: "Encourage your partner’s involvement in prenatal visits and baby care to strengthen family support.",
+        },
+        {
+            tip: "Use mosquito nets and repellents in malaria-prone areas to protect both mother and baby.",
         },
     ];
 
@@ -342,10 +418,11 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* Health Tip Banner */}
+            {/* Health Tip Banner (rotating tips) */}
             <section className="bg-warning text-dark py-3 text-center health-tip-banner">
-                <strong>Tip:</strong> Breastfeeding within the first hour boosts
-                immunity.
+                <div className="container">
+                    <TipRotator tips={motherChildCareTips.map((t) => t.tip)} />
+                </div>
             </section>
 
             <main>
@@ -356,7 +433,7 @@ const LandingPage = () => {
                             Gauteng Health MCH Services
                         </h2>
                         <p></p>
-                        <div className="services-grid">
+                        <div id="hlvServices" className="services-grid">
                             {services.map((service) => (
                                 <ServiceCard key={service.title} {...service} />
                             ))}
@@ -369,7 +446,7 @@ const LandingPage = () => {
                             Clinic
                         </h5>
                         <p></p>
-                        <div className="services-grid">
+                        <div id="locServices" className="services-grid">
                             {perHospMaternalServices.map((inst, idx) => (
                                 <LevelOfCareHospitalCard
                                     key={`${inst.title}-${idx}`}
