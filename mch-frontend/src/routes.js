@@ -25,6 +25,8 @@ import NotFoundPage from "./pages/NotFound/NotFoundPage";
 import Services from "./pages/Services.jsx";
 import MchServicePage from "./pages/MchServices/MchServicePage.jsx";
 import AppointmentBooking from "./pages/MchServices/AppointmentBooking.jsx";
+import LabourDelivery from "./pages/MchServices/LabourDelivery.jsx";
+import Immunisations from "./pages/MchServices/Immunisations.jsx";
 
 // Shared Authenticated Pages
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -104,6 +106,8 @@ const AppRoutes = () => (
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/services" element={<Services />} />
             <Route path="/mch-services/:slug" element={<MchServicePage />} />
+            <Route path="/mch-services/labour-delivery" element={<LabourDelivery />} />
+            <Route path="/mch-services/immunisations" element={<Immunisations />} />
             <Route path="/mch-services/:slug/appointment" element={<AppointmentBooking />} />
             <Route path="/hospital-details" element={<HospitalDetails />} />
             <Route path="/main" element={<Main />} />
