@@ -120,6 +120,44 @@
     display: inline;
 }
 
+/* Sidebar label visibility rules
+   - When expanded: labels are visible
+   - When collapsed: hide labels, but show them when the collapsed sidebar is hovered
+*/
+.sidebar ul li a .sidebar-label {
+    display: inline-block; /* default for expanded */
+}
+
+.sidebar.collapsed ul li a .sidebar-label {
+    display: none; /* hide labels when collapsed */
+}
+
+.sidebar.collapsed:hover ul li a .sidebar-label {
+    display: inline-block; /* reveal labels on hover */
+}
+
+/* Toggle button label: show when expanded or when collapsed sidebar is hovered */
+.toggle-label {
+    display: inline-block;
+}
+
+.sidebar.collapsed .toggle-label {
+    display: none;
+}
+
+.sidebar.collapsed:hover .toggle-label,
+.sidebar.expanded .toggle-label {
+    display: inline-block;
+}
+
+/* Small visual tweaks for label alignment */
+.sidebar-link .icon-span {
+    vertical-align: middle;
+}
+.sidebar-label {
+    vertical-align: middle;
+}
+
 .sidebar-title {
     font-size: 0.9rem;
     font-weight: bold;
@@ -130,6 +168,8 @@
     padding: 0;
     border: 0;
 }
+
+/* add a .sidebar-inner-title */
 
 .sidebar ul {
     list-style: none;
