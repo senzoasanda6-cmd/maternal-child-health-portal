@@ -1,4 +1,4 @@
-const SimpleLineChart = ({ data = [], height = 80 }) => {
+const SimpleLineChart = ({ data = [], height = 80, subText = "" }) => {
     const max = Math.max(...data, 1);
     const step = data.length > 1 ? 100 / (data.length - 1) : 100;
     const points = data

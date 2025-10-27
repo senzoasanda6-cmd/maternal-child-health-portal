@@ -60,7 +60,7 @@ function AdminProfilePage() {
     return (
         <div className="container p-4 space-y-6">
             {saving && <Spinner />}
-            <h2 className="mb-4">Admin Profile</h2>
+            <h2 className="text-custom-color-primary fw-bold mb-4">Admin Profile</h2>
             <div className="card p-4 shadow-sm">
                 <div className="mb-3">
                     <label className="form-label">Name:</label>

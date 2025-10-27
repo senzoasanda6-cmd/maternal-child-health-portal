@@ -4,8 +4,7 @@ import { getAuditLogs } from "../../services/auditLogService";
 
 import ScreenLoading from "../../components/spinners/ScreenLoading";
 import StatCard from "../../components/cards/StatCard";
-import SimpleBarChart from "../../components/charts/SimpleBarChart";
-import SimpleLineChart from "../../components/charts/SimpleLineChart";
+import ChartCard from "../../components/cards/ChartCard";
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
@@ -139,7 +138,9 @@ const AdminDashboard = () => {
 
     return (
         <div className="container p-4 space-y-6">
-            <h2>Admin Dashboard</h2>
+            <h2 className="text-custom-color-primary fw-bold">
+                Admin Dashboard
+            </h2>
             <p>Key metrics for maternal & child health program.</p>
 
             <div className="row g-3 mb-4">
@@ -165,199 +166,229 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
-            <div className="card p-3 mb-4">
-                <h6>Recent Admin Actions</h6>
-                {logLoading ? (
-                    <p>Loading logs...</p>
-                ) : auditLogs.length === 0 ? (
-                    <p>No recent actions found.</p>
-                ) : (
-                    <ul className="list-group list-group-flush">
-                        {auditLogs.map((log) => (
-                            <li key={log.id} className="list-group-item">
-                                <strong>{log.action.replace("_", " ")}</strong>{" "}
-                                — {log.details}
-                                <br />
-                                <small className="text-muted">
-                                    By {log.performer?.name || "Unknown"} on{" "}
-                                    {new Date(log.created_at).toLocaleString()}
-                                </small>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
+            <hr />
+            <p>Trend Analysis Chart Visualizations.</p>
 
-            <div className="row mb-4">
+            <div className="row mb-1">
                 <div className="col-md-6 mb-3">
-                    <div className="card p-3">
-                        <h6>Vaccination Coverage (last 6 months)</h6>
-                        <div style={{ height: 140 }}>
-                            <SimpleBarChart
-                                data={vaccinationCoverage}
-                                height={120}
-                            />
-                        </div>
-                    </div>
+                    <ChartCard
+                        title="Monthly Active Mothers"
+                        delta={monthlyActiveMothers}
+                        subText="Past 6 months"
+                        visualHeight={100}
+                        type="line"
+                    />
                 </div>
-
                 <div className="col-md-6 mb-3">
-                    <div className="card p-3">
-                        <h6>Monthly Active Mothers</h6>
-                        <div style={{ height: 100 }}>
-                            <SimpleLineChart
-                                data={monthlyActiveMothers}
-                                height={80}
-                            />
-                        </div>
-                        <small className="text-muted">Past 6 months</small>
-                    </div>
+                    {/* Use a line chart to show vaccination coverage over time (values only) */}
+                    <ChartCard
+                        title="Vaccination Coverage Over Time"
+                        delta={vaccinationCoverage.map((v) => v.value)}
+                        subText="Past 6 months"
+                        visualHeight={120}
+                        type="line"
+                    />
                 </div>
             </div>
 
-            <div className="row mb-4">
-                <div className="col-md-6">
-                    <div className="card p-3">
-                        <h6>Appointments by Type</h6>
-                        <div style={{ height: 120 }}>
-                            <SimpleBarChart
-                                data={appointmentTypes}
-                                height={100}
-                            />
-                        </div>
-                        <small className="text-muted">
-                            Counts of appointment types
-                        </small>
-                    </div>
+            <div className="row mb-1">
+                <div className="col-md-6 mb-3">
+                    <ChartCard
+                        title="Appointments by Type"
+                        delta={appointmentTypes}
+                        subText="Counts of appointment types"
+                        visualHeight={120}
+                        type="bar"
+                    />
                 </div>
 
-                <div className="col-md-6">
-                    <div className="card p-3">
-                        <h6>Engagement Snapshot</h6>
-                        <p className="mb-1">
-                            Avg. notifications per mother: <strong>3.2</strong>
-                        </p>
-                        <p className="mb-1">
-                            Avg. health worker replies: <strong>1.1</strong>
-                        </p>
-                        <p className="mb-0 text-muted">
-                            These numbers are illustrative; swap the arrays
-                            above with your API data.
-                        </p>
-                    </div>
+                <div className="col-md-6 mb-3">
+                    <ChartCard
+                        title="Appointments by Type"
+                        delta={appointmentTypes}
+                        subText="Distribution of appointment types"
+                        visualHeight={120}
+                        type="pie"
+                    />
                 </div>
             </div>
 
             <div className="card mt-3">
                 <div className="card-body">
-                    <h5 className="card-title">Users</h5>
-                    <input
-                        type="text"
-                        placeholder="Search by name or email"
-                        className="form-control mb-3"
-                        value={searchTerm}
-                        onChange={handleSearch}
-                    />
-                    <div className="table-responsive">
-                        <table className="table table-bordered mt-2">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Registered</th>
-                                    <th>Last Login</th>
-                                    <th>Days Since Last Login</th>
-                                    <th>Interactions</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {currentUsers.map((user) => (
-                                    <tr key={user.id}>
-                                        <td>{user.name}</td>
-                                        <td>{user.email}</td>
-                                        <td>{user.role}</td>
-                                        <td>
-                                            {new Date(
-                                                user.registrationDate
-                                            ).toLocaleDateString()}
-                                        </td>
-                                        <td>
-                                            {new Date(
-                                                user.lastLogin
-                                            ).toLocaleString()}
-                                        </td>
-                                        <td>{daysSince(user.lastLogin)}</td>
-                                        <td>{user.interactions ?? 0}</td>
-                                        <td>
-                                            {user.role !== "admin" ? (
-                                                <button
-                                                    className="btn btn-sm btn-success me-2"
-                                                    onClick={() =>
-                                                        handleRoleChange(
-                                                            user.id,
-                                                            "admin"
-                                                        )
-                                                    }
-                                                    disabled={
-                                                        updatingUserId ===
-                                                        user.id
-                                                    }
-                                                >
-                                                    {updatingUserId === user.id
-                                                        ? "Updating..."
-                                                        : "Promote to Admin"}
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    className="btn btn-sm btn-warning"
-                                                    onClick={() =>
-                                                        handleRoleChange(
-                                                            user.id,
-                                                            "user"
-                                                        )
-                                                    }
-                                                    disabled={
-                                                        updatingUserId ===
-                                                        user.id
-                                                    }
-                                                >
-                                                    {updatingUserId === user.id
-                                                        ? "Updating..."
-                                                        : "Demote to User"}
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                    <div className="row">
+                        <div className="col-md mb-3">
+                            <h5 className="card-title">Users</h5>
+                            <input
+                                type="text"
+                                placeholder="Search by name or email"
+                                className="form-control mb-3"
+                                value={searchTerm}
+                                onChange={handleSearch}
+                            />
+                            <div className="table-responsive">
+                                <table className="table table-bordered mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Registered</th>
+                                            <th>Last Login</th>
+                                            <th>Days Since Last Login</th>
+                                            <th>Interactions</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {currentUsers.map((user) => (
+                                            <tr key={user.id}>
+                                                <td>{user.name}</td>
+                                                <td>{user.email}</td>
+                                                <td>{user.role}</td>
+                                                <td>
+                                                    {new Date(
+                                                        user.registrationDate
+                                                    ).toLocaleDateString()}
+                                                </td>
+                                                <td>
+                                                    {new Date(
+                                                        user.lastLogin
+                                                    ).toLocaleString()}
+                                                </td>
+                                                <td>
+                                                    {daysSince(user.lastLogin)}
+                                                </td>
+                                                <td>
+                                                    {user.interactions ?? 0}
+                                                </td>
+                                                <td>
+                                                    {user.role !== "admin" ? (
+                                                        <button
+                                                            className="btn btn-sm btn-success me-2"
+                                                            onClick={() =>
+                                                                handleRoleChange(
+                                                                    user.id,
+                                                                    "admin"
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                updatingUserId ===
+                                                                user.id
+                                                            }
+                                                        >
+                                                            {updatingUserId ===
+                                                            user.id
+                                                                ? "Updating..."
+                                                                : "Promote to Admin"}
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            className="btn btn-sm btn-warning"
+                                                            onClick={() =>
+                                                                handleRoleChange(
+                                                                    user.id,
+                                                                    "user"
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                updatingUserId ===
+                                                                user.id
+                                                            }
+                                                        >
+                                                            {updatingUserId ===
+                                                            user.id
+                                                                ? "Updating..."
+                                                                : "Demote to User"}
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
 
-                    {/* Pagination */}
-                    <nav className="mt-3">
-                        <ul className="pagination justify-content-center">
-                            {Array.from(
-                                { length: totalPages },
-                                (_, i) => i + 1
-                            ).map((num) => (
-                                <li
-                                    key={num}
-                                    className={`page-item ${
-                                        num === currentPage ? "active" : ""
-                                    }`}
-                                >
-                                    <button
-                                        className="page-link"
-                                        onClick={() => setCurrentPage(num)}
-                                    >
-                                        {num}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </nav>
+                            {/* Pagination */}
+                            <nav className="mt-3">
+                                <ul className="pagination justify-content-center">
+                                    {Array.from(
+                                        { length: totalPages },
+                                        (_, i) => i + 1
+                                    ).map((num) => (
+                                        <li
+                                            key={num}
+                                            className={`page-item ${
+                                                num === currentPage
+                                                    ? "active"
+                                                    : ""
+                                            }`}
+                                        >
+                                            <button
+                                                className="page-link"
+                                                onClick={() =>
+                                                    setCurrentPage(num)
+                                                }
+                                            >
+                                                {num}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </nav>
+                        </div>
+                        <div className="col-md mb-3">
+                            <div className="card p-3 mb-4">
+                                <h6>Engagement Snapshot</h6>
+                                <p className="mb-1">
+                                    Avg. notifications per mother:{" "}
+                                    <strong>3.2</strong>
+                                </p>
+                                <p className="mb-1">
+                                    Avg. health worker replies:{" "}
+                                    <strong>1.1</strong>
+                                </p>
+                                <p className="mb-0 text-muted">
+                                    These numbers are illustrative; swap the
+                                    arrays above with your API data.
+                                </p>
+                            </div>
+                            <div className="card p-3 mb-4">
+                                <h6>Recent Admin Actions</h6>
+                                {logLoading ? (
+                                    <p>Loading logs...</p>
+                                ) : auditLogs.length === 0 ? (
+                                    <p>No recent actions found.</p>
+                                ) : (
+                                    <ul className="list-group list-group-flush">
+                                        {auditLogs.map((log) => (
+                                            <li
+                                                key={log.id}
+                                                className="list-group-item"
+                                            >
+                                                <strong>
+                                                    {log.action.replace(
+                                                        "_",
+                                                        " "
+                                                    )}
+                                                </strong>{" "}
+                                                — {log.details}
+                                                <br />
+                                                <small className="text-muted">
+                                                    By{" "}
+                                                    {log.performer?.name ||
+                                                        "Unknown"}{" "}
+                                                    on{" "}
+                                                    {new Date(
+                                                        log.created_at
+                                                    ).toLocaleString()}
+                                                </small>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

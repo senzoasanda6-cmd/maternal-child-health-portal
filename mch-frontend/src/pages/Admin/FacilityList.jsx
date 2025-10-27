@@ -92,7 +92,7 @@ const FacilityList = () => {
     return (
         <div className="container p-4 space-y-6">
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Facility Management</h2>
+                <h2 className="text-custom-color-primary fw-bold">Facility Management</h2>
                 <Button variant="primary" onClick={() => handleShowModal()}>
                     Add New Facility
                 </Button>

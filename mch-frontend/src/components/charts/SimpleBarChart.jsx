@@ -1,4 +1,4 @@
-const SimpleBarChart = ({ data = [], height = 120 }) => {
+const SimpleBarChart = ({ data = [], height = 120, subText = "" }) => {
     const max = data.length ? Math.max(...data.map((d) => d.value)) : 1;
     const barWidth = Math.floor(100 / Math.max(data.length, 1));
 

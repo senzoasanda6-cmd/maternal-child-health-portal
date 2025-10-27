@@ -158,6 +158,21 @@
     vertical-align: middle;
 }
 
+/* Facebook icon square (blue background with white F) used in external links */
+.facebook-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:28px;
+    height:28px;
+    background:#1877f2; /* Facebook blue */
+    color:#fff;
+    border-radius:6px;
+    font-size:14px;
+}
+
+.facebook-icon svg{width:14px;height:14px}
+
 .sidebar-title {
     font-size: 0.9rem;
     font-weight: bold;
