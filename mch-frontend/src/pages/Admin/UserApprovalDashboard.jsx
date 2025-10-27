@@ -49,7 +49,7 @@ function UserApprovalDashboard() {
 
     return (
         <div className="user-approval-dashboard p-4 space-y-6">
-            <h2>Pending Registration Requests</h2>
+            <h2 className="text-custom-color-primary fw-bold">Pending Registration Requests</h2>
             {requests.length === 0 ? (
                 <p>No pending requests.</p>
             ) : (

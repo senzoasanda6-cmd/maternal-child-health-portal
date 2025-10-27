@@ -87,7 +87,7 @@ const UserList = () => {
 
     return (
         <div className="container p-4 space-y-6">
-            <h2 className="mb-4">User Management</h2>
+            <h2 className="text-custom-color-primary fw-bold mb-4">User Management</h2>
 
             <div className="row mb-3">
                 <div className="col-md-6">

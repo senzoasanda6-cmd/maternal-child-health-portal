@@ -109,11 +109,11 @@ const Sidebar = ({ user }) => {
                 )}
                 <div className="col-md d-flex justify-content-end">
                     <button
-                        className="button bg-custom-color-primary p-2 flex-fill text-white custom-color-primary"
+                        className="button bg-custom-color-primary p-2 flex-fill text-white custom-color-primary d-flex align-items-center justify-content-center"
                         onMouseDown={toggleSidebar}
                     >
                         {/* toggle label (hidden when collapsed, shown on hover or when expanded) */}
-                        {!isOpen && (<span className="me-2 toggle-label">Navigation</span>)}
+                        {!isOpen && (<span className="me-2 toggle-label text-truncate">Navigation</span>)}
                         {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
                     </button>
                 </div>

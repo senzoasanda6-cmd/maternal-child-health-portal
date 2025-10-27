@@ -64,7 +64,7 @@ const UserCreate = () => {
 
     return (
         <div className="container p-4 space-y-6">
-            <h2>Create New User</h2>
+            <h2 className="text-custom-color-primary fw-bold">Create New User</h2>
             <button
                 className="btn btn-outline-secondary mb-3"
                 onClick={() => navigate("/admin/users")}

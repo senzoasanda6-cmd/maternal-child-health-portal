@@ -25,7 +25,7 @@ function AdminApprovalPanel() {
 
     return (
         <div className="container p-4 space-y-6">
-            <h2>Pending Registration Requests</h2>
+            <h2 className="text-custom-color-primary fw-bold">Pending Registration Requests</h2>
             {requests.map((req) => (
                 <div key={req.id} className="request-card">
                     <p>
