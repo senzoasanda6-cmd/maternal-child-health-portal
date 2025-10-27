@@ -115,7 +115,7 @@ const AdminReports = () => {
 
     return (
         <div className="container p-4 space-y-6">
-            <h2 className="mb-4">Facility Reports</h2>
+            <h2  className="text-custom-color-primary fw-bold mb-4">Facility Reports</h2>
 
             {/* Filters */}
             <div className="row mb-4">

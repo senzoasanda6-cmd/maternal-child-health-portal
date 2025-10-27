@@ -8,7 +8,7 @@ function AdminHomePage() {
     return (
         <div className="admin-home p-4">
             <div className="admin-hero card mb-4 text-center">
-                <h1 className="text-custom-color-primary">Admin Portal</h1>
+                <h1 className="text-custom-color-primary fw-bold">Admin Portal</h1>
                 <p className="lead">Welcome to the Maternal & Child Health Admin Dashboard</p>
                 <div className="d-flex justify-content-center gap-3 mt-3">
                     <button className="button button-primary button-fw-medium" onClick={() => navigate('/admin/dashboard')}>Go to Dashboard</button>

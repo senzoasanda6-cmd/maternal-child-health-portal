@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FaFacebookF } from 'react-icons/fa';
 
 const HospitalDetails = () => {
     const { state } = useLocation();
@@ -34,7 +35,7 @@ const HospitalDetails = () => {
                     />
                 </div>
                 <div className="col-md">
-                    <h2>{hospital.title}</h2>
+                    <h2 className='text-custom-color-primary'>{hospital.title}</h2>
                     <p>{hospital.summary}</p>
 
                     {hospital.top3services && (
@@ -50,8 +51,17 @@ const HospitalDetails = () => {
 
                     {hospital.fblink && (
                         <p>
-                            <a href={hospital.fblink} target="_blank" rel="noreferrer">
-                                Visit hospital page
+                            <a
+                                href={hospital.fblink}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="d-inline-flex align-items-center gap-2"
+                                aria-label={`Visit ${hospital.title} Facebook page`}
+                            >
+                                <span className="facebook-icon" aria-hidden="true">
+                                    <FaFacebookF />
+                                </span>
+                                <span>Visit Facebook page</span>
                             </a>
                         </p>
                     )}

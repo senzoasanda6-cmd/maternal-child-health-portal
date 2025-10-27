@@ -44,112 +44,248 @@ const LandingPage = () => {
 
     const perHospMaternalServices = [
         {
-            imageUrl: "/hospital_images/dgmah/dgmah.jpg",
+            imageUrl: "/hospital_images/central.jpg",
             title: "Central Hospitals",
             description:
                 "Comprehensive support throughout your pregnancy journey, from the first trimester to delivery.",
-            hospitals: {
-                imageUrl: "/hospital_images/dgmah/dgmah.jpg",
-                title: "Chris Hani Baragwanath Academic Hospital",
-                summary:
-                    "Offers comprehensive maternal services including prenatal care, delivery, and postnatal support. Known for its large capacity and skilled staff.",
-                fblink: "#",
-                top3services: [
-                    "Prenatal Care",
-                    "Labour & Delivery",
-                    "Postnatal Support",
-                ],
-            },
+            hospitals: [
+                {
+                    imageUrl: "/hospital_images/chbah/chbah.jpg",
+                    title: "Chris Hani Baragwanath Academic Hospital",
+                    summary:
+                        "Offers comprehensive maternal services including prenatal care, delivery, and postnatal support. Known for its large capacity and skilled staff.",
+                    fblink: "#",
+                    top3services: [
+                        "Prenatal Care",
+                        "Labour & Delivery",
+                        "Postnatal Support",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/cmjah/cmjah.jpg",
+                    title: "Charlotte Maxeke Academic Hospital",
+                    summary:
+                        "Renowned for expert maternity services with compassionate care and advanced facilities.",
+                    fblink: "#",
+                    top3services: [
+                        "Prenatal Screening",
+                        "Emergency Obstetrics",
+                        "Postnatal Care",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/dgmah/dgmah.jpg",
+                    title: "Dr George Mukhari Academic Hospital",
+                    summary:
+                        "Provides high-level maternal care including neonatal ICU and specialist obstetric services.",
+                    fblink: "#",
+                    top3services: [
+                        "High-Risk Pregnancy",
+                        "Neonatal ICU",
+                        "Obstetric Surgery",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/sbah/sbah.jpg",
+                    title: "Steve Biko Academic Hospital",
+                    summary:
+                        "Advanced maternal care with a focus on critical cases and research-based practices.",
+                    fblink: "#",
+                    top3services: [
+                        "Maternal ICU",
+                        "Obstetric Emergencies",
+                        "Postnatal Monitoring",
+                    ],
+                },
+            ],
         },
         {
-            imageUrl: "/sample_images/Picture1.jpg",
+            imageUrl: "/hospital_images/tertiary.jpg",
             title: "Tertiary Hospitals",
             description:
-                "Comprehensive support throughout your pregnancy journey, from the first trimester to delivery.",
-            hospitals: {
-                imageUrl: "/sample_images/Picture1.jpg",
-                title: "Charlotte Maxeke Academic Hospital",
-                summary:
-                    "Renowned for expert maternity services with compassionate care and advanced facilities.",
-                fblink: "#",
-                top3services: [
-                    "Prenatal Screening",
-                    "Emergency Obstetrics",
-                    "Postnatal Care",
-                ],
-            },
+                "Advanced maternal care for complex cases and referrals.",
+            hospitals: [
+                {
+                    imageUrl: "/hospital_images/tembisa/tembisa.jpg",
+                    title: "Tembisa Hospital",
+                    summary:
+                        "Offers full-spectrum maternity services including emergency obstetrics and neonatal care.",
+                    fblink: "#",
+                    top3services: [
+                        "Emergency Obstetrics",
+                        "Prenatal Care",
+                        "Neonatal Services",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/kalafong/kalafong.jpg",
+                    title: "Kalafong Hospital",
+                    summary:
+                        "Provides maternal care with a focus on community outreach and education.",
+                    fblink: "#",
+                    top3services: [
+                        "Prenatal Education",
+                        "Labour Support",
+                        "Postnatal Counseling",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/helenjoseph/helenjoseph.jpg",
+                    title: "Helen Joseph Hospital",
+                    summary:
+                        "Personalized maternity services including prenatal and postnatal care.",
+                    fblink: "#",
+                    top3services: [
+                        "Prenatal Care",
+                        "Postnatal Support",
+                        "Counseling",
+                    ],
+                },
+            ],
         },
         {
-            imageUrl: "/sample_images/Picture1.jpg",
+            imageUrl: "/hospital_images/regional.jpg",
             title: "Regional Hospitals",
             description:
                 "Accessible maternal care for communities, with a focus on safe childbirth and wellness.",
-            hospitals: {
-                imageUrl: "/sample_images/Picture1.jpg",
-                title: "Rahima Moosa Mother and Child Hospital",
-                summary:
-                    "Specialized care for mothers and babies, including neonatal services and high-risk pregnancy management.",
-                fblink: "#",
-                top3services: [
-                    "High-Risk Pregnancy Care",
-                    "Neonatal Services",
-                    "Midwifery",
-                ],
-            },
+            hospitals: [
+                {
+                    imageUrl: "/hospital_images/rahima/rahima.jpg",
+                    title: "Rahima Moosa Mother and Child Hospital",
+                    summary:
+                        "Specialized care for mothers and babies, including neonatal services and high-risk pregnancy management.",
+                    fblink: "#",
+                    top3services: [
+                        "High-Risk Pregnancy Care",
+                        "Neonatal Services",
+                        "Midwifery",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/pholosong/pholosong.jpg",
+                    title: "Pholosong Hospital",
+                    summary:
+                        "Community-focused maternal care with emergency obstetric services.",
+                    fblink: "#",
+                    top3services: [
+                        "Prenatal Care",
+                        "Emergency Obstetrics",
+                        "Postnatal Support",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/sebokeng/sebokeng.jpg",
+                    title: "Sebokeng Hospital",
+                    summary:
+                        "Provides maternal services with a focus on safe delivery and newborn care.",
+                    fblink: "#",
+                    top3services: [
+                        "Labour Monitoring",
+                        "Newborn Care",
+                        "Postnatal Support",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/thelle/thelle.jpg",
+                    title: "Thelle Mogoerane Hospital",
+                    summary:
+                        "Offers full maternity services including antenatal clinics and delivery units.",
+                    fblink: "#",
+                    top3services: [
+                        "Antenatal Clinics",
+                        "Labour & Delivery",
+                        "Postnatal Care",
+                    ],
+                },
+            ],
         },
         {
-            imageUrl: "/sample_images/Picture1.jpg",
+            imageUrl: "/hospital_images/district.jpg",
             title: "District Hospitals",
             description:
                 "Community-focused maternal health services for safe and supported childbirth.",
-            hospitals: {
-                imageUrl: "/sample_images/Picture1.jpg",
-                title: "Edenvale Regional Hospital",
-                summary:
-                    "Offers community-centric maternity care with modern facilities and attentive staff.",
-                fblink: "#",
-                top3services: [
-                    "Prenatal Care",
-                    "Labour Monitoring",
-                    "Postnatal Support",
-                ],
-            },
+            hospitals: [
+                {
+                    imageUrl: "/hospital_images/edenvale/edenvale.jpg",
+                    title: "Edenvale Hospital",
+                    summary:
+                        "Offers community-centric maternity care with modern facilities and attentive staff.",
+                    fblink: "#",
+                    top3services: [
+                        "Prenatal Care",
+                        "Labour Monitoring",
+                        "Postnatal Support",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/jubilee/jubilee.jpg",
+                    title: "Jubilee District Hospital",
+                    summary:
+                        "Provides maternal services including antenatal care and delivery support.",
+                    fblink: "#",
+                    top3services: [
+                        "Antenatal Care",
+                        "Delivery Support",
+                        "Postnatal Services",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/pretoriawest/pretoriawest.jpg",
+                    title: "Pretoria West District Hospital",
+                    summary:
+                        "Supports maternal health with a focus on safe delivery and community outreach.",
+                    fblink: "#",
+                    top3services: [
+                        "Prenatal Care",
+                        "Safe Delivery",
+                        "Community Education",
+                    ],
+                },
+            ],
         },
         {
-            imageUrl: "/sample_images/Picture1.jpg",
-            title: "Community Health Centres (CHCs)",
+            imageUrl: "/hospital_images/specialised.jpg",
+            title: "Specialised Hospitals",
             description:
-                "Accessible maternal care for communities, with a focus on safe childbirth and wellness.",
-            hospitals: {
-                imageUrl: "/sample_images/Picture1.jpg",
-                title: "Helen Joseph Hospital",
-                summary:
-                    "Provides personalized maternity services including prenatal and postnatal care in a supportive environment.",
-                fblink: "#",
-                top3services: [
-                    "Prenatal Care",
-                    "Postnatal Support",
-                    "Counseling",
-                ],
-            },
-        },
-        {
-            imageUrl: "/sample_images/Picture1.jpg",
-            title: "Private Maternity Clinics",
-            description:
-                "Accessible maternal care for communities, with a focus on safe childbirth and wellness.",
-            hospitals: {
-                imageUrl: "/sample_images/Picture1.jpg",
-                title: "Helen Joseph Hospital",
-                summary:
-                    "Provides personalized maternity services including prenatal and postnatal care in a supportive environment.",
-                fblink: "#",
-                top3services: [
-                    "Prenatal Care",
-                    "Postnatal Support",
-                    "Counseling",
-                ],
-            },
+                "Focused maternal care for specific needs including rehabilitation and tropical diseases.",
+            hospitals: [
+                {
+                    imageUrl: "/hospital_images/sizwe/sizwe.jpg",
+                    title: "Sizwe Tropical Disease Hospital",
+                    summary:
+                        "Provides maternal care in the context of infectious disease management.",
+                    fblink: "#",
+                    top3services: [
+                        "Prenatal Screening",
+                        "Infectious Disease Management",
+                        "Postnatal Support",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/tara/tara.jpg",
+                    title: "Tara The H Moross Centre",
+                    summary:
+                        "Offers psychiatric support for mothers during and after pregnancy.",
+                    fblink: "#",
+                    top3services: [
+                        "Mental Health Support",
+                        "Prenatal Counseling",
+                        "Postpartum Care",
+                    ],
+                },
+                {
+                    imageUrl: "/hospital_images/weskoppies/weskoppies.jpg",
+                    title: "Weskoppies Psychiatric Hospital",
+                    summary:
+                        "Specialized psychiatric care for maternal mental health.",
+                    fblink: "#",
+                    top3services: [
+                        "Psychiatric Evaluation",
+                        "Prenatal Counseling",
+                        "Postnatal Therapy",
+                    ],
+                },
+            ],
         },
     ];
 
