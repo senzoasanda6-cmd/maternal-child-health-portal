@@ -1,0 +1,461 @@
+﻿Title,Facility Name,District,Sub-District,Facility Type,Level of care
+1,4th Avenue Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+10,Andries Raditsela Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+100,Eersterust CHC,TSHWANE,gp Health Sub-District 6,CHC,PHC
+101,Eikenhof Prov Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+102,Ekangala Clinic,TSHWANE,gp Health Sub-District 7,Clinic,PHC
+103,Ekurhuleni District Office,EKURHULENI,EKURHULENI,Management,District Office
+104,Elandsfontein Clinic,WESTRAND,gp Randfontein Municipality,Clinic,PHC
+105,Eldorado Park Ext 1 Mobile,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+106,Eldorado Park Ext 2 Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+107,Eldorado Park Ext 9 Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+108,Eldoraigne Satellite Clinic,TSHWANE,gp Health Sub-District 4,Clinic,PHC
+109,Elias Motsoaledi Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+11,Atteridgeville Clinic,TSHWANE,gp Health Sub-District 3,CHC,PHC
+110,Elsburg Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+111,Emaphupheni Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+112,Emfuleni East LA Mobile,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+113,Emfuleni South Provincial Mobile,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+114,Empilisweni Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+115,Endayeni Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+116,Ennerdale Ext 8 Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+117,Ennerdale Ext 9 Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+118,Ennerdale X9 Mobile,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+119,Eric Ndeleni Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+12,Azaadville Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+120,Erin Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+121,Esangweni Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+122,Esselen Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+123,Ethafeni Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+124,Evaton Main Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+125,Eyethu Ya Rona Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+126,Fanyana Nhlapo Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+127,Far East Rand Regional Hospital,EKURHULENI,gp Ekurhuleni East Health sub-District,Hospital,Regional Hospital
+128,FF Ribeiro Clinic,TSHWANE,gp Health Sub-District 3,Clinic,PHC
+13,Badirile Clinic,WESTRAND,gp Randfontein Municipality,Clinic,PHC
+130,First Avenue Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+132,Fochville Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+133,Folang Clinic,TSHWANE,gp Health Sub-District 3,Clinic,PHC
+134,Freedom Park Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+135,Freeway Park Satellite Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+136,Ga-Rankuwa View Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+137,Gazankulu Clinic,TSHWANE,gp Health Sub-District 3,Clinic,PHC
+138,Geluksdal Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+139,Germiston City Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+14,Bakerton Satellite Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+140,Glenanda Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+141,Glenhavie Satellite Clinic,WESTRAND,gp Westonaria Municipality,Clinic,PHC
+142,Goba Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+143,Green Village Porta Cabin Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+144,Greenfields Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+145,Groendenne Mobile,SEDIBENG,gp Midvaal Municipality,Clinic,PHC
+146,Halfway House Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+147,Hands of Compassion Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+148,Heidelberg Clinic,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+149,Heidelberg District Hospital,SEDIBENG,gp Lesedi Municipality,Hospital,District Hospital
+15,Bapsfontein Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+150,Helderkruin Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+151,Helen Joseph Tertiary Hospital,JOHANNESBURG,gp Johannesburg Health sub-District B,Hospital,Tertiary Hospital
+152,Hercules Clinic,TSHWANE,gp Health Sub-District 3,Clinic,PHC
+153,Hikhensile Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+154,Hillbrow CHC,JOHANNESBURG,gp Johannesburg Health sub-District F,CHC,PHC
+155,Hillshaven Satellite Clinic,WESTRAND,gp Westonaria Municipality,Clinic,PHC
+156,Holani Clinic,TSHWANE,gp Health Sub-District 6,Clinic,PHC
+157,Isabella De Villiers Oral Health Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+158,Itireleng CHC,JOHANNESBURG,gp Johannesburg Health sub-District D,CHC,PHC
+16,Barcelona Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+160,Itireleng Region B Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+161,Itumeleng Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+162,Jabavu Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+163,Jabulane Dumane CHC,EKURHULENI,gp Ekurhuleni South Health sub-District,CHC,PHC
+164,Jack Hindon Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+165,Jameson Park Satellite Clinic,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+166,Jan Maree Satellite Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+167,JCDI Oral Health Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+168,Jeppe Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+17,Barney Molokoane Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+170,Jiswa Mental Health Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+171,Jocod Mental Health Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+172,Johan Deo Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+173,Johan Heyns CHC,SEDIBENG,gp Emfuleni Municipality,CHC,PHC
+174,John the Baptist_Caska,SEDIBENG,gp Nokeng Tsa Taemane Municipality,Clinic,PHC
+176,Joy Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+177,Jubilee District Hospital,TSHWANE,gp Health Sub-District 2,Hospital,District Hospital
+178,Jubilee Gateway Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+179,Kalafong Tertiary Hospital,TSHWANE,gp Health Sub-District 3,Hospital,Tertiary Hospital
+18,Baviaanspoort Correctional Service,SEDIBENG,gp Nokeng Tsa Taemane Municipality,Clinic,PHC
+180,Kameeldrift Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+181,Kanana Clinic,TSHWANE,gp Health Sub-District 7,Clinic,PHC
+182,Karenpark Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+183,Katlehong North Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+184,Kekana Gardens Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+185,Kekanastad Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+186,Kempton Park Civic Centre Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+187,Kempton Park Civic Centre Mobile,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+188,Kemston Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+189,Kgabo CHC,TSHWANE,gp Health Sub-District 1,CHC,PHC
+19,Bedfordview Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+190,Khumalo Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+191,Khutsong East Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+192,Khutsong Ext 3 Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+193,Khutsong Main Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+194,Khutsong South Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+195,Khutsong West Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+196,Kibler Park Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+197,Kingsway Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+198,Klipspruit West Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+199,Kliptown Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+2,80 Albert Street Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+20,Bekkersdal East Clinic,WESTRAND,gp Westonaria Municipality,Clinic,PHC
+200,Kliptown Mobile,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+201,Klopperpark Satellite Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+202,Kocksoord Clinic,WESTRAND,gp Randfontein Municipality,Clinic,PHC
+203,Kokosi Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+204,Kookrus Clinic,SEDIBENG,gp Midvaal Municipality,Clinic,PHC
+205,Kopanong District Hospital,SEDIBENG,gp Emfuleni Municipality,Hospital,District Hospital
+206,Kroomdraai Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+207,Krugersdorp Central Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+208,Krugersdorp Correctional Service,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+209,Krugersdorp Oral Health Mobile,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+21,Bekkersdal West Clinic,WESTRAND,gp Westonaria Municipality,Clinic,PHC
+210,KT Motubatse Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+211,Kwa Thema CHC,EKURHULENI,gp Ekurhuleni East Health sub-District,CHC,PHC
+212,Kwa Thema Mobile,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+213,Land Is Wealth Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+214,Laudium CHC,TSHWANE,gp Health Sub-District 3,CHC,PHC
+215,Laudium Clinic,TSHWANE,gp Health Sub-District 4,Clinic,PHC
+216,Lawley 2 Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+217,Lawley Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+218,Leeuwkop Correctional Service,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+219,Lenasia Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+22,Bellavista Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+220,Lenasia Ext 10 Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+221,Lenasia Ext 2 Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+222,Lenasia South CHC,JOHANNESBURG,gp Johannesburg Health sub-District G,CHC,PHC
+223,Lenasia South Civic Centre Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+224,Leondale Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+225,Leratong Regional Hospital,WESTRAND,gp Mogale City Municipality,Hospital,Regional Hospital
+226,Lesedi East Provincial Mobile,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+227,Lesedi West Provincial Mobile,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+228,Lethabong Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+229,Levai Mbatha CHC,SEDIBENG,gp Emfuleni Municipality,CHC,PHC
+23,Berario Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+230,Lillian Ngoyi CHC,JOHANNESBURG,gp Johannesburg Health sub-District D,CHC,PHC
+231,Local Auth,Mun,Mun,Management,District Office
+232,Lotus Gardens Clinic,TSHWANE,gp Health Sub-District 3,Clinic,PHC
+233,Lucky Mkhwanazi Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+234,Luipaardvlei Satellite Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+235,Lyttelton Clinic,TSHWANE,gp Health Sub-District 4,Clinic,PHC
+236,Magagula Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+237,Maki Legwete Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+238,Malvern Satellite Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+239,Mamelodi Regional Hospital,TSHWANE,gp Health Sub-District 6,Hospital,Regional Hospital
+24,Bertha Gxowa District Hospital,EKURHULENI,gp Ekurhuleni South Health sub-District,Hospital,District Hospital
+240,Mamelodi West Clinic,TSHWANE,gp Health Sub-District 6,Clinic,PHC
+241,Mandela Sisulu Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+242,Mandisa Shiceka Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+243,Maria Rantho Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+244,Market Ave Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+245,Mary Moodley Memorial Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+246,Mary Moodley Memorial Mobile,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+247,Mayfair Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+248,Mayibuye Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+25,Bertha Gxowa Gateway Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+250,Meadowlands Zone 2 Prov Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+251,Sefako Makgatho Oral Health University,TSHWANE,gp Health Sub-District 1,Hospital,Dental Hospital
+253,Michael Maponya Prov Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+254,Mid Ennerdale Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+255,Midrand Mobile 2,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+256,Midrand Rehabilitation Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+257,Midrand West Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+258,Midvaal CHC,SEDIBENG,gp Midvaal Municipality,CHC,PHC
+259,Midvaal Provincial Mobile,SEDIBENG,gp Midvaal Municipality,Clinic,PHC
+26,Beverly Hills Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+260,ML Pessen Clinic,WESTRAND,gp Randfontein Municipality,Clinic,PHC
+261,Mofolo CHC,JOHANNESBURG,gp Johannesburg Health sub-District D,CHC,PHC
+262,Mofolo South Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+263,Mogale Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+264,Mohlakeng Clinic,WESTRAND,gp Randfontein Municipality,Clinic,PHC
+265,Moleleki Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+266,Moroka Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+267,Motsamai Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+268,Mountain View Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+269,Mpumelelo Clinic (COJ),JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+27,Bezvalley Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+270,Mpumelelo Clinic (Sedibeng),SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+271,Muldersdrift Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+272,Naledi Extension 2 Mobile,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+273,Nancefield Mobile Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+274,Nellmapius Clinic,TSHWANE,gp Health Sub-District 6,Clinic,PHC
+275,New Eersterus Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+276,Newlands Oral Health Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+277,Nigel Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+278,Nizamiye Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+279,Nokuphila Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+28,Bheki Mlangeni District Hospital,JOHANNESBURG,gp Johannesburg Health sub-District D,Hospital,District Hospital
+280,Nokuthela Ngwenya CHC,EKURHULENI,gp Ekurhuleni East Health sub-District,CHC,PHC
+282,Noordgesig Prov Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+283,Noordheuwel Satellite Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+284,Northmead Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+285,Odi District Hospital,TSHWANE,gp Health Sub-District 1,Hospital,District Hospital
+286,Odirileng Maponya Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+287,Olievenhoutbosch Ext 13 Clinic,TSHWANE,gp Health Sub-District 4,Clinic,PHC
+288,Olifantsfontein Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+289,Onverwacht Clinic,TSHWANE,gp Health Sub-District 5,Clinic,PHC
+29,Birchleigh Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+290,OR Tambo Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+291,Orange Farm Ext 7 Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+292,Orchards Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+294,Orlando Prov Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+295,Osizweni Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+296,Palmridge Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+297,Parkhurst Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+298,Paul Jung Nickel Satellite Clinic,SEDIBENG,gp Kungwini Municipality,Clinic,PHC
+299,Payneville Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+3,Adelaide Tambo Clinic,TSHWANE,gp Health Sub-District 2,CHC,PHC
+30,Birchleigh North Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+300,Petervale Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+301,Phahameng Clinic,TSHWANE,gp Health Sub-District 6,Clinic,PHC
+302,Phedisong 1 Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+303,Phedisong 4 CHC,TSHWANE,gp Health Sub-District 1,CHC,PHC
+304,Phedisong 6 Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+305,Phenduka Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+306,Phillip Moyo CHC,EKURHULENI,gp Ekurhuleni East Health sub-District,CHC,PHC
+307,Phola Park CHC,EKURHULENI,gp Ekurhuleni South Health sub-District,CHC,PHC
+308,Pholosong Regional Hospital,EKURHULENI,gp Ekurhuleni East Health sub-District,Hospital,Regional Hospital
+309,Phomolong Clinic,TSHWANE,gp Health Sub-District 3,Clinic,PHC
+31,Blybank Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+310,Phuthanang Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+311,Pierre Van Ryneveld Satellite Clinic,TSHWANE,gp Health Sub-District 4,Clinic,PHC
+312,PJ Maree Clinic,WESTRAND,gp Randfontein Municipality,Clinic,PHC
+313,Pontshong Clinic,SEDIBENG,gp Midvaal Municipality,Clinic,PHC
+314,Pretoria West District Hospital,TSHWANE,gp Health Sub-District 3,Hospital,District Hospital
+315,Pretorius Park Clinic,TSHWANE,gp Health Sub-District 6,Clinic,PHC
+316,Princess Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+317,Protea Glen Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+318,Protea South Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+319,Provincial Office,PROVINCE,PROVINCE,Management,Head Office
+32,Blyvoor Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+320,Rabie Ridge Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+321,Rahima Moosa Regional Hospital,JOHANNESBURG,gp Johannesburg Health sub-District B,Hospital,Regional Hospital
+322,Ramaphosa Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+323,Ramokonopi Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+324,Ramotse Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+325,Randburg Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+326,Randgate Clinic,WESTRAND,gp Randfontein Municipality,Clinic,PHC
+327,Randvaal Clinic,SEDIBENG,gp Midvaal Municipality,Clinic,PHC
+328,Ratanda Clinic,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+329,Ratanda Ext 23 Clinic,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+33,Boekenhout Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+330,Ratanda Ext 7 Clinic,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+331,Rayton Clinic,TSHWANE,gp Health Sub-District 5,Clinic,PHC
+332,Reedville Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+333,Refentse Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+334,Refilwe Clinic,TSHWANE,gp Health Sub-District 5,Clinic,PHC
+335,Reiger Park Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+336,Rensburg Clinic,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+337,Rethabiseng Clinic,TSHWANE,gp Health Sub-District 7,Clinic,PHC
+338,Retswelapele Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+339,Rex Street Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+34,Boikhutsong Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+340,Rietspruit Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+341,Rietvallei 2 and 3 Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+342,Riverlea Major Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+343,Riverpark Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+344,Rondebult Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+345,Rooihuiskraal Clinic,TSHWANE,gp Health Sub-District 4,Clinic,PHC
+346,Rosebank Satellite Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+347,Rosettenville Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+348,Rosslyn Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+349,Rus ter vaal Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+35,Boipatong CHC,SEDIBENG,gp Emfuleni Municipality,CHC,PHC
+350,Sandown Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+351,Saulsville Clinic,TSHWANE,gp Health Sub-District 3,Clinic,PHC
+352,Sead Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+353,Sebokeng Regional Hospital,SEDIBENG,gp Emfuleni Municipality,Hospital,Regional Hospital
+354,Sedibeng District Office,SEDIBENG,SEDIBENG,Management,District Office
+355,Sedilega Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+356,Selope Thema Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+357,Semunye Clinic,WESTRAND,gp Westonaria Municipality,Clinic,PHC
+358,Senaoane Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+359,Sepei Motsoeneng,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+36,Boitumelo Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+360,Shanty Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+361,Sharpeville CHC,SEDIBENG,gp Emfuleni Municipality,CHC,PHC
+362,Silverton Clinic,TSHWANE,gp Health Sub-District 6,Clinic,PHC
+363,Simunye Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+364,Sinethemba Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+365,Sinqobile Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+366,Siphumlile Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+367,Sizwe Tropical Disease Hospital,JOHANNESBURG,gp Johannesburg Health sub-District E,Hospital,Specialized Hospital
+368,Skinner Clinic,TSHWANE,gp Health Sub-District 3,Clinic,PHC
+369,Slovo Park Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+37,Boksburg Civic Centre Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+370,Slovo Park Mobile Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+371,Slovoville Mobile Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+372,Sokhulumi Clinic,TSHWANE,gp Health Sub-District 7,Clinic,PHC
+373,Sol Plaatjies Satellite Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+374,Sonto Thobela Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+375,Sophiatown Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+376,Soshanguve 2 Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+377,Soshanguve Block JJ Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+378,Soshanguve Block TT Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+379,Soshanguve Block X Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+38,Boksburg Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+380,Soshanguve CHC,TSHWANE,gp Health Sub-District 1,CHC,PHC
+381,South Hills Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+382,South Rand District Hospital,JOHANNESBURG,gp Johannesburg Health sub-District F,Hospital,District Hospital
+383,Spartan Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+384,Stanza Bopape CHC,TSHWANE,gp Health Sub-District 6,CHC,PHC
+385,Stanza Bopape II Clinic,TSHWANE,gp Health Sub-District 5,Clinic,PHC
+386,Sterkfontein Psychiatric Hospital,WESTRAND,gp Mogale City Municipality,Hospital,Specialized Hospital
+387,Steve Biko Academic hospital,TSHWANE,gp Health Sub-District 3,Hospital,National Central Hospital
+388,Stretford CHC,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+389,Sunrise View Clinc,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+39,Boksburg Correctional Service,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+390,Suurman Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+391,Sweetwaters Mobile,JOHANNESBURG,unknown,Clinic,PHC
+392,Tamaho Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+393,Tambo Memorial Regional Hospital,EKURHULENI,gp Ekurhuleni North Health sub-District,Hospital,Regional Hospital
+394,Tara .H Moross Centre,JOHANNESBURG,gp Johannesburg Health sub-District B,Hospital,Specialized Hospital
+395,Tarlton Satellite Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+396,Temba CHC,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+397,Tembisa Health Care Centre,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+398,Tembisa Tertiary Hospital,EKURHULENI,gp Ekurhuleni North Health sub-District,Hospital,Tertiary Hospital
+399,Tembisa Main Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+4,Albertina Sisulu Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+40,Boksburg North Satellite Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+400,Thelle Mogoerane Regional Hospital,EKURHULENI,gp Ekurhuleni North Health sub-District,Hospital,Regional Hospital
+401,Thembelihle Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+402,Thembelisha Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+403,Thlokomelong Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+404,Thoko Mngoma Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+405,Thulamntwana Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+406,Thusanang 2 Clinic,WESTRAND,gp Westonaria Municipality,Clinic,PHC
+407,Thusanang Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+408,Thusong Community Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+409,Thuthukani Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+41,Bonaero Park Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+410,Tladi LA Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+411,Tladi Prov Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+412,Tlamelong Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+413,TMI Oral Health Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+414,Tsakane Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+415,Tsakane Ext 10 Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+416,Tshepiso Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+417,Tshepisong Porta Cabin Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+418,Tshwane District Hospital,TSHWANE,gp Health Sub-District 3,Hospital,District Hospital
+419,Tshwane District Office,TSHWANE,TSHWANE,Management,District Office
+42,Bophelong A Clinic (COJ),JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+420,Tshwane Rehabilitation Hospital,TSHWANE,gp Health Sub-District 3,Hospital,Specialized Hospital
+421,Tsietsi Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+422,Tswelopele Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+423,Ubuntu Clinic,TSHWANE,gp Health Sub-District 6,Clinic,PHC
+424,UP Oral and Dental Hospital,TSHWANE,gp Health Sub-District 3,Hospital,Dental Hospital
+425,Urban Health Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+426,Usizolwethu Clinic,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+427,Van Dyk Park Satellite Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+428,Venterspos Clinic,WESTRAND,gp Westonaria Municipality,Clinic,PHC
+429,Villa Liza Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+43,Bophelong Clinic (Sedibeng),SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+430,Vischuil Satellite Clinic,SEDIBENG,gp Lesedi Municipality,Clinic,PHC
+431,Vlakfontein Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+432,Vosloorus Ext 14 Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+433,Vosloorus Ext 28 Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+434,Vosloorus Ext 9 Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+435,Vosloorus Mobile,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+436,Vosloorus Poly Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+437,Wannenburg Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+438,Wedela Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+439,Weilers Farm Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+44,Bophelong Region C Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+440,Weltevreden Park Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+441,Welverdiend Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+442,Wendywood Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+443,Weskoppies Psychiatric Hospital,TSHWANE,gp Health Sub-District 3,Hospital,Specialized Hospital
+444,West Rand District Office,WESTRAND,WESTRAND,Management,District Office
+445,Westbury Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+446,Westonaria Clinic,WESTRAND,gp Westonaria Municipality,Clinic,PHC
+447,White City Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+448,Wildebeesfontein Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+449,Windsor Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+45,Bophelong Clinic (Tshwane),TSHWANE,gp Health Sub-District 3,Clinic,PHC
+450,Winnie Mandela Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+451,Winterveld Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+452,Witkoppen Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+453,Wits Oral and Dental Center,JOHANNESBURG,gp Johannesburg Health sub-District A,Hospital,Dental Hospital
+454,Ya Rona Clinic,WESTRAND,gp Randfontein Municipality,Clinic,PHC
+455,Yeoville Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+456,Zamile Clinic,TSHWANE,gp Health Sub-District 1,Clinic,PHC
+457,Zandspruit Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+458,Zenzele Clinic,WESTRAND,gp Randfontein Municipality,Clinic,PHC
+459,Zithobeni Clinic,TSHWANE,gp Health Sub-District 7,Clinic,PHC
+46,Bosmont Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+460,Zola CHC,JOHANNESBURG,gp Johannesburg Health sub-District D,CHC,PHC
+461,Zola Gateway Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+463,Zonderwater Correctional Service,SEDIBENG,gp Nokeng Tsa Taemane Municipality,Clinic,PHC
+464,Zondi Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+465,Zone 13 Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+466,Zone 14 Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+467,Zone 17 Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+468,Zone 3 Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+469,Zonkizizwe 1 Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+47,Braamfischer Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+470,Zonkizizwe 2 Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+471,Zuurbekom Clinic,WESTRAND,gp Westonaria Municipality,Clinic,PHC
+48,Brackenhurst Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+49,Brakpan Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+5,Alberton North Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+50,Imbalenhle Clinic,JOHANNESBURG,gp Johannesburg Health sub-District G,Clinic,PHC
+51,Bronkhorstspruit Clinic,TSHWANE,gp Health Sub-District 7,Clinic,PHC
+52,Bronkhorstspruit District Hospital,TSHWANE,gp Health Sub-District 7,Hospital,District Hospital
+53,Bronkhorstspruit Mobile,SEDIBENG,gp Kungwini Municipality,Clinic,PHC
+54,Calcut Dhlephu Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+55,Carletonville Central Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+56,Carletonville District Hospital,WESTRAND,gp Merafong City Municipality,Hospital,District Hospital
+57,Charlotte Maxeke Academic Hospital,JOHANNESBURG,gp Johannesburg Health sub-District D,Hospital,National Central Hospital
+58,Chiawelo CHC,JOHANNESBURG,gp Johannesburg Health sub-District D,CHC,PHC
+6,Alexandra 8th Avenue Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+60,Chief Albert Luthuli Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+61,Chris Hani Baragwanath Academic Hospital,JOHANNESBURG,gp Johannesburg Health sub-District D,Hospital,National Central Hospital
+62,Claremont Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+63,COJ District Office,JOHANNESBURG,JOHANNESBURG,Management,District Office
+64,Colgate Oral Health Mobile,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+65,Cosmo City Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+66,Crosby Clinic,JOHANNESBURG,gp Johannesburg Health sub-District B,Clinic,PHC
+67,Crown Gardens Clinic,JOHANNESBURG,gp Johannesburg Health sub-District F,Clinic,PHC
+68,Crystal Park Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+69,Cullinan Care and Rehab Centre,TSHWANE,gp Health Sub-District 5,Hospital,Specialized Hospital
+7,Alexandra East Bank Clinic,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+70,Dan Kubheka Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+71,Danville Clinic,TSHWANE,gp Health Sub-District 3,Clinic,PHC
+72,Dark City CHC,TSHWANE,gp Health Sub-District 7,CHC,PHC
+73,Daveyton East Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+74,Daveyton Ext Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+75,Daveyton Main Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+76,Davidsonville Clinic,JOHANNESBURG,gp Johannesburg Health sub-District C,Clinic,PHC
+77,Dawn Park Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+78,De Wagensdrift Clinic,TSHWANE,gp Health Sub-District 5,Clinic,PHC
+79,Deelkraal Clinic,WESTRAND,gp Merafong City Municipality,Clinic,PHC
+8,Alexandra Commumunity Health Centre,JOHANNESBURG,gp Johannesburg Health sub-District E,Clinic,PHC
+80,Diepkloof LA Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+81,Diepkloof Prov Clinic,JOHANNESBURG,gp Johannesburg Health sub-District D,Clinic,PHC
+83,Diepsloot South Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+84,Dilopye Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+85,Discoverers CHC,JOHANNESBURG,gp Johannesburg Health sub-District C,CHC,PHC
+86,Doornpoort Clinic,TSHWANE,gp Health Sub-District 2,Clinic,PHC
+87,Dr George Mukhari Academic Hospital,TSHWANE,gp Health Sub-District 1,Hospital,National Central Hospital
+88,Dr Helga Kuhn Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+89,Dr Martinez Ramirez Clinic,WESTRAND,gp Mogale City Municipality,Clinic,PHC
+9,Alra Park Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+90,Dr Yusuf Dadoo District Hospital,WESTRAND,gp Mogale City Municipality,Hospital,District Hospital
+91,Dresser Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+92,Driehoek Clinic,SEDIBENG,gp Emfuleni Municipality,Clinic,PHC
+93,Duduza Clinic,EKURHULENI,gp Ekurhuleni East Health sub-District,Clinic,PHC
+94,Dukathole Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+95,East Lynne Clinic,TSHWANE,gp Health Sub-District 5,Clinic,PHC
+96,Ebony Park_Kaalfontein Clinic,JOHANNESBURG,gp Johannesburg Health sub-District A,Clinic,PHC
+97,Eden Park Clinic,EKURHULENI,gp Ekurhuleni South Health sub-District,Clinic,PHC
+98,Edenvale Clinic,EKURHULENI,gp Ekurhuleni North Health sub-District,Clinic,PHC
+99,Edenvale Regional Hospital,JOHANNESBURG,gp Johannesburg Health sub-District E,Hospital,Regional Hospital
+AGF,All Gauteng Facilities,Gauteng,Gauteng,Provincial,Provincial
