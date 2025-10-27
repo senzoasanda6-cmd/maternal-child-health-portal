@@ -112,6 +112,8 @@ const Sidebar = ({ user }) => {
                         className="button bg-custom-color-primary p-2 flex-fill text-white custom-color-primary"
                         onMouseDown={toggleSidebar}
                     >
+                        {/* toggle label (hidden when collapsed, shown on hover or when expanded) */}
+                        {!isOpen && (<span className="me-2 toggle-label">Navigation</span>)}
                         {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
                     </button>
                 </div>
@@ -121,8 +123,9 @@ const Sidebar = ({ user }) => {
                     {links.map((link) => (
                         <li key={link.path}>
                             <NavLink to={link.path} className={getLinkClass}>
-                                {link.icon && <span>{link.icon}</span>}
-                                {isOpen && <span className="ms-2">{link.label}</span>}
+                                {link.icon && <span className="icon-span">{link.icon}</span>}
+                                {/* always render label span so CSS can reveal it on hover when collapsed */}
+                                <span className="ms-2 sidebar-label">{link.label}</span>
                             </NavLink>
                         </li>
                     ))}
