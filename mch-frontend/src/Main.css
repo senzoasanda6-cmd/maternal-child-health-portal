@@ -107,8 +107,14 @@ select {
         0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.2s ease-in-out;
     text-decoration: none;
+    /* make the button a flex container so align-items works and text centers vertically */
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    /* keep horizontal centering fallback */
     text-align: center;
+    /* ensure consistent line-height inside the flex container */
+    line-height: 1;
 }
 .button:hover {
     box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
@@ -127,41 +133,48 @@ select {
     background-color: var(--primary-color);
     color: #ffffff !important;
     text-decoration: none;
+    vertical-align: middle;
 }
 .button-accent {
     background-color: var(--accent-color);
     color: #ffffff !important;
     text-decoration: none;
+    vertical-align: middle;
 }
 
 .button-secondary {
     background-color: var(--secondary-color);
     color: #ffffff !important;
     text-decoration: none;
+    vertical-align: middle;
 }
 
 .button-danger {
     background-color: var(--danger-color);
     color: #ffffff !important;
     text-decoration: none;
+    vertical-align: middle;
 }
 
 .button-success {
     background-color: var(--success-color);
     color: #ffffff !important;
     text-decoration: none;
+    vertical-align: middle;
 }
 
 .button-warning {
     background-color: var(--warning-color);
     color: #333333 !important;
     text-decoration: none;
+    vertical-align: middle;
 }
 
 .button-light {
     background-color: #f4f6f8;
     color: var(--primary-color) !important;
     text-decoration: none;
+    vertical-align: middle;
 }
 
 .button-outline {
@@ -169,7 +182,9 @@ select {
     border: 2px solid var(--primary-color);
     color: var(--primary-color) !important;
     text-decoration: none;
+    vertical-align: middle;
 }
+
 .button-outline:hover {
     background-color: var(--primary-color);
     color: #ffffff !important;
