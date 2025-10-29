@@ -155,8 +155,8 @@ return [
     | domain and all subdomains. Typically, this shouldn't be changed.
     |
     */
-
-    'domain' => env('SESSION_DOMAIN'),
+    
+    'domain' => env('SESSION_DOMAIN', '.localhost'),
 
     /*
     |--------------------------------------------------------------------------
@@ -168,8 +168,8 @@ return [
     | the cookie from being sent to you when it can't be done securely.
     |
     */
-
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    
+    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV') === 'production'),
 
     /*
     |--------------------------------------------------------------------------
@@ -198,7 +198,7 @@ return [
     | Supported: "lax", "strict", "none", null
     |
     */
-
+    
     'same_site' => env('SESSION_SAME_SITE', 'lax'),
 
     /*

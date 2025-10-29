@@ -7,17 +7,19 @@ export default function AdminSettings() {
         email: "",
         password: "",
         password_confirmation: "",
+        session_timeout_minutes: "", // ✅ Added field
     });
     const [message, setMessage] = useState(null);
 
     useEffect(() => {
-        api
-            .get("/api/admin/settings")
+        api.get("/api/admin/settings")
             .then((res) => {
-                setForm(f => ({
+                setForm((f) => ({
                     ...f,
                     name: res.data.name,
                     email: res.data.email,
+                    session_timeout_minutes:
+                        res.data.session_timeout_minutes || "", // ✅ Load existing value
                 }));
             })
             .catch((err) => console.error(err));
@@ -29,8 +31,7 @@ export default function AdminSettings() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        api
-            .post("/api/admin/settings", form)
+        api.post("/api/admin/settings", form)
             .then((res) => setMessage("Settings updated successfully."))
             .catch((err) => setMessage("Update failed."));
     };
@@ -70,6 +71,16 @@ export default function AdminSettings() {
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
                     placeholder="Confirm Password"
+                />
+                <input
+                    name="session_timeout_minutes"
+                    type="number"
+                    min="1"
+                    max="1440"
+                    value={form.session_timeout_minutes}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                    placeholder="Session Timeout (minutes)"
                 />
                 <button
                     type="submit"

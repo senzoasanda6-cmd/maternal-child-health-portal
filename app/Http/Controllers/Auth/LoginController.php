@@ -20,9 +20,11 @@ class LoginController extends Controller
         }
 
         $request->session()->regenerate(); // ✅ Important for session tracking
+        $request->session()->put('login_time', now()); // ✅ Track login timestamp
 
         return response()->json([
-            'user' => Auth::user(), // ✅ Return user object for frontend
+            'user' => Auth::user(),
+            'message' => 'Login successful',
         ]);
     }
 }
