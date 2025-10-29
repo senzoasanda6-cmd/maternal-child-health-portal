@@ -26,10 +26,9 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\CheckLoginDuration::class,
         ],
     ];
 
@@ -39,8 +38,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'checkrole' => \App\Http\Middleware\RoleMiddleware::class,
+        'checkrole' => \App\Http\Middleware\RoleMiddleware::class
     ];
     
 }
-
