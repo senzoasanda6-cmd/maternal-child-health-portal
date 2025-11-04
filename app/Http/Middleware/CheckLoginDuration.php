@@ -13,7 +13,7 @@ class CheckLoginDuration
 {
     if (Auth::check()) {
         $loginTime = session('login_time');
-        $timeout = Setting::where('key', 'session_timeout_minutes')->value('value') ?? 30;
+        $timeout = Setting::where('key', 'session_timeout_minutes')->value('value') ?? 720;
 
         if ($loginTime && now()->diffInMinutes($loginTime) > (int) $timeout) {
             Auth::logout();

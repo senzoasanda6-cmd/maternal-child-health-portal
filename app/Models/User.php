@@ -8,6 +8,14 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * App\Models\User
+ *
+ * @property int|null $facility_id
+ * @property string $role
+ * @property string|null $sub_role
+ * @property string|null $designation
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes;

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Spinner from "../../components/spinners/Spinner";
 import "./LoginPage.css";
+import axios from "axios";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -20,7 +21,13 @@ function LoginPage() {
         setError(null);
         setLoading(true);
         try {
-            await login(form);
+            // Step 1: Get CSRF cookie
+            await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+                withCredentials: true,
+            });
+
+            // Step 2: Submit login
+            await login(form); // Make sure login uses withCredentials too
         } catch (err) {
             setError(err.response?.data?.error || "Login failed");
         } finally {
@@ -57,7 +64,7 @@ function LoginPage() {
                         </div>{" "}
                     </div>{" "}
                 </div>{" "}
-                <div className="login-right" style={{minWidth: "400px"}}>
+                <div className="login-right" style={{ minWidth: "400px" }}>
                     {" "}
                     <div className="login-card">
                         {" "}
@@ -69,7 +76,7 @@ function LoginPage() {
                                 name="email"
                                 value={form.email}
                                 onChange={handleChange}
-                                style={{textAlign: 'center'}}
+                                style={{ textAlign: "center" }}
                                 placeholder="Email Address"
                                 required
                             />{" "}
@@ -78,23 +85,35 @@ function LoginPage() {
                                 name="password"
                                 value={form.password}
                                 onChange={handleChange}
-                                style={{textAlign: 'center'}}
+                                style={{ textAlign: "center" }}
                                 placeholder="Password"
                                 required
                             />{" "}
                             {error && <p className="error">{error}</p>}{" "}
-                            <div style={{ marginBottom: '12px' }}></div>
-                            <button type="submit" className="button button-primary" style={{ maxWidth: '200px', marginTop: '0' }}>Login</button>{" "}
-                            <p style={{ marginBottom: '12px', marginTop: '12px' }}>Or</p>
+                            <div style={{ marginBottom: "12px" }}></div>
+                            <button
+                                type="submit"
+                                className="button button-primary"
+                                style={{ maxWidth: "200px", marginTop: "0" }}
+                            >
+                                Login
+                            </button>{" "}
+                            <p
+                                style={{
+                                    marginBottom: "12px",
+                                    marginTop: "12px",
+                                }}
+                            >
+                                Or
+                            </p>
                             <button
                                 type="button"
                                 className="button button-secondary"
-                                style={{ maxWidth: '200px', marginTop: '0' }}
+                                style={{ maxWidth: "200px", marginTop: "0" }}
                                 onClick={() => navigate("/register")}
                             >
                                 Register
                             </button>
-
                         </form>{" "}
                     </div>{" "}
                 </div>{" "}
