@@ -2,6 +2,7 @@
   "name": "maternal-child-health-frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8000",
   "dependencies": {
     "@fullcalendar/bootstrap5": "^6.1.19",
     "@fullcalendar/daygrid": "^6.1.19",
@@ -36,9 +37,7 @@
     "react-scripts": "5.0.1",
     "recharts": "^3.2.1",
     "web-vitals": "^2.1.4",
-    "yup": "^1.7.1",
-    "proxy": "http://localhost:8000"
-
+    "yup": "^1.7.1"
   },
   "scripts": {
     "start": "react-scripts start",

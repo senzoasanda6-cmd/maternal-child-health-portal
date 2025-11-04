@@ -40,8 +40,10 @@ export const AuthProvider = ({ children }) => {
             await api.get("/sanctum/csrf-cookie");
             const res = await api.post("/api/refresh");
             const refreshedUser = res.data.user;
+            if (!refreshedUser) throw new Error("Missing user data on refresh");
             setUser(refreshedUser);
             localStorage.setItem("role", refreshedUser.role);
+            await new Promise((res) => setTimeout(res, 300)); // small delay before retry
             return true;
         } catch (err) {
             console.error("Token refresh failed:", err);
@@ -50,8 +52,15 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const fetchUser = useCallback(async () => {
+        const role = localStorage.getItem("role");
+        if (!role) {
+            setLoading(false);
+            return;
+        }
+
         const maxRetries = 2;
         let attempt = 0;
+
         while (attempt <= maxRetries) {
             try {
                 const res = await api.get("/api/user");
@@ -59,19 +68,27 @@ export const AuthProvider = ({ children }) => {
                 break;
             } catch (err) {
                 attempt += 1;
-                console.error(`Auth error (attempt ${attempt}):`, err);
 
-                if (err?.response?.status === 401) {
+                if (!err.response) {
+                    console.error("Server unreachable:", err.message);
+                    setUser(null);
+                    setLoading(false);
+                    return;
+                }
+
+                if (err.response?.status === 401) {
                     const refreshed = await refreshToken();
                     if (!refreshed) {
-                        await logout();
+                        localStorage.removeItem("role");
+                        setUser(null);
                         break;
                     }
-                    continue; // retry fetchUser after refresh
+                    continue;
                 }
 
                 if (attempt > maxRetries) {
                     setUser(null);
+                    localStorage.removeItem("role");
                     break;
                 }
 
@@ -80,7 +97,7 @@ export const AuthProvider = ({ children }) => {
             }
         }
         setLoading(false);
-    }, [logout, refreshToken]);
+    }, [refreshToken]);
 
     useEffect(() => {
         fetchUser();
@@ -90,11 +107,10 @@ export const AuthProvider = ({ children }) => {
         await api.get("/sanctum/csrf-cookie");
         const res = await api.post("/api/login", credentials);
         const user = res.data.user;
+        if (!user) throw new Error("Login response missing user data");
 
         localStorage.setItem("role", user.role);
         setUser(user);
-
-        await fetchUser();
 
         const redirectPath = roleRedirects[user.role] || "/";
         navigate(redirectPath);
@@ -108,4 +124,5 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
 export default AuthContext;

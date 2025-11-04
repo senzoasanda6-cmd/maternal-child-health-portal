@@ -4,18 +4,27 @@ import FacilityTable from "../../components/FacilityTable";
 //import "./Dashboard.css";
 
 const Dashboard = () => {
-    const [stats, setStats] = useState({});
+    const [stats, setStats] = useState(null);
     const [facilities, setFacilities] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Fetch dashboard data from API
         fetch("/api/district/dashboard")
             .then((res) => res.json())
             .then((data) => {
                 setStats(data.stats);
                 setFacilities(data.facilities);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Failed to load dashboard data:", err);
+                setLoading(false);
             });
     }, []);
+
+    if (loading || !stats) {
+        return <div>Loading dashboard...</div>;
+    }
 
     return (
         <div className="container py-4">
