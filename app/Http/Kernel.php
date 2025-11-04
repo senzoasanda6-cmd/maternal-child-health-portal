@@ -28,7 +28,6 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\CheckLoginDuration::class,
         ],
     ];
 
@@ -38,7 +37,8 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'checkrole' => \App\Http\Middleware\RoleMiddleware::class
+        'checkrole' => \App\Http\Middleware\RoleMiddleware::class,
+        'check.login.duration' => \App\Http\Middleware\CheckLoginDuration::class,
     ];
     
 }
