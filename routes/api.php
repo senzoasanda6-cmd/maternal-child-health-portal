@@ -30,6 +30,7 @@ use App\Http\Controllers\{
     AdminController,
     AdminSettingsController,
     AuditLogController,
+    Dashboard\UnifiedVisitController,
 };
 use Illuminate\Session\Middleware\StartSession;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
@@ -55,6 +56,7 @@ Route::middleware([ // This group will wrap all stateful API routes
         'auth:sanctum',
         \App\Http\Middleware\CheckLoginDuration::class,
     ])->group(function () {
+        Route::get('/dashboard/unified-visit', [UnifiedVisitController::class, 'unifiedVisit']);
 
         // User session and logout
         Route::post('/refresh', fn() => response()->json([
@@ -104,12 +106,16 @@ Route::middleware([ // This group will wrap all stateful API routes
         });
 
         // Health Worker Routes
-        Route::middleware('checkrole:health_worker')->prefix('health')->group(function () {
+        Route::middleware('checkrole:health_worker,midwife,facility_worker,facility_nurse,facility_doctor')->prefix('health')->group(function () {
             Route::get('/dashboard', function () {
                 $facility = Facility::with(['patients', 'appointments'])->find(Auth::user()->facility_id);
                 return response()->json($facility);
             });
             Route::get('/patients', [HealthWorkerController::class, 'patients']);
+            Route::get('/children/{childId}', [ChildController::class, 'show']);
+            Route::get('/children/{childId}/postnatal-visits', [PostnatalVisitController::class, 'index']);
+            Route::get('/children/{childId}/vaccinations', [VaccinationController::class, 'index']);
+            Route::get('/children/{childId}/vaccine-progress', [ReportController::class, 'vaccineProgress']);
         });
 
         // Child Routes

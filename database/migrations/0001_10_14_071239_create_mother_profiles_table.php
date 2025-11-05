@@ -18,11 +18,9 @@ return new class extends Migration
             $table->date('dob');
             $table->string('contact');
             $table->string('address');
-            $table->json('children')->nullable(); // store as array
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.

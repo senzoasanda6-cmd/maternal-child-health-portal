@@ -101,4 +101,8 @@ class User extends Authenticatable
     {
         return $this->role === 'health_worker' && $this->sub_role === 'nurse';
     }
+    public function district()
+    {
+        return $this->belongsTo(District::class); // if applicable
+    }
 }

@@ -10,9 +10,15 @@ function getCookie(name) {
     return null;
 }
 
-// Create Axios instance
+// Separate Axios instance for CSRF cookie
+export const csrf = axios.create({
+    baseURL: "http://localhost:8000", // no /api prefix
+    withCredentials: true,
+});
+
+// Main API instance
 const api = axios.create({
-    baseURL: "", // CRA proxy forwards to Laravel backend
+    baseURL: "http://localhost:8000/api",
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
@@ -38,18 +44,17 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        // If 401 and not already retried
         if (
             error.response?.status === 401 &&
             !originalRequest._retry &&
-            !originalRequest.url.includes("/api/refresh") &&
-            !originalRequest.url.includes("/api/login")
+            !originalRequest.url.includes("/refresh") &&
+            !originalRequest.url.includes("/login")
         ) {
             originalRequest._retry = true;
             try {
-                await api.get("/sanctum/csrf-cookie");
-                await api.post("/api/refresh");
-                return api(originalRequest); // Retry original request
+                await csrf.get("/sanctum/csrf-cookie");
+                await api.post("/refresh");
+                return api(originalRequest);
             } catch (refreshError) {
                 console.error("Session refresh failed:", refreshError);
             }
@@ -58,5 +63,22 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+// ✅ Check if user is already authenticated
+export async function checkAuth() {
+    try {
+        const response = await api.get("/user");
+        return response.data;
+    } catch {
+        return null;
+    }
+}
+
+// ✅ Login flow with auth check
+export async function login(email, password) {
+    await csrf.get("/sanctum/csrf-cookie");
+    const response = await api.post("/login", { email, password });
+    return response.data;
+}
 
 export default api;

@@ -55,6 +55,7 @@ import VaccinationList from "./pages/ChildProfile/Vaccinations/Vaccinations.jsx"
 import VaccineProgressChart from "./pages/ChildProfile/Vaccinations/VaccineProgressChart.jsx";
 import HealthPatients from "./pages/HealthWorker/HealthPatients.jsx";
 import HealthDashboard from "./pages/HealthWorker/HealthDashboard.jsx";
+import ImmunizationsPage from "./pages/HealthWorker/ImmunizationsPage";
 
 // Admin Pages
 import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
@@ -184,6 +185,7 @@ const AppRoutes = () => (
                     path="/health/child-details"
                     element={<ChildDetailsForm onSave={() => {}} />}
                 />
+                <Route path="/immunizations" element={<ImmunizationsPage />} />
                 <Route
                     path="/health/child-form/:id"
                     element={<ChildDetailsForm onSave={() => {}} />}

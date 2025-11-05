@@ -14,7 +14,7 @@ const HealthPatients = () => {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const res = await api.get("/api/health/patients");
+                const res = await api.get("/health/patients");
                 const allPatients = res.data;
 
                 // ✅ Filter by hospital

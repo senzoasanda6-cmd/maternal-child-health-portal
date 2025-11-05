@@ -1,31 +1,35 @@
 import React, { createContext, useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import api, { csrf } from "../services/api";
 
 export const AuthContext = createContext();
+
+// 🔧 Moved outside to avoid hook dependency warnings
+const subRoleMap = {
+    midwife: "health_worker",
+    facility_worker: "health_worker",
+    facility_nurse: "health_worker",
+    facility_doctor: "health_worker",
+    facility_admin: "health_worker",
+    facility_manager: "health_worker",
+    hospital_admin: "health_worker",
+};
+
+const roleRedirects = {
+    mother: "/mother/home",
+    health_worker: "/health/dashboard",
+    admin: "/admin/home",
+    district_admin: "/district/home",
+};
 
 export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const roleRedirects = {
-        admin: "/admin/home",
-        health_worker: "/health/dashboard",
-        mother: "/mother/home",
-        district_admin: "/district/home",
-        hospital_admin: "/admin/home",
-        facility_admin: "/admin/home",
-        facility_manager: "/admin/home",
-        midwife: "/health/dashboard",
-        facility_worker: "/health/dashboard",
-        facility_nurse: "/health/dashboard",
-        facility_doctor: "/health/dashboard",
-    };
-
     const logout = useCallback(async () => {
         try {
-            await api.post("/api/logout");
+            await api.post("/logout");
         } catch (err) {
             console.error("Logout error:", err);
         } finally {
@@ -37,13 +41,17 @@ export const AuthProvider = ({ children }) => {
 
     const refreshToken = useCallback(async () => {
         try {
-            await api.get("/sanctum/csrf-cookie");
-            const res = await api.post("/api/refresh");
+            await csrf.get("/sanctum/csrf-cookie");
+            const res = await api.post("/refresh");
             const refreshedUser = res.data.user;
             if (!refreshedUser) throw new Error("Missing user data on refresh");
-            setUser(refreshedUser);
-            localStorage.setItem("role", refreshedUser.role);
-            await new Promise((res) => setTimeout(res, 300)); // small delay before retry
+
+            const normalizedRole = refreshedUser.role?.toLowerCase();
+            const effectiveRole = subRoleMap[normalizedRole] || normalizedRole;
+
+            setUser({ ...refreshedUser, role: effectiveRole });
+            localStorage.setItem("role", effectiveRole);
+            await new Promise((res) => setTimeout(res, 300));
             return true;
         } catch (err) {
             console.error("Token refresh failed:", err);
@@ -52,51 +60,29 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const fetchUser = useCallback(async () => {
-        const role = localStorage.getItem("role");
-        if (!role) {
-            setLoading(false);
-            return;
-        }
+        try {
+            const res = await api.get("/user");
+            const fetchedUser = res.data;
 
-        const maxRetries = 2;
-        let attempt = 0;
+            const normalizedRole = fetchedUser.role?.toLowerCase();
+            const effectiveRole = subRoleMap[normalizedRole] || normalizedRole;
 
-        while (attempt <= maxRetries) {
-            try {
-                const res = await api.get("/api/user");
-                setUser(res.data);
-                break;
-            } catch (err) {
-                attempt += 1;
-
-                if (!err.response) {
-                    console.error("Server unreachable:", err.message);
-                    setUser(null);
-                    setLoading(false);
-                    return;
-                }
-
-                if (err.response?.status === 401) {
-                    const refreshed = await refreshToken();
-                    if (!refreshed) {
-                        localStorage.removeItem("role");
-                        setUser(null);
-                        break;
-                    }
-                    continue;
-                }
-
-                if (attempt > maxRetries) {
-                    setUser(null);
+            setUser({ ...fetchedUser, role: effectiveRole });
+            localStorage.setItem("role", effectiveRole);
+        } catch (err) {
+            if (err.response?.status === 401) {
+                const refreshed = await refreshToken();
+                if (!refreshed) {
                     localStorage.removeItem("role");
-                    break;
+                    setUser(null);
                 }
-
-                const delay = 500 * attempt;
-                await new Promise((res) => setTimeout(res, delay));
+            } else {
+                console.error("Fetch user failed:", err);
+                setUser(null);
             }
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, [refreshToken]);
 
     useEffect(() => {
@@ -104,21 +90,57 @@ export const AuthProvider = ({ children }) => {
     }, [fetchUser]);
 
     const login = async (credentials) => {
-        await api.get("/sanctum/csrf-cookie");
-        const res = await api.post("/api/login", credentials);
+        try {
+            // Step 1: Check if already authenticated
+            const existing = await api.get("/user");
+            if (existing?.data) {
+                const normalizedRole = existing.data.role?.toLowerCase();
+                const effectiveRole =
+                    subRoleMap[normalizedRole] || normalizedRole;
+                setUser({ ...existing.data, role: effectiveRole });
+                localStorage.setItem("role", effectiveRole);
+                navigate(roleRedirects[effectiveRole] || "/unauthorized");
+                return;
+            }
+        } catch {
+            // Not authenticated — proceed to login
+        }
+
+        // Step 2: Proceed with login
+        await csrf.get("/sanctum/csrf-cookie");
+        const res = await api.post("/login", credentials);
         const user = res.data.user;
         if (!user) throw new Error("Login response missing user data");
 
-        localStorage.setItem("role", user.role);
-        setUser(user);
+        const normalizedRole = user.role?.toLowerCase();
+        const effectiveRole = subRoleMap[normalizedRole] || normalizedRole;
 
-        const redirectPath = roleRedirects[user.role] || "/";
-        navigate(redirectPath);
+        localStorage.setItem("role", effectiveRole);
+        setUser({ ...user, role: effectiveRole });
+
+        const redirectPath = roleRedirects[effectiveRole];
+        if (redirectPath) {
+            navigate(redirectPath);
+        } else {
+            console.warn("Unknown role:", effectiveRole);
+            navigate("/unauthorized");
+        }
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <AuthContext.Provider
-            value={{ user, role: user?.role, login, logout, loading }}
+            value={{
+                user,
+                role: user?.role,
+                district: user?.district_id,
+                login,
+                logout,
+                loading,
+            }}
         >
             {children}
         </AuthContext.Provider>

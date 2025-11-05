@@ -36,6 +36,9 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $admin->id,
         ]);
+        /** @var \App\Models\User $admin */
+        $admin = Auth::user();
+
 
         $admin->update($validated);
 
