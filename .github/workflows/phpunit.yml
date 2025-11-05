@@ -8,35 +8,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_DATABASE: laravel
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v4
+        uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, intl, pdo_mysql
+          extensions: mbstring, intl, pdo_sqlite
           ini-values: post_max_size=256M, memory_limit=1024M
 
       - name: Setup Composer
         uses: php-actions/composer@v6
         with:
-          install: true
+          command: install
 
       - name: Copy .env
         run: cp .env.example .env
@@ -44,9 +30,10 @@ jobs:
       - name: Generate app key
         run: php artisan key:generate
 
-      - name: Configure DB
+      - name: Configure SQLite Database
         run: |
-          php -r "file_exists('database/database.sqlite') || mkdir('database'); touch('database/database.sqlite');"
+          mkdir -p database
+          touch database/database.sqlite
           php artisan migrate --force
         env:
           DB_CONNECTION: sqlite
