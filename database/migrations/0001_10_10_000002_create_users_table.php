@@ -18,14 +18,14 @@ return new class extends Migration {
             $table->string('password');
 
             // Role system
-            $table->string('role')->default('mother');       // 'mother' or 'health_worker'
-            $table->string('sub_role')->nullable();          // e.g., 'nurse', 'midwife'
-            $table->string('designation')->nullable();       // submitted during registration
+            $table->string('role')->default('mother');
+            $table->string('sub_role')->nullable();
+            $table->string('designation')->nullable();
             $table->string('custom_designation')->nullable();
 
-            // Facility association
-            $table->unsignedBigInteger('facility_id')->nullable();
-            $table->foreign('facility_id')->references('id')->on('facilities')->onDelete('set null');
+            // Facility and District association
+            $table->foreignId('facility_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('district_id')->nullable()->constrained('districts')->onDelete('set null');
 
             // Status and tokens
             $table->boolean('is_active')->default(true);
@@ -34,6 +34,7 @@ return new class extends Migration {
             $table->softDeletes();
         });
     }
+
 
 
 

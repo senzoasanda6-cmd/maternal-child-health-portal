@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/spinners/Spinner";
-import axios from "axios";
+import api, { csrf } from "../../services/api"; // ✅ Import centralized api and csrf instances
 import { BsArrowLeft } from "react-icons/bs";
 import "./LoginPage.css";
 
@@ -26,15 +26,10 @@ function RegisterForm() {
     const [loading, setLoading] = useState(false);
     const [facilities, setFacilities] = useState([]);
 
-    const API_BASE = "http://localhost:8000";
-
-    axios.defaults.withCredentials = true;
-    axios.defaults.withXSRFToken = true;
-
     useEffect(() => {
         if (!selectedRole) return;
 
-        let url = `${API_BASE}/api/facilities`;
+        let url = `/facilities`; // ✅ Use relative path
 
         if (selectedRole === "health_worker") {
             url += "?type=clinic";
@@ -42,10 +37,10 @@ function RegisterForm() {
             (selectedRole === "manager" || selectedRole === "district_admin") &&
             form.district
         ) {
-            url += `?district=${encodeURIComponent(form.district)}`;
+            url += `?district=${encodeURIComponent(form.district)}`; // This part is fine
         }
 
-        axios
+        api // ✅ Use the 'api' instance
             .get(url)
             .then((data) => {
                 setFacilities(data.data);
@@ -102,10 +97,6 @@ function RegisterForm() {
         setFacilities([]);
     };
 
-    const getCsrfCookie = async () => {
-        await axios.get(`${API_BASE}/sanctum/csrf-cookie`);
-    };
-
     const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -133,14 +124,13 @@ function RegisterForm() {
     };
 
     const endpoint =
-        form.role === "mother"
-            ? `${API_BASE}/api/register`
-            : `${API_BASE}/api/registration-request`;
+        form.role === "mother" ? `/register` : `/registration-request`; // ✅ Use relative paths
 
     try {
-        await getCsrfCookie();
+        // ✅ Use the 'csrf' instance for the cookie, and 'api' for the POST request
+        await csrf.get("/sanctum/csrf-cookie");
 
-        const response = await axios.post(endpoint, submissionData);
+        const response = await api.post(endpoint, submissionData);
 
         if (response.status === 200 || response.status === 201) {
             if (form.role === "mother") {

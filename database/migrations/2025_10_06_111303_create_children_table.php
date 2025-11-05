@@ -13,16 +13,19 @@ return new class extends Migration
     {
         Schema::create('children', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mother_profile_id')->constrained()->onDelete('cascade');
+            $table->foreignId('mother_profile_id')->nullable()->constrained()->onDelete('set null'); // ✅ only this line
             $table->string('name');
             $table->string('gender');
+            $table->date('birth_date')->nullable();
             $table->integer('age')->nullable();
             $table->date('dob')->nullable();
             $table->date('next_checkup')->nullable();
             $table->string('growth_status')->nullable();
+            $table->foreignId('mother_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

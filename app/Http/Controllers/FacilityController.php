@@ -4,66 +4,62 @@ namespace App\Http\Controllers;
 
 use App\Models\Facility;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class FacilityController extends Controller
 {
-    // List all facilities with optional filters
+    use AuthorizesRequests;
     public function index(Request $request)
     {
+        $user = $request->user();
         $query = Facility::query();
+
+        if (in_array($user->role, ['hospital_admin', 'facility_admin', 'facility_manager'])) {
+            $query->where('id', $user->facility_id);
+        } elseif ($user->role === 'district_admin') {
+            $query->where('district_id', $user->district_id);
+        }
 
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
 
         if ($request->filled('district')) {
-            $query->where('district', $request->district);
+            $query->where('district_id', $request->district);
         }
 
         return response()->json(
-            $query->withCount(['mothers', 'appointments'])
-                ->orderBy('name')
-                ->get()
+            $query->withCount(['mothers', 'appointments'])->orderBy('name')->get()
         );
     }
 
-    // Show a single facility with related data
-    public function show(Facility $facility)
+    public function show(Request $request, Facility $facility)
     {
+        $this->authorize('view', $facility);
         $facility->load(['mothers', 'appointments']);
         return response()->json($facility);
     }
 
-    // Store a new facility
-    public function store(Request $request)
-    {
-        $validated = $this->validateRequest($request);
-        $facility = Facility::create($validated);
-
-        return response()->json($facility, 201);
-    }
-
-    // Update a facility
     public function update(Request $request, Facility $facility)
     {
+        $this->authorize('update', $facility);
         $validated = $this->validateRequest($request, true);
         $facility->update($validated);
-
         return response()->json($facility);
     }
 
-    // Delete a facility
     public function destroy(Facility $facility)
     {
+        $this->authorize('delete', $facility);
         $facility->delete();
         return response()->json(['message' => 'Facility deleted successfully']);
     }
 
-    // Dashboard: summary for a facility
-    public function dashboard(Facility $facility)
+    public function dashboard(Request $request, Facility $facility)
     {
+        $this->authorize('view', $facility);
         $facility->load(['mothers', 'appointments']);
-
         $visitsCount = \App\Models\PostnatalVisit::where('facility_id', $facility->id)->count();
 
         return response()->json([
@@ -77,7 +73,6 @@ class FacilityController extends Controller
         ]);
     }
 
-    // Search facilities by name, district, sub_district
     public function search(Request $request)
     {
         $query = Facility::query();
@@ -97,7 +92,6 @@ class FacilityController extends Controller
         return $query->withCount(['mothers', 'appointments'])->get();
     }
 
-    // Private method for validation
     private function validateRequest(Request $request, bool $update = false): array
     {
         $rules = [
