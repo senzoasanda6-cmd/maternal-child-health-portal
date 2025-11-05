@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('prenatal_visits', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // links to users table
+            $table->foreignId('child_id')->nullable()->constrained()->onDelete('set null'); // optional link to child
+            $table->foreignId('facility_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('provider_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->date('visit_date')->nullable();
+            $table->string('visit_type')->nullable(); // e.g., 'prenatal'
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }

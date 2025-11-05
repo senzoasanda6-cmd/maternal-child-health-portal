@@ -42,5 +42,8 @@ class Facility extends Model
     {
         return $this->hasMany(Mother::class);
     }
-    
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
 }

@@ -4,12 +4,13 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Facility;
+use App\Models\District;
 use Illuminate\Support\Facades\Storage;
 
 class ImportFacilities extends Command
 {
     protected $signature = 'facilities:import';
-    protected $description = 'Import facilities from CSV';
+    protected $description = 'Import facilities from CSV and auto-create districts';
 
     public function handle()
     {
@@ -32,17 +33,22 @@ class ImportFacilities extends Command
         foreach ($csv as $row) {
             $rowData = array_combine($headers, $row);
 
-            // Defensive coding: check if required keys exist
             if (!isset($rowData['facility name'])) {
                 $this->warn("Skipping row: missing 'Facility Name'");
                 continue;
             }
 
+            // Auto-create district if it doesn't exist
+            $districtName = $rowData['district'] ?? null;
+            $district = $districtName
+                ? District::firstOrCreate(['name' => $districtName], ['region' => 'Unknown'])
+                : null;
+
             Facility::updateOrCreate(
                 ['name' => $rowData['facility name']],
                 [
                     'title' => $rowData['title'] ?? null,
-                    'district' => $rowData['district'] ?? null,
+                    'district_id' => $district?->id,
                     'sub_district' => $rowData['sub-district'] ?? null,
                     'type' => strtolower($rowData['facility type'] ?? 'unknown'),
                     'level_of_care' => $rowData['level of care'] ?? null,
@@ -50,6 +56,6 @@ class ImportFacilities extends Command
             );
         }
 
-        $this->info('Facilities imported successfully.');
+        $this->info('Facilities and districts imported successfully.');
     }
 }

@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->string('name');
-            $table->string('district')->nullable();
+            $table->foreignId('district_id')->nullable()->constrained('districts')->onDelete('set null');
             $table->string('sub_district')->nullable();
             $table->string('type'); // e.g., hospital, clinic, central
             $table->string('level_of_care')->nullable();
             $table->timestamps();
         });
     }
+
 
 
     /**

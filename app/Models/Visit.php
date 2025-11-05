@@ -4,14 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PostnatalVisit extends Model
+class Visit extends Model
 {
     protected $fillable = [
+        'user_id',
         'child_id',
         'facility_id',
+        'provider_id',
+        'visit_type',
         'visit_date',
         'notes',
     ];
+
+    public function child()
+    {
+        return $this->belongsTo(Child::class);
+    }
 
     public function facility()
     {
@@ -23,13 +31,8 @@ class PostnatalVisit extends Model
         return $this->belongsTo(User::class, 'provider_id');
     }
 
-    public function child()
-    {
-        return $this->belongsTo(Child::class);
-    }
-
     public function immunizations()
     {
-        return $this->morphMany(Immunization::class, 'visitable');
+        return $this->hasMany(Immunization::class);
     }
 }

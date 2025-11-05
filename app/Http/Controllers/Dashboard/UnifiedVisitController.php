@@ -1,21 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dashboard;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Visit;
-use App\Models\Appointment;
-use App\Models\Child;
-use App\Models\Facility;
-use App\Models\User as Provider;
+use App\Http\Controllers\Controller;
 use App\Models\PrenatalVisit;
 use App\Models\PostnatalVisit;
 use Carbon\Carbon;
 
-class DashboardController extends Controller
+class UnifiedVisitController extends Controller
 {
-    public function lastVisit(Request $request)
+    public function unifiedVisit(Request $request)
     {
         $user = Auth::user();
         $now = Carbon::now();
@@ -34,13 +30,8 @@ class DashboardController extends Controller
         $type = null;
 
         if ($prenatal && $postnatal) {
-            if ($prenatal->visit_date > $postnatal->visit_date) {
-                $visit = $prenatal;
-                $type = 'prenatal';
-            } else {
-                $visit = $postnatal;
-                $type = 'postnatal';
-            }
+            $visit = $prenatal->visit_date > $postnatal->visit_date ? $prenatal : $postnatal;
+            $type = $visit === $prenatal ? 'prenatal' : 'postnatal';
         } elseif ($prenatal) {
             $visit = $prenatal;
             $type = 'prenatal';
@@ -54,12 +45,10 @@ class DashboardController extends Controller
         }
 
         $past = $visit->immunizations->filter(fn($i) => $i->administered_on !== null);
-        $upcoming = $visit->immunizations->filter(
-            fn($i) =>
+        $upcoming = $visit->immunizations->filter(fn($i) =>
             $i->administered_on === null && $i->scheduled_on && Carbon::parse($i->scheduled_on)->isFuture()
         );
-        $missed = $visit->immunizations->filter(
-            fn($i) =>
+        $missed = $visit->immunizations->filter(fn($i) =>
             $i->administered_on === null && $i->scheduled_on && Carbon::parse($i->scheduled_on)->isPast()
         );
 
@@ -75,51 +64,6 @@ class DashboardController extends Controller
                 'upcoming' => $upcoming->map(fn($i) => $i->only(['id', 'vaccine_name', 'dose', 'scheduled_on', 'notes'])),
                 'missed' => $missed->map(fn($i) => $i->only(['id', 'vaccine_name', 'dose', 'scheduled_on', 'notes'])),
             ],
-        ]);
-    }
-    public function appointments(Request $request)
-    {
-        $childId = $request->query('child_id');
-
-        if ($childId) {
-            $child = Child::where('id', $childId)
-                ->where('user_id', Auth::id())
-                ->first();
-
-            if (!$child) {
-                return response()->json(['error' => 'Child not found or unauthorized'], 403);
-            }
-
-            $appointments = Appointment::where('child_id', $childId)
-                ->with('child')
-                ->orderBy('date')
-                ->get();
-
-            return response()->json([
-                'child' => [
-                    'id' => $child->id,
-                    'name' => $child->name,
-                    'birth_date' => $child->birth_date,
-                    'gender' => $child->gender,
-                ],
-                'appointments' => $appointments,
-            ]);
-        }
-
-        return response()->json([
-            'child' => null,
-            'appointments' => [
-                ['date' => '2025-10-15', 'type' => 'Vaccination'],
-                ['date' => '2025-10-20', 'type' => 'Follow-up Visit'],
-            ],
-        ]);
-    }
-
-    public function pregnancyStage(Request $request)
-    {
-        return response()->json([
-            'title' => 'Third Trimester',
-            'description' => 'Prepare for delivery and monitor fetal movement.'
         ]);
     }
 }
