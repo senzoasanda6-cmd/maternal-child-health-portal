@@ -2,7 +2,7 @@ name: Run PHPUnit
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -17,7 +17,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: "8.2"
           extensions: mbstring, intl, pdo_sqlite
           ini-values: post_max_size=256M, memory_limit=1024M
 
@@ -54,4 +54,4 @@ jobs:
 
       # 8. Run tests
       - name: Run tests
-        run: php artisan test --no-interaction --verbosity=normal
+        run: php artisan test --verbose
