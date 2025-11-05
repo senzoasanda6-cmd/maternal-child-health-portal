@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import ServiceCard from "../../components/ServiceCard.jsx";
 import LevelOfCareHospitalCard from "../../components/LevelOfCareHospitalCard.jsx";
 import TipRotator from "../../components/TipRotator.jsx";
+import KiddiesCornerHeader from "../../components/KiddiesCornerHeader.jsx";
+import KiddiesCornerNavGrid from "../../components/KiddiesCornerNavGrid.jsx";
+import KiddiesCornerFooter from "../../components/KiddiesCornerFooter.jsx";
+import EmotionExplorer from "../../components/EmotionExplorer.jsx";
 
 import chbahImg from "../../assets/hospital_images/chbah/chbah.jpg";
 import cmjahImg from "../../assets/hospital_images/cmjah/cmjah.webp";
@@ -28,8 +32,6 @@ import sizweImg from "../../assets/hospital_images/sizwe/sizwe.jpg";
 // import centralImg from "../../assets/hospital_images/central.jpg";
 // import tertiaryImg from "../../assets/hospital_images/tertiary.jpg";
 // import regionalImg from "../../assets/hospital_images/regional.jpg";
-
-
 
 const LandingPage = () => {
     const services = [
@@ -508,6 +510,20 @@ const LandingPage = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                {/* Kiddies Corner Section */}
+                <section id="kiddies-corner" className="section">
+                    <div className="container">
+                        <h2 className="text-center mb-4">Kiddies Corner 🎨</h2>
+                        <KiddiesCornerHeader />
+                        <KiddiesCornerNavGrid />
+                        <KiddiesCornerFooter />
+                        <h4 className="text-center mt-5 mb-3">
+                            Explore Emotions
+                        </h4>
+                        <EmotionExplorer />
                     </div>
                 </section>
             </main>
