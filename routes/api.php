@@ -64,12 +64,28 @@ Route::middleware([ // This group will wrap all stateful API routes
             'message' => 'Session refreshed successfully',
         ]));
         Route::get('/user', fn(Request $request) => $request->user());
+
+
+
         Route::post('/logout', function (Request $request) {
+            /** @var \App\Models\User|null $user */
+            $user = Auth::user();
+
+            // Revoke Sanctum token if available
+            if ($user) {
+                /** @var \Laravel\Sanctum\PersonalAccessToken|null $token */
+                $token = $user->currentAccessToken();
+                $token?->delete();
+            }
+
+            // Kill the session for web-based auth
             Auth::guard('web')->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            return response()->json(['message' => 'Logged out']);
+            $request->session()->invalidate();      // Destroys the session
+            $request->session()->regenerateToken(); // Regenerates CSRF token
+
+            return response()->json(['message' => 'Logged out successfully']);
         });
+
 
         // Admin Routes
         Route::middleware('checkrole:admin')->prefix('admin')->group(function () {

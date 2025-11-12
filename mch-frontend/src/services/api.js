@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+
 // Helper to extract a cookie value by name
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -12,13 +14,13 @@ function getCookie(name) {
 
 // Separate Axios instance for CSRF cookie
 export const csrf = axios.create({
-    baseURL: "http://localhost:8000", // no /api prefix
+    baseURL: API_BASE_URL, // Use environment variable
     withCredentials: true,
 });
 
 // Main API instance
 const api = axios.create({
-    baseURL: "http://localhost:8000/api",
+    baseURL: `${API_BASE_URL}/api`, // Use environment variable
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
@@ -26,12 +28,19 @@ const api = axios.create({
     },
 });
 
-// Attach CSRF token to every request
+// Attach tokens to every request
 api.interceptors.request.use(
     (config) => {
+        // 1. Attach CSRF token for cookie-based authentication
         const xsrfToken = getCookie("XSRF-TOKEN");
         if (xsrfToken) {
             config.headers["X-XSRF-TOKEN"] = xsrfToken;
+        }
+
+        // 2. Attach Bearer token for token-based authentication
+        const apiToken = localStorage.getItem("api_token");
+        if (apiToken) {
+            config.headers.Authorization = `Bearer ${apiToken}`;
         }
         return config;
     },

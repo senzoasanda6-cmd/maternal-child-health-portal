@@ -26,8 +26,8 @@ const UserEdit = () => {
             setLoading(true);
             try {
                 const [userRes, facilityRes] = await Promise.all([
-                    api.get(`/api/admin/users/${userId}`),
-                    api.get("/api/admin/facilities"),
+                    api.get(`/admin/users/${userId}`),
+                    api.get("/admin/facilities"),
                 ]);
                 setForm({
                     ...userRes.data,
@@ -73,7 +73,7 @@ const UserEdit = () => {
         }
 
         try {
-            await api.put(`/api/admin/users/${userId}`, form);
+            await api.put(`/admin/users/${userId}`, form);
             navigate("/admin/users");
         } catch (err) {
             console.error("Update failed:", err);

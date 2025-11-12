@@ -1,43 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
+import "./BreastfeedingVideoResource.css";
 
 const BreastfeedingVideoResource = () => {
+    const [showYouTube, setShowYouTube] = useState(true);
+
+    const handleToggleVideo = () => {
+        setShowYouTube(!showYouTube);
+    };
+
     return (
-        <>
-            <div className="container py-5">
-                <h2>Breastfeeding Tips</h2>
-                <p className="text-muted">Category: Nutrition</p>
+        <div className="container py-5">
+            <h2>Breastfeeding Tips</h2>
+            <p className="text-muted">Category: Nutrition</p>
 
-                <p>
-                    Breastfeeding provides essential nutrients and bonding for
-                    newborns. This video offers practical tips for positioning,
-                    latching, and maintaining milk supply.
-                </p>
+            <p>
+                Breastfeeding provides essential nutrients and bonding for
+                newborns. This video offers practical tips for positioning,
+                latching, and maintaining milk supply.
+            </p>
 
-                <div
-                    className="ratio ratio-16x9 mb-4 rounded-xl overflow-hidden"
-                    style={{
-                        margin: "0 auto",
-                        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                        borderRadius: "18px",
-                    }}
-                >
+            {/* Toggle Button */}
+            <button
+                onClick={handleToggleVideo}
+                className="btn btn-primary mb-3"
+            >
+                {showYouTube ? "Show Local Video" : "Show YouTube Video"}
+            </button>
+
+            {/* Animated Video Container */}
+            <div
+                key={showYouTube ? "youtube" : "local"}
+                className="video-container fade-in"
+            >
+                {showYouTube ? (
                     <iframe
-                        src="/breastfeeding-tips.mp4"
-                        title="Breastfeeding Tips"
+                        src="https://www.youtube.com/embed/S5RijIXcHlk"
+                        title="Breastfeeding Tips from YouTube"
                         allowFullScreen
                     ></iframe>
-                </div>
-
-                <p>
-                    For more guidance, explore our{" "}
-                    <a href="/resources/nutrition">
-                        Nutrition During Pregnancy
-                    </a>{" "}
-                    article.
-                </p>
+                    
+                ) : (
+                    <video
+                        src="/breastfeeding-tips.mp4"
+                        controls
+                        aria-label="Breastfeeding Tips Local Video"
+                    ></video>
+                )}
             </div>
-        </>
+
+            <p>
+                For more guidance, explore our{" "}
+                <a href="/resources/nutrition">Nutrition During Pregnancy</a>{" "}
+                article.
+            </p>
+        </div>
     );
 };
 
 export default BreastfeedingVideoResource;
+                           
