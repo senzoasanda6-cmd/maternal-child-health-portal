@@ -23,7 +23,7 @@ const FacilityList = () => {
         setLoading(true);
         setError("");
         try {
-            const res = await api.get("/api/admin/facilities");
+            const res = await api.get("/admin/facilities");
             setFacilities(res.data);
         } catch (err) {
             setError("Failed to load facilities. Please try again later.");
@@ -57,8 +57,8 @@ const FacilityList = () => {
         setError("");
 
         const apiCall = editingFacility
-            ? api.put(`/api/admin/facilities/${editingFacility.id}`, formData)
-            : api.post("/api/admin/facilities", formData);
+            ? api.put(`/admin/facilities/${editingFacility.id}`, formData)
+            : api.post("/admin/facilities", formData);
 
         try {
             const res = await apiCall;
@@ -80,7 +80,7 @@ const FacilityList = () => {
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this hospital?")) {
             try {
-                await api.delete(`/api/admin/facilities/${id}`);
+                await api.delete(`/admin/facilities/${id}`);
                 setFacilities(facilities.filter((h) => h.id !== id));
             } catch (err) {
                 alert("Failed to delete hospital.");

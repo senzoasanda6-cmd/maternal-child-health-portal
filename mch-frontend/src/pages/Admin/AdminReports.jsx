@@ -45,7 +45,7 @@ const AdminReports = () => {
     useEffect(() => {
         const fetchFacilities = async () => {
             try {
-                const res = await api.get("/api/admin/facilities");
+                const res = await api.get("/admin/facilities");
                 setFacilities(res.data);
             } catch (err) {
                 console.error("Failed to load facilities:", err);
@@ -64,11 +64,11 @@ const AdminReports = () => {
 
                 const [vaccineRes, visitRes] = await Promise.all([
                     api.get(
-                        `/api/admin/facilities/${selectedFacilityId}/vaccine-progress`,
+                        `/admin/facilities/${selectedFacilityId}/vaccine-progress`,
                         { params }
                     ),
                     api.get(
-                        `/api/admin/facilities/${selectedFacilityId}/postnatal-visits`,
+                        `/admin/facilities/${selectedFacilityId}/postnatal-visits`,
                         { params }
                     ),
                 ]);

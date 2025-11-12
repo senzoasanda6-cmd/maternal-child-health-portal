@@ -4,20 +4,20 @@ function AdminApprovalPanel() {
     const [requests, setRequests] = useState([]);
 
     useEffect(() => {
-        fetch("/api/admin/registration-requests")
+        fetch("/admin/registration-requests")
             .then((res) => res.json())
             .then((data) => setRequests(data));
     }, []);
 
     const handleApprove = async (id) => {
-        await fetch(`/api/admin/registration-requests/${id}/approve`, {
+        await fetch(`/admin/registration-requests/${id}/approve`, {
             method: "POST",
         });
         setRequests((prev) => prev.filter((r) => r.id !== id));
     };
 
     const handleReject = async (id) => {
-        await fetch(`/api/admin/registration-requests/${id}/reject`, {
+        await fetch(`/admin/registration-requests/${id}/reject`, {
             method: "POST",
         });
         setRequests((prev) => prev.filter((r) => r.id !== id));

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import ServiceCard from "../../components/ServiceCard.jsx";
 import LevelOfCareHospitalCard from "../../components/LevelOfCareHospitalCard.jsx";
@@ -6,6 +6,8 @@ import TipRotator from "../../components/TipRotator.jsx";
 import KiddiesCornerHeader from "../../components/KiddiesCornerHeader.jsx";
 import KiddiesCornerNavGrid from "../../components/KiddiesCornerNavGrid.jsx";
 import KiddiesCornerFooter from "../../components/KiddiesCornerFooter.jsx";
+import "./animations.css"; // Import the animation styles
+import { FaArrowUp } from "react-icons/fa";
 import EmotionExplorer from "../../components/EmotionExplorer.jsx";
 
 import chbahImg from "../../assets/hospital_images/chbah/chbah.jpg";
@@ -33,7 +35,35 @@ import sizweImg from "../../assets/hospital_images/sizwe/sizwe.jpg";
 // import tertiaryImg from "../../assets/hospital_images/tertiary.jpg";
 // import regionalImg from "../../assets/hospital_images/regional.jpg";
 
+// Custom hook for observing intersection
+const useIntersectionObserver = (options) => {
+    const ref = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target); // Animate only once
+            }
+        }, options);
+
+        if (ref.current) {
+            observer.observe(ref.current);
+        }
+
+        return () => {
+            if (ref.current) {
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+                observer.unobserve(ref.current);
+            }
+        };
+    }, [ref, options]);
+
+    return ref;
+};
+
 const LandingPage = () => {
+    const [showBackToTop, setShowBackToTop] = useState(false);
     const services = [
         {
             imageUrl: "/sample_images/Picture1.jpg",
@@ -367,6 +397,32 @@ const LandingPage = () => {
         },
     ];
 
+    // Create refs for each section we want to animate
+    const servicesRef = useIntersectionObserver({ threshold: 0.1 });
+    const aboutRef = useIntersectionObserver({ threshold: 0.1 });
+    const kiddiesCornerRef = useIntersectionObserver({ threshold: 0.1 });
+    const tipRotatorRef = useIntersectionObserver({ threshold: 0.1 });
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 300) {
+                setShowBackToTop(true);
+            } else {
+                setShowBackToTop(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
+
     return (
         <>
             {/* Hero Section */}
@@ -421,7 +477,10 @@ const LandingPage = () => {
             </section>
 
             {/* Health Tip Banner (rotating tips) */}
-            <section className="bg-warning text-dark py-3 text-center health-tip-banner">
+            <section
+                ref={tipRotatorRef}
+                className="bg-warning text-dark py-3 text-center health-tip-banner fade-in-section"
+            >
                 <div className="container">
                     <TipRotator tips={motherChildCareTips.map((t) => t.tip)} />
                 </div>
@@ -429,7 +488,11 @@ const LandingPage = () => {
 
             <main>
                 {/* Services Section */}
-                <section id="services" className="section section-grey">
+                <section
+                    ref={servicesRef}
+                    id="services"
+                    className="section section-grey fade-in-section"
+                >
                     <div className="container my-4">
                         <h2 className="text-center">
                             Gauteng Health MCH Services
@@ -465,7 +528,11 @@ const LandingPage = () => {
                 </section>
 
                 {/* About Section */}
-                <section id="about" className="section">
+                <section
+                    ref={aboutRef}
+                    id="about"
+                    className="section fade-in-section"
+                >
                     <div className="container about-section">
                         <div className="row">
                             <div className="col-md-5 mb-4">
@@ -514,7 +581,11 @@ const LandingPage = () => {
                 </section>
 
                 {/* Kiddies Corner Section */}
-                <section id="kiddies-corner" className="section">
+                <section
+                    ref={kiddiesCornerRef}
+                    id="kiddies-corner"
+                    className="section fade-in-section"
+                >
                     <div className="container">
                         <h2 className="text-center mb-4">Kiddies Corner 🎨</h2>
                         <KiddiesCornerHeader />
@@ -527,6 +598,17 @@ const LandingPage = () => {
                     </div>
                 </section>
             </main>
+
+            {/* Back to Top Button */}
+            {showBackToTop && (
+                <button
+                    onClick={scrollToTop}
+                    className="back-to-top-btn"
+                    title="Go to top"
+                >
+                    <FaArrowUp />
+                </button>
+            )}
         </>
     );
 };
