@@ -20,7 +20,7 @@ const UserList = () => {
             return;
 
         try {
-            await api.delete(`/api/admin/users/${id}`);
+            await api.delete(`/admin/users/${id}`);
             setUsers(users.filter((u) => u.id !== id));
         } catch (err) {
             console.error("Delete failed:", err);
@@ -31,7 +31,7 @@ const UserList = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await api.get("/api/admin/users");
+                const res = await api.get("/admin/users");
                 setUsers(res.data);
                 setFilteredUsers(res.data);
             } catch (err) {
@@ -68,7 +68,7 @@ const UserList = () => {
         setUpdatingUserId(userId);
         try {
             // We only need to send the role for this update
-            await api.put(`/api/admin/users/${userId}`, { role: newRole });
+            await api.put(`/admin/users/${userId}`, { role: newRole });
             setUsers(
                 users.map((u) =>
                     u.id === userId ? { ...u, role: newRole } : u

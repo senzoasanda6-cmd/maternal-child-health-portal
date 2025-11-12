@@ -15,7 +15,7 @@ function UserApprovalDashboard() {
 
     const fetchRequests = async () => {
         try {
-            const response = await api.get("/api/admin/registration-requests");
+            const response = await api.get("/admin/registration-requests");
             setRequests(response.data);
         } catch (err) {
             setError("Failed to load registration requests.");
@@ -26,7 +26,7 @@ function UserApprovalDashboard() {
 
     const handleApprove = async (id, subRole = null, customSubRole = null) => {
         try {
-            await api.post(`/api/admin/registration-requests/${id}/approve`, {
+            await api.post(`/admin/registration-requests/${id}/approve`, {
                 sub_role: subRole === "other" ? customSubRole : subRole,
             });
             setRequests((prev) => prev.filter((r) => r.id !== id));
@@ -37,7 +37,7 @@ function UserApprovalDashboard() {
 
     const handleReject = async (id) => {
         try {
-            await api.post(`/api/admin/registration-requests/${id}/reject`);
+            await api.post(`/admin/registration-requests/${id}/reject`);
             setRequests((prev) => prev.filter((r) => r.id !== id));
         } catch (err) {
             alert("Rejection failed.");

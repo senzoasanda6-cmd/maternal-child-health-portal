@@ -18,7 +18,7 @@ const UserCreate = () => {
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
-        api.get("/api/admin/facilities")
+        api.get("/admin/facilities")
             .then((res) => setFacilities(res.data))
             .catch((err) => console.error("Failed to load facilities:", err));
     }, []);
@@ -50,7 +50,7 @@ const UserCreate = () => {
         }
 
         try {
-            await api.post("/api/admin/users", form);
+            await api.post("/admin/users", form);
             navigate("/admin/users");
         } catch (err) {
             console.error("User creation failed:", err);

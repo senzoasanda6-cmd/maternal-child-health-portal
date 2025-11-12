@@ -29,10 +29,11 @@ export const AuthProvider = ({ children }) => {
 
     const logout = useCallback(async () => {
         try {
-            await api.post("/logout");
+            await api.post("/logout"); // No change needed here, but good for reference
         } catch (err) {
             console.error("Logout error:", err);
         } finally {
+            localStorage.removeItem("api_token");
             localStorage.removeItem("role");
             setUser(null);
             navigate("/login");
@@ -61,7 +62,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUser = useCallback(async () => {
         try {
-            const res = await api.get("/user");
+            const res = await api.get("/user"); // No change needed here, but good for reference
             const fetchedUser = res.data;
 
             const normalizedRole = fetchedUser.role?.toLowerCase();
@@ -92,7 +93,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (credentials) => {
         try {
             // Step 1: Check if already authenticated
-            const existing = await api.get("/user");
+            const existing = await api.get("/user"); // No change needed here, but good for reference
             if (existing?.data) {
                 const normalizedRole = existing.data.role?.toLowerCase();
                 const effectiveRole =
@@ -107,8 +108,8 @@ export const AuthProvider = ({ children }) => {
         }
 
         // Step 2: Proceed with login
-        await csrf.get("/sanctum/csrf-cookie");
-        const res = await api.post("/login", credentials);
+        await csrf.get("/sanctum/csrf-cookie"); // No change needed here, but good for reference
+        const res = await api.post("/login", credentials); // No change needed here, but good for reference
         const user = res.data.user;
         if (!user) throw new Error("Login response missing user data");
 

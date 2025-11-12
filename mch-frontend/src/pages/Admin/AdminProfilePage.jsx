@@ -22,7 +22,7 @@ function AdminProfilePage() {
         setLoading(true);
         setError("");
         try {
-            const response = await api.get("/api/admin/profile");
+            const response = await api.get("/admin/profile");
             setAdmin(response.data);
             setFormData({ name: response.data.name, password: "" });
         } catch (err) {
@@ -37,7 +37,7 @@ function AdminProfilePage() {
         setSaving(true);
         setError("");
         try {
-            await api.put("/api/admin/profile", formData);
+            await api.put("/admin/profile", formData);
             setEditing(false);
             fetchAdminProfile();
         } catch (err) {
