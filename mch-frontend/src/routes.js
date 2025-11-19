@@ -27,9 +27,16 @@ import MchServicePage from "./pages/MchServices/MchServicePage.jsx";
 import AppointmentBooking from "./pages/MchServices/AppointmentBooking.jsx";
 import LabourDelivery from "./pages/MchServices/LabourDelivery.jsx";
 import Immunisations from "./pages/MchServices/Immunisations.jsx";
+import KidsCorner from "./pages/KidsCorner/KidsCorner.jsx";
+// import HealthyHabits from "./pages/KidsCorner/HealthyHabits.jsx";
+// import ColoringBook from "./pages/KidsCorner/ColoringBook.jsx";
+// import QuizTime from "./pages/KidsCorner/QuizTime.jsx";
+// import Storytime from "./pages/KidsCorner/Storytime.jsx";
+// import Games from "./pages/KidsCorner/Games.jsx";
+// import EmotionalWellness from "./pages/KidsCorner/EmotionalWellness.jsx";
 
 // Shared Authenticated Pages
-import Dashboard from "./pages/Dashboard/Dashboard";
+import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 // import CalendarView from "./pages/CareTimeline/CalendarView.jsx";
 import CareTimeline from "./pages/CareTimeline/CareTimeline.jsx";
 import TimelineEvent from "./pages/CareTimeline/TimelineEvent.jsx";
@@ -133,6 +140,7 @@ const AppRoutes = () => (
                 path="/resources/breastfeeding-video"
                 element={<BreastfeedingVideoResource />}
             />
+            <Route path="/kids-corner" element={<KidsCorner />} />
         </Route>
 
         <Route path="/prenatalVisitForm" element={<PreNatalVisitForm />} />
