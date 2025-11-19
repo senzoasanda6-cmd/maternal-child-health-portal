@@ -9,7 +9,7 @@ function EmotionalWellness() {
             padding: "30px",
             boxShadow: "0 8px 16px rgba(0,0,0,0.1)"
         }}>
-            <h2 className="fw-bold text-center" style={{ fontFamily: "Comic Neue, cursive", color: "#BF360C" }}>Emotional Wellness</h2>
+            <h2 className="fw-bold text-center" style={{ fontFamily: "Comic Neue, cursive", color: "#BF360C" }}>Emotional Wellness😊😔</h2>
             <h4 className="text-center mt-5 mb-3" style={{ fontFamily: "Comic Neue, cursive", color: "#D84315" }}>
                 Explore Emotions
             </h4>
