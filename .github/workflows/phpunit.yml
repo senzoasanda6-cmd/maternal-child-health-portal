@@ -54,4 +54,5 @@ jobs:
 
       # 8. Run tests
       - name: Run tests
-        run: vendor/bin/phpunit --verbose
+        run: vendor/bin/phpunit 
+      # --verbose
