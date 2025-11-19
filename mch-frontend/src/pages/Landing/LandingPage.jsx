@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import ServiceCard from "../../components/ServiceCard.jsx";
 import LevelOfCareHospitalCard from "../../components/LevelOfCareHospitalCard.jsx";
 import TipRotator from "../../components/TipRotator.jsx";
-import KiddiesCornerHeader from "../../components/KiddiesCornerHeader.jsx";
-import KiddiesCornerNavGrid from "../../components/KiddiesCornerNavGrid.jsx";
-import KiddiesCornerFooter from "../../components/KiddiesCornerFooter.jsx";
+// import KiddiesCornerHeader from "../../components/KiddiesCornerHeader.jsx";
+// import KiddiesCornerNavGrid from "../../components/KiddiesCornerNavGrid.jsx";
+// import KiddiesCornerFooter from "../../components/KiddiesCornerFooter.jsx";
 import "./animations.css"; // Import the animation styles
 import { FaArrowUp } from "react-icons/fa";
-import EmotionExplorer from "../../components/EmotionExplorer.jsx";
+// import EmotionExplorer from "../../components/EmotionExplorer.jsx";
 
 import chbahImg from "../../assets/hospital_images/chbah/chbah.jpg";
 import cmjahImg from "../../assets/hospital_images/cmjah/cmjah.webp";
@@ -586,15 +586,42 @@ const LandingPage = () => {
                     id="kiddies-corner"
                     className="section fade-in-section"
                 >
-                    <div className="container">
-                        <h2 className="text-center mb-4">Kiddies Corner 🎨</h2>
-                        <KiddiesCornerHeader />
-                        <KiddiesCornerNavGrid />
-                        <KiddiesCornerFooter />
-                        <h4 className="text-center mt-5 mb-3">
-                            Explore Emotions
-                        </h4>
-                        <EmotionExplorer />
+                   <div className="container about-section">
+                        <div className="row">
+                            <div className="col-md-5 mb-4">
+                                <img
+                                    src={`${process.env.PUBLIC_URL}/kiddies_corner/mascot_inga_education.png`}
+                                    alt="Inga the friendly giraffe with kids"
+                                    className="img-fluid"
+                                    style={{
+                                        borderRadius: "8px",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                        objectPosition: "top center",
+                                    }}
+                                    onError={(e) =>
+                                        (e.target.src = "/fallback.jpg")
+                                    }
+                                />
+                            </div>
+                            <div className="col-md mb-4">
+                                <div>
+                                    <h2>Visit the Kids Corner</h2>
+                                    <p>
+                                        Welcome to the Kids Corner, a fun and educational space designed just for children! Meet Inga, our friendly giraffe mascot, who guides kids through exciting activities like coloring, storytime, and emotional wellness games.
+                                    </p>
+                                    <p>
+                                        Here, children can explore emotions, create art, read magical stories, and learn about health in a playful way. It's a safe place for kids to have fun while discovering important life skills.
+                                    </p>
+                                    <Link
+                                        to="/kids-corner"
+                                        className="button button-secondary"
+                                    >
+                                        Enter Kids Corner
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </main>
