@@ -186,7 +186,7 @@ function Storytime() {
                     color: "#4A148C"
                 }}
             >
-                Storytime
+                Storytime📖🦁
             </h2>
             <p className="text-center" style={{ fontFamily: "Baloo, sans-serif", color: "#6A1B9A" }}>Enjoy magical stories with fun characters! 📖🦁</p>
             
@@ -205,7 +205,10 @@ function Storytime() {
 
             <div className="book-grid">
                 {filteredBooks.map((book, index) => (
-                    <div key={index} className="book-card">
+                    <div key={index} className="book-card" style={{
+                        background: "#fff",
+                        border: `3px solid #4A148C`
+                    }}>
                         <img src={book.image} alt={book.title} className="book-image" />
                         <div className="book-info">
                             <h3>{book.title}</h3>
