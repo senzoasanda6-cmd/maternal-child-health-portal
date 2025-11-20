@@ -24,7 +24,7 @@ const HealthDashboard = () => {
                 const [appointmentsRes, lastVisitRes, stageRes] =
                     await Promise.all([
                         api.get("/dashboard/appointments"),
-                        api.get("/dashboard/unified-visit"), // ✅ updated to unified visit endpoint
+                        api.get("/dashboard/last-visit"), // ✅ updated to unified visit endpoint
                         api.get("/dashboard/pregnancy-stage"),
                     ]);
 

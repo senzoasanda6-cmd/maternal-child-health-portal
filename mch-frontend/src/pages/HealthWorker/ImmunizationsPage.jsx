@@ -13,7 +13,7 @@ const ImmunizationsPage = () => {
     useEffect(() => {
         const fetchImmunizations = async () => {
             try {
-                const res = await api.get("/dashboard/unified-visit"); // ✅ updated to unified visit endpoint
+                const res = await api.get("/dashboard/last-visit"); // ✅ updated to unified visit endpoint
                 setImmunizations(res.data.immunizations || {});
             } catch (err) {
                 console.error("Failed to fetch immunizations:", err);

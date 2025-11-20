@@ -11,7 +11,7 @@ use App\Models\Facility;
 use App\Http\Controllers\{
     PostnatalVisitController,
     VaccinationController,
-    EventController,
+    Api\EventController,
     DashboardController,
     Api\MotherController,
     Api\ChildController,
@@ -30,10 +30,10 @@ use App\Http\Controllers\{
     AdminController,
     AdminSettingsController,
     AuditLogController,
-    Dashboard\UnifiedVisitController,
 };
 use Illuminate\Session\Middleware\StartSession;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+
 
 // Public Routes
 Route::middleware([ // This group will wrap all stateful API routes
@@ -56,16 +56,12 @@ Route::middleware([ // This group will wrap all stateful API routes
         'auth:sanctum',
         \App\Http\Middleware\CheckLoginDuration::class,
     ])->group(function () {
-        Route::get('/dashboard/unified-visit', [UnifiedVisitController::class, 'unifiedVisit']);
-
         // User session and logout
         Route::post('/refresh', fn() => response()->json([
             'user' => Auth::user(),
             'message' => 'Session refreshed successfully',
         ]));
         Route::get('/user', fn(Request $request) => $request->user());
-
-
 
         Route::post('/logout', function (Request $request) {
             /** @var \App\Models\User|null $user */
@@ -170,6 +166,13 @@ Route::middleware([ // This group will wrap all stateful API routes
         Route::get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
         Route::get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
         Route::get('/dashboard/appointments', [DashboardController::class, 'appointments']);
+
+        // Event Routes
+        Route::get('/events', [EventController::class, 'index']);
+        Route::post('/events', [EventController::class, 'store']);
+        Route::get('/events/{event}', [EventController::class, 'show']);
+        Route::put('/events/{event}', [EventController::class, 'update']);
+        Route::delete('/events/{event}', [EventController::class, 'destroy']);
     });
 });
 
