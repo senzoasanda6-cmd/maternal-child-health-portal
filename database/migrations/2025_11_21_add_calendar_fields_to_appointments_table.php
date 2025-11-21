@@ -99,7 +99,6 @@ return new class extends Migration
         Schema::table('appointments', function (Blueprint $table) {
             // Drop columns in reverse order
             if (Schema::hasColumn('appointments', 'reschedule_requested_by')) {
-                $table->dropForeignIdFor('reschedule_requested_by');
                 $table->dropColumn('reschedule_requested_by');
             }
             if (Schema::hasColumn('appointments', 'reschedule_requested_at')) {
@@ -121,7 +120,6 @@ return new class extends Migration
                 $table->dropColumn('notes');
             }
             if (Schema::hasColumn('appointments', 'health_worker_id')) {
-                $table->dropForeignIdFor('health_worker_id');
                 $table->dropColumn('health_worker_id');
             }
             if (Schema::hasColumn('appointments', 'status')) {
@@ -137,7 +135,6 @@ return new class extends Migration
                 $table->dropColumn('start_time');
             }
             if (Schema::hasColumn('appointments', 'user_id')) {
-                $table->dropForeignIdFor('user_id');
                 $table->dropColumn('user_id');
             }
         });
