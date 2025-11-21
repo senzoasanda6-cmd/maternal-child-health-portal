@@ -20,9 +20,9 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const [visitRes, stageRes, apptRes] = await Promise.all([
-          api.get("/api/dashboard/last-visit"),
-          api.get("/api/dashboard/pregnancy-stage"),
-          api.get(`/api/dashboard/appointments?child_id=${childId}`),
+          api.get("/dashboard/last-visit"),
+          api.get("/dashboard/pregnancy-stage"),
+          api.get(`/dashboard/appointments?child_id=${childId}`),
         ]);
 
         setLastVisit(visitRes.data);

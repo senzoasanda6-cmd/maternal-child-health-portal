@@ -21,7 +21,7 @@ const ChildrenList = () => {
 
     const fetchChildren = async () => {
         try {
-            const res = await api.get("/api/children");
+            const res = await api.get("/children");
             setChildren(res.data);
             console.log("API response:", res.data);
         } catch (err) {
@@ -61,13 +61,10 @@ const ChildrenList = () => {
 
         try {
             if (addingNew) {
-                const res = await api.post("/api/children", formData);
+                const res = await api.post("/children", formData);
                 setChildren([...children, res.data]);
             } else {
-                const res = await api.patch(
-                    `/api/children/${editingId}`,
-                    formData
-                );
+                const res = await api.patch(`/children/${editingId}`, formData);
                 setChildren(
                     children.map((c) => (c.id === editingId ? res.data : c))
                 );
@@ -87,7 +84,7 @@ const ChildrenList = () => {
             return;
 
         try {
-            await api.delete(`/api/children/${id}`);
+            await api.delete(`/children/${id}`);
             setChildren(children.filter((c) => c.id !== id));
         } catch (err) {
             console.error("Delete failed:", err);

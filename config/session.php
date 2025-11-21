@@ -156,7 +156,11 @@ return [
     |
     */
     
-    'domain' => env('SESSION_DOMAIN', '.localhost'),
+    // Default to null for local development. Setting this to '.localhost' can
+    // sometimes prevent browsers from accepting cookies for the plain
+    // 'localhost' host. Use the .env `SESSION_DOMAIN` to override in
+    // production if needed.
+    'domain' => env('SESSION_DOMAIN', null),
 
     /*
     |--------------------------------------------------------------------------

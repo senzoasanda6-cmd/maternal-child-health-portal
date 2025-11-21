@@ -42,9 +42,15 @@ export const AuthProvider = ({ children }) => {
 
     const refreshToken = useCallback(async () => {
         try {
+            // Refresh CSRF cookie and attempt to GET /user. The POST /refresh
+            // route in this project is behind auth:sanctum, so calling it when
+            // unauthenticated will return 401. Using GET /user after
+            // requesting the CSRF cookie is a safe way to detect whether a
+            // session cookie is valid and recover the user without hitting a
+            // protected refresh endpoint.
             await csrf.get("/sanctum/csrf-cookie");
-            const res = await api.post("/refresh");
-            const refreshedUser = res.data.user;
+            const res = await api.get("/user");
+            const refreshedUser = res.data;
             if (!refreshedUser) throw new Error("Missing user data on refresh");
 
             const normalizedRole = refreshedUser.role?.toLowerCase();
@@ -89,6 +95,20 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         fetchUser();
     }, [fetchUser]);
+
+    // Listen for global 'auth:required' events (emitted by the API layer when
+    // token/session refresh fails). Navigate the user to the login page so a
+    // clear login prompt is shown instead of repeated console errors.
+    useEffect(() => {
+        const onAuthRequired = (e) => {
+            localStorage.removeItem("role");
+            setUser(null);
+            navigate("/login");
+        };
+
+        window.addEventListener("auth:required", onAuthRequired);
+        return () => window.removeEventListener("auth:required", onAuthRequired);
+    }, [navigate]);
 
     const login = async (credentials) => {
         try {

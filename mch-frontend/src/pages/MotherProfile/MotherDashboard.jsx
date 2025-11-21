@@ -29,7 +29,7 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const res = await api.get("/api/children");
+                const res = await api.get("/children");
                 const data = Array.isArray(res.data) ? res.data : [];
                 setChildren(data);
                 if (data.length > 0) {
