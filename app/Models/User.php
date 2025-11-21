@@ -89,6 +89,11 @@ class User extends Authenticatable
         return $this->role === 'district_admin';
     }
 
+    public function isHisManager(): bool
+    {
+        return $this->role === 'health_worker' && $this->sub_role === 'his_manager';
+    }
+
     // Relationships
     public function facility()
     {

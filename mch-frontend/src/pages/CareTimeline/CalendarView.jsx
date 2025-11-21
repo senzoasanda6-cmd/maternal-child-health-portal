@@ -22,11 +22,18 @@ import {
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
 
-// Tooltip component
+// Tooltip component with appointment details
 const EventWithTooltip = ({ event, title }) => {
+    const isAppointment = event.type === "appointment";
     const renderTooltip = (props) => (
         <Tooltip id={`tooltip-${event.id}`} {...props}>
             <strong>{event.title}</strong>
+            {isAppointment && (
+                <>
+                    <br />
+                    <small>Type: Appointment</small>
+                </>
+            )}
             <br />
             {moment(event.start).format("LT")} -{" "}
             {moment(event.end).format("LT")}
@@ -36,10 +43,34 @@ const EventWithTooltip = ({ event, title }) => {
                     Location: {event.extendedProps.facilityName}
                 </>
             )}
+            {event.extendedProps?.childName && (
+                <>
+                    <br />
+                    Child: {event.extendedProps.childName}
+                </>
+            )}
+            {event.extendedProps?.motherName && (
+                <>
+                    <br />
+                    Mother: {event.extendedProps.motherName}
+                </>
+            )}
+            {event.extendedProps?.healthWorker && (
+                <>
+                    <br />
+                    Health Worker: {event.extendedProps.healthWorker}
+                </>
+            )}
             {event.extendedProps?.status && (
                 <>
                     <br />
-                    Status: {event.extendedProps.status}
+                    Status: <strong>{event.extendedProps.status}</strong>
+                </>
+            )}
+            {event.extendedProps?.notes && (
+                <>
+                    <br />
+                    Notes: {event.extendedProps.notes}
                 </>
             )}
         </Tooltip>
@@ -183,15 +214,27 @@ const CalendarView = () => {
         clinic: "all",
         status: "all",
     });
+    const [loading, setLoading] = useState(true);
 
     // Fetch events and facilities
     const fetchEvents = useCallback(async () => {
         try {
-            const res = await api.get("/events");
-            const formattedEvents = res.data.map((event) => ({
+            setLoading(true);
+            // Fetch appointments for a window around current month so they appear in calendar
+            const startDate = moment().startOf('month').subtract(2, 'months').format('YYYY-MM-DD');
+            const endDate = moment().endOf('month').add(2, 'months').format('YYYY-MM-DD');
+            const [eventsRes, appointmentsRes, facilitiesRes] = await Promise.all([
+                api.get("/events"),
+                api.get(`/appointments?per_page=100&start_date=${startDate}&end_date=${endDate}`),
+                api.get("/facilities"),
+            ]);
+
+            // Format events
+            const formattedEvents = (eventsRes.data || []).map((event) => ({
                 ...event,
                 start: new Date(event.start),
                 end: new Date(event.end),
+                type: "event",
                 extendedProps: {
                     careType: event.care_type,
                     facilityId: event.facility_id,
@@ -201,24 +244,47 @@ const CalendarView = () => {
                     recurrenceDays: event.recurrence_days,
                 },
             }));
-            setAllEvents(formattedEvents);
+
+            // Format appointments - handle both direct array and paginated response
+            const appointmentsData = appointmentsRes.data?.data || appointmentsRes.data || [];
+            const formattedAppointments = appointmentsData.map((apt) => {
+                // Parse date and time separately
+                const dateStr = apt.date ? new Date(apt.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+                const startTime = apt.start_time || '09:00:00';
+                const endTime = apt.end_time || '10:00:00';
+                
+                return {
+                    ...apt,
+                    id: `apt_${apt.id}`,
+                    title: apt.type || `${apt.phase?.charAt(0).toUpperCase() + apt.phase?.slice(1) || 'Appointment'} Appointment`,
+                    start: new Date(`${dateStr}T${startTime}`),
+                    end: new Date(`${dateStr}T${endTime}`),
+                    type: "appointment",
+                    extendedProps: {
+                        careType: apt.phase,
+                        facilityId: apt.facility_id,
+                        facilityName: apt.facility?.name || 'Unknown',
+                        status: apt.status,
+                        healthWorker: apt.health_worker?.name || 'Unassigned',
+                        childName: apt.child?.name,
+                        motherName: apt.user?.name,
+                        notes: apt.notes,
+                    },
+                };
+            });
+
+            setAllEvents([...formattedEvents, ...formattedAppointments]);
+            setFacilities(facilitiesRes.data);
+            console.log(`Loaded ${formattedEvents.length} events and ${formattedAppointments.length} appointments`);
         } catch (error) {
-            console.error("Failed to load events:", error);
+            console.error("Failed to load calendar data:", error);
+        } finally {
+            setLoading(false);
         }
     }, []);
 
     useEffect(() => {
         fetchEvents();
-
-        const fetchFacilities = async () => {
-            try {
-                const res = await api.get("/facilities");
-                setFacilities(res.data);
-            } catch (error) {
-                console.error("Failed to load facilities:", error);
-            }
-        };
-        fetchFacilities();
     }, [fetchEvents]);
 
     // Filter and process recurring events
@@ -337,20 +403,33 @@ const CalendarView = () => {
         }
     };
 
-    // Event styling
+    // Event styling with type distinction
     const eventStyleGetter = (event) => {
         let color = "#0d6efd"; // default
-        if (event.extendedProps?.careType === "prenatal") color = "#6f42c1";
-        if (event.extendedProps?.careType === "postnatal") color = "#0d6efd";
-        if (event.extendedProps?.status === "pending") color = "#ffc107";
-        if (event.extendedProps?.status === "cancelled") color = "#6c757d";
+        const careType = event.extendedProps?.careType;
+        const status = event.extendedProps?.status;
+        
+        // Color by care type
+        if (careType === "prenatal") color = "#6f42c1";
+        if (careType === "postnatal") color = "#0d6efd";
+        if (careType === "vaccination") color = "#198754";
+        
+        // Override by status
+        if (status === "pending") color = "#ffc107";
+        if (status === "cancelled") color = "#6c757d";
+        if (status === "completed") color = "#198754";
+        
+        // Visual distinction for appointments
+        const isAppointment = event.type === "appointment";
+        
         return {
             style: {
                 backgroundColor: color,
                 borderRadius: "6px",
                 color: "white",
-                border: "0px",
+                border: isAppointment ? "3px solid #ff6b6b" : "0px",
                 padding: "4px",
+                fontWeight: isAppointment ? "bold" : "normal",
             },
         };
     };
@@ -372,6 +451,11 @@ const CalendarView = () => {
 
     return (
         <div className="container-fluid p-4">
+            {loading && (
+                <div className="alert alert-info">
+                    Loading calendar events and appointments...
+                </div>
+            )}
             <Card className="rounded-4 shadow-sm">
                 <Card.Body>
                     <DnDCalendar

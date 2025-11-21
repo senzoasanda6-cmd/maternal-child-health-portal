@@ -25,6 +25,9 @@ class AppointmentController extends Controller
         if (in_array($user->role, ['mother', 'patient'])) {
             // Mothers only see their own appointments
             $query->where('user_id', $user->id);
+        } elseif ($user->role === 'health_worker' && $user->sub_role === 'his_manager') {
+            // HIS Managers see all appointments (provincial/all facilities)
+            // No filter applied
         } elseif (in_array($user->role, ['health_worker', 'midwife', 'nurse', 'doctor', 'facility_worker', 'facility_nurse', 'facility_doctor'])) {
             // Health workers see:
             // 1. Appointments assigned to them
