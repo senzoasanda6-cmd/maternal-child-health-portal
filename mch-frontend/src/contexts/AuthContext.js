@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api, { csrf } from "../services/api";
 import LoginModal from "../components/modals/LoginModal";
@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const authRequiredTimeoutRef = useRef(null);
 
     const logout = useCallback(async () => {
         try {
@@ -101,15 +102,29 @@ export const AuthProvider = ({ children }) => {
     // Listen for global 'auth:required' events (emitted by the API layer when
     // token/session refresh fails). Show the login modal instead of navigating
     // away so users can re-authenticate without losing their current page.
+    // Debounce to avoid multiple events firing at once.
     useEffect(() => {
         const onAuthRequired = (e) => {
-            localStorage.removeItem("role");
-            setUser(null);
-            setShowLoginModal(true);
+            // Debounce: only show modal once per 100ms
+            if (authRequiredTimeoutRef.current) {
+                clearTimeout(authRequiredTimeoutRef.current);
+            }
+            authRequiredTimeoutRef.current = setTimeout(() => {
+                localStorage.removeItem("role");
+                localStorage.removeItem("api_token");
+                setUser(null);
+                setShowLoginModal(true);
+                authRequiredTimeoutRef.current = null;
+            }, 100);
         };
 
         window.addEventListener("auth:required", onAuthRequired);
-        return () => window.removeEventListener("auth:required", onAuthRequired);
+        return () => {
+            window.removeEventListener("auth:required", onAuthRequired);
+            if (authRequiredTimeoutRef.current) {
+                clearTimeout(authRequiredTimeoutRef.current);
+            }
+        };
     }, []);
 
     const login = async (credentials) => {

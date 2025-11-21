@@ -53,35 +53,33 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        // Only attempt refresh for 401 errors on certain endpoints, and only once per request
         if (
             error.response?.status === 401 &&
             !originalRequest._retry &&
+            !originalRequest.url.includes("/user") &&
             !originalRequest.url.includes("/refresh") &&
-            !originalRequest.url.includes("/login")
+            !originalRequest.url.includes("/login") &&
+            !originalRequest.url.includes("/sanctum/csrf-cookie")
         ) {
             originalRequest._retry = true;
             try {
-                // Try to refresh the CSRF cookie and re-check the current session
+                // Try to refresh the CSRF cookie
                 await csrf.get("/sanctum/csrf-cookie");
-                // Instead of calling a protected /refresh endpoint (which may be
-                // behind auth:sanctum), try to GET /user using the newly-set
-                // cookies. If the session is still valid the server will return
-                // the authenticated user and we can retry the original request.
+                // Attempt to fetch current user without triggering another 401 retry
                 const userRes = await api.get("/user");
-                if (userRes?.status === 200) {
+                if (userRes?.status === 200 && userRes.data) {
+                    // Session is valid, retry the original request
                     return api(originalRequest);
                 }
             } catch (refreshError) {
-                // Emit a global event so the app can show a login prompt/modal
-                // instead of spamming the console. Components can listen for
-                // `auth:required` and handle UX (e.g. show login modal).
+                // Session refresh failed. Emit global event so UI can show login modal.
                 try {
                     window.dispatchEvent(new CustomEvent("auth:required", { detail: { error: refreshError } }));
                 } catch (e) {
                     // ignore in non-browser environments
                 }
-                // Keep original logging for debugging but avoid noisy stacks
-                console.warn("Session refresh failed");
+                console.warn("Session refresh failed:", refreshError.response?.status || refreshError.message);
             }
         }
 
