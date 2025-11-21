@@ -100,6 +100,11 @@ import Alerts from "./pages/Notifications/Alerts"; // or wherever Alerts.jsx is 
 import District from "./pages/District/Dashboard.jsx";
 import Home from "./pages/District/Home.jsx";
 import Facilities from "./pages/District/Facilities.jsx";
+import Reports from "./pages/District/Reports.jsx";
+import Users from "./pages/District/Users.jsx";
+import DistrictSettings from "./pages/District/DistrictSettings.jsx";
+import Approvals from "./pages/District/Approvals.jsx";
+
 
 const AppRoutes = () => (
     <Routes>
@@ -256,6 +261,12 @@ const AppRoutes = () => (
                 <Route path="/district/dashboard" element={<District />} />
                 <Route path="/district/home" element={<Home />} />
                 <Route path="/district/facilities" element={<Facilities />} />
+                <Route path="/district/reports" element={<Reports />} />
+                <Route path="/district/users" element={<Users />} />
+                <Route path="/district/settings" element={<DistrictSettings />} />
+                <Route path="/district/approvals" element={<Approvals />} />
+                <Route path="/profile" element={<AdminProfilePage />} />
+
             </Route>
         </Route>
 

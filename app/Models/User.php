@@ -16,7 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $district_id
  * @property string $name
  * @property string $email
+ * @property string $password
  * @property string $role
+ * @property string|null $phone
  * @property string|null $sub_role
  * @property string|null $designation
  * @property bool $is_active
@@ -33,6 +35,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
         'role',
         'sub_role',
         'designation',
