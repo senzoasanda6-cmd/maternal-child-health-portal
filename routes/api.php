@@ -16,6 +16,7 @@ use App\Http\Controllers\{
     Api\MotherController,
     Api\ChildController,
     Api\MotherDashboardController,
+    Api\AppointmentController,
     PostnatalBookingController,
     CalendarEventController,
     AdminBookingController,
@@ -173,6 +174,18 @@ Route::middleware([ // This group will wrap all stateful API routes
         Route::get('/events/{event}', [EventController::class, 'show']);
         Route::put('/events/{event}', [EventController::class, 'update']);
         Route::delete('/events/{event}', [EventController::class, 'destroy']);
+
+        // Appointment Routes
+        Route::get('/appointments', [AppointmentController::class, 'index']);
+        Route::post('/appointments', [AppointmentController::class, 'store']);
+        Route::get('/appointments/{appointment}', [AppointmentController::class, 'show']);
+        Route::put('/appointments/{appointment}', [AppointmentController::class, 'update']);
+        Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy']);
+        Route::post('/appointments/{appointment}/mark-completed', [AppointmentController::class, 'markCompleted']);
+        Route::post('/appointments/{appointment}/flag-high-risk', [AppointmentController::class, 'flagHighRisk']);
+        Route::post('/appointments/{appointment}/request-reschedule', [AppointmentController::class, 'requestReschedule']);
+        Route::post('/appointments/{appointment}/reschedule', [AppointmentController::class, 'reschedule']);
+        Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel']);
     });
 });
 
