@@ -11,10 +11,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * App\Models\User
  *
+ * @property int $id
  * @property int|null $facility_id
+ * @property int|null $district_id
+ * @property string $name
+ * @property string $email
  * @property string $role
  * @property string|null $sub_role
  * @property string|null $designation
+ * @property bool $is_active
+ * @property \Carbon\Carbon|null $email_verified_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
  */
 class User extends Authenticatable
 {

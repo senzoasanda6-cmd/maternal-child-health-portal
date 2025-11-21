@@ -4,6 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Appointment
+ *
+ * @property int $id
+ * @property int $child_id
+ * @property int|null $user_id
+ * @property \Carbon\Carbon $date
+ * @property \Carbon\Carbon|null $start_time
+ * @property \Carbon\Carbon|null $end_time
+ * @property string $type
+ * @property string $phase
+ * @property string $status
+ * @property string|null $location
+ * @property int|null $facility_id
+ * @property int|null $health_worker_id
+ * @property string|null $notes
+ * @property string|null $clinical_notes
+ * @property bool $is_high_risk
+ * @property bool $reminder_sent
+ * @property string|null $reschedule_reason
+ * @property \Carbon\Carbon|null $reschedule_requested_at
+ * @property int|null $reschedule_requested_by
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ */
 class Appointment extends Model
 {
     protected $fillable = [
