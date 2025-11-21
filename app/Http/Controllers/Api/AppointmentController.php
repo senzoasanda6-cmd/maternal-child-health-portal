@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AppointmentController extends Controller
 {
@@ -17,14 +18,14 @@ class AppointmentController extends Controller
      */
     public function index(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $query = Appointment::with(['child', 'user', 'facility', 'healthWorker']);
 
         // Apply role-based filtering
-        if ($user->hasRole(['mother', 'patient'])) {
+        if (in_array($user->role, ['mother', 'patient'])) {
             // Mothers only see their own appointments
             $query->where('user_id', $user->id);
-        } elseif ($user->hasRole(['health_worker', 'midwife', 'nurse', 'doctor'])) {
+        } elseif (in_array($user->role, ['health_worker', 'midwife', 'nurse', 'doctor', 'facility_worker', 'facility_nurse', 'facility_doctor'])) {
             // Health workers see:
             // 1. Appointments assigned to them
             // 2. Appointments at their facility
@@ -123,10 +124,10 @@ class AppointmentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Authorization: Only admins, health workers, and the mother can create appointments
-        if (!$user->hasRole(['admin', 'health_worker', 'midwife', 'nurse', 'doctor'])) {
+        if (!in_array($user->role, ['admin', 'health_worker', 'midwife', 'nurse', 'doctor', 'facility_worker', 'facility_nurse', 'facility_doctor', 'district_admin'])) {
             if ($user->id !== $validated['user_id']) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
@@ -145,7 +146,7 @@ class AppointmentController extends Controller
      */
     public function show(Appointment $appointment)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Authorization: Check if user can view this appointment
         if (!$this->canViewAppointment($user, $appointment)) {
@@ -162,10 +163,10 @@ class AppointmentController extends Controller
      */
     public function update(Request $request, Appointment $appointment)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Authorization
-        if (!$user->hasRole(['admin', 'health_worker', 'midwife', 'nurse', 'doctor'])) {
+        if (!in_array($user->role, ['admin', 'health_worker', 'midwife', 'nurse', 'doctor', 'facility_worker', 'facility_nurse', 'facility_doctor', 'district_admin'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -194,10 +195,10 @@ class AppointmentController extends Controller
      */
     public function markCompleted(Request $request, Appointment $appointment)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Only health workers and admins can mark as completed
-        if (!$user->hasRole(['admin', 'health_worker', 'midwife', 'nurse', 'doctor'])) {
+        if (!in_array($user->role, ['admin', 'health_worker', 'midwife', 'nurse', 'doctor', 'facility_worker', 'facility_nurse', 'facility_doctor', 'district_admin'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -218,10 +219,10 @@ class AppointmentController extends Controller
      */
     public function flagHighRisk(Request $request, Appointment $appointment)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Only health workers and admins can flag
-        if (!$user->hasRole(['admin', 'health_worker', 'midwife', 'nurse', 'doctor', 'doctor'])) {
+        if (!in_array($user->role, ['admin', 'health_worker', 'midwife', 'nurse', 'doctor', 'facility_worker', 'facility_nurse', 'facility_doctor', 'district_admin'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -242,11 +243,11 @@ class AppointmentController extends Controller
      */
     public function requestReschedule(Request $request, Appointment $appointment)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Only mothers and assigned health workers can request reschedule
         if ($user->id !== $appointment->user_id && $user->id !== $appointment->health_worker_id) {
-            if (!$user->hasRole(['admin', 'district_admin'])) {
+            if (!in_array($user->role, ['admin', 'district_admin'])) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
         }
@@ -284,10 +285,10 @@ class AppointmentController extends Controller
      */
     public function reschedule(Request $request, Appointment $appointment)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Only admins and health workers can reschedule
-        if (!$user->hasRole(['admin', 'health_worker', 'midwife', 'nurse', 'doctor', 'district_admin'])) {
+        if (!in_array($user->role, ['admin', 'health_worker', 'midwife', 'nurse', 'doctor', 'facility_worker', 'facility_nurse', 'facility_doctor', 'district_admin'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -318,10 +319,10 @@ class AppointmentController extends Controller
      */
     public function cancel(Request $request, Appointment $appointment)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Only admins, health workers, and the mother can cancel
-        if (!$user->hasRole(['admin', 'health_worker', 'midwife', 'nurse', 'doctor'])) {
+        if (!in_array($user->role, ['admin', 'health_worker', 'midwife', 'nurse', 'doctor', 'facility_worker', 'facility_nurse', 'facility_doctor', 'district_admin'])) {
             if ($user->id !== $appointment->user_id) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
@@ -347,10 +348,10 @@ class AppointmentController extends Controller
      */
     public function destroy(Appointment $appointment)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Only admins can delete
-        if (!$user->hasRole(['admin', 'district_admin'])) {
+        if (!in_array($user->role, ['admin', 'district_admin'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -366,16 +367,16 @@ class AppointmentController extends Controller
      */
     private function canViewAppointment(User $user, Appointment $appointment): bool
     {
-        if ($user->hasRole(['admin', 'district_admin'])) {
+        if (in_array($user->role, ['admin', 'district_admin'])) {
             return true;
         }
 
-        if ($user->hasRole(['health_worker', 'midwife', 'nurse', 'doctor'])) {
+        if (in_array($user->role, ['health_worker', 'midwife', 'nurse', 'doctor', 'facility_worker', 'facility_nurse', 'facility_doctor'])) {
             return $appointment->health_worker_id === $user->id ||
                    $appointment->facility_id === $user->facility_id;
         }
 
-        if ($user->hasRole(['mother', 'patient'])) {
+        if (in_array($user->role, ['mother', 'patient'])) {
             return $appointment->user_id === $user->id;
         }
 
