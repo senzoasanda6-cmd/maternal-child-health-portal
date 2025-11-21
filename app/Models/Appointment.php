@@ -54,8 +54,8 @@ class Appointment extends Model
 
     protected $casts = [
         'date' => 'date',
-        'start_time' => 'time',
-        'end_time' => 'time',
+        'start_time' => 'string',
+        'end_time' => 'string',
         'reminder_sent' => 'boolean',
         'is_high_risk' => 'boolean',
         'reschedule_requested_at' => 'datetime',

@@ -23,16 +23,19 @@ class DistrictUsersController extends Controller
      */
     public function index(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if ($user->role !== 'district_admin') {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $districtName = $user->district;
+        // Get the district ID from the authenticated user.
+        // The user model has a district_id, which is more reliable.
+        $districtId = $user->district_id;
 
-        // Get facility IDs in this district
-        $facilityIds = Facility::where('district', $districtName)->pluck('id');
+        // Get facility IDs in this district by querying the 'district_id' column.
+        $facilityIds = Facility::where('district_id', $districtId)->pluck('id');
 
         $query = User::whereIn('facility_id', $facilityIds)
             ->whereIn('role', ['health_worker', 'midwife', 'nurse', 'doctor']);

@@ -3,7 +3,7 @@ import api from "../../services/api";
 
 const Reports = () => {
     const [appointmentStats, setAppointmentStats] = useState(null);
-    const [visitTrends, setVisitTrends] = useState([]);
+    // Removed unused visitTrends state
     const [vaccinationProgress, setVaccinationProgress] = useState([]);
     const [highRiskCases, setHighRiskCases] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ const Reports = () => {
     useEffect(() => {
         const fetchReports = async () => {
             try {
-                const [stats, trends, vaccination, highRisk] = await Promise.all([
+                const [stats, , vaccination, highRisk] = await Promise.all([
                     api.get("/district/reports/appointments"),
                     api.get("/district/reports/trends"),
                     api.get("/district/reports/vaccination-progress"),
@@ -20,7 +20,7 @@ const Reports = () => {
                 ]);
 
                 setAppointmentStats(stats.data);
-                setVisitTrends(trends.data);
+                // Removed unused setVisitTrends call
                 setVaccinationProgress(vaccination.data);
                 setHighRiskCases(highRisk.data.data || []);
             } catch (err) {

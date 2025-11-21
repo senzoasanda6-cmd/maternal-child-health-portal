@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Facility;
 use App\Models\Appointment;
 use App\Models\Child;
+use App\Models\User;
+use App\Models\Vaccination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,8 +31,9 @@ class DistrictReportsController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $districtName = $user->district;
-        $facilityIds = Facility::where('district', $districtName)->pluck('id');
+        // Ensure we use the district id (integer) for DB queries
+        $districtId = $user->district_id ?? ($user->district?->id ?? null);
+        $facilityIds = Facility::where('district_id', $districtId)->pluck('id');
 
         $query = Appointment::whereIn('facility_id', $facilityIds);
 
@@ -80,8 +83,9 @@ class DistrictReportsController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $districtName = $user->district;
-        $facilityIds = Facility::where('district', $districtName)->pluck('id');
+        // Ensure we use the district id (integer) for DB queries
+        $districtId = $user->district_id ?? ($user->district?->id ?? null);
+        $facilityIds = Facility::where('district_id', $districtId)->pluck('id');
 
         $query = Appointment::whereIn('facility_id', $facilityIds);
 
@@ -114,22 +118,14 @@ class DistrictReportsController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $districtName = $user->district;
-        $facilities = Facility::where('district', $districtName)
-            ->with(['children' => function ($q) {
-                $q->with('vaccinations');
-            }])
-            ->get();
+        // Ensure we use the district id (integer) for DB queries
+        $districtId = $user->district_id ?? ($user->district?->id ?? null);
+        $facilities = Facility::where('district_id', $districtId)->get();
 
         $data = $facilities->map(function ($facility) {
-            $totalChildren = $facility->children->count();
-            $vaccinated = 0;
-
-            foreach ($facility->children as $child) {
-                if ($child->vaccinations->count() > 0) {
-                    $vaccinated++;
-                }
-            }
+            // Get all children from this facility via their mothers' users assigned to this facility
+            $totalChildren = Child::whereIn('mother_id', User::where('facility_id', $facility->id)->pluck('id'))->count();
+            $vaccinated = Vaccination::whereIn('child_id', Child::whereIn('mother_id', User::where('facility_id', $facility->id)->pluck('id'))->pluck('id'))->distinct('child_id')->count();
 
             return [
                 'facility_id' => $facility->id,
@@ -159,8 +155,9 @@ class DistrictReportsController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $districtName = $user->district;
-        $facilityIds = Facility::where('district', $districtName)->pluck('id');
+        // Ensure we use the district id (integer) for DB queries
+        $districtId = $user->district_id ?? ($user->district?->id ?? null);
+        $facilityIds = Facility::where('district_id', $districtId)->pluck('id');
 
         $query = Appointment::whereIn('facility_id', $facilityIds)
             ->where('is_high_risk', true);
