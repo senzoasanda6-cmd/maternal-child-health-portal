@@ -1,6 +1,7 @@
 import React, { createContext, useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api, { csrf } from "../services/api";
+import LoginModal from "../components/modals/LoginModal";
 
 export const AuthContext = createContext();
 
@@ -26,6 +27,7 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
     const logout = useCallback(async () => {
         try {
@@ -97,18 +99,18 @@ export const AuthProvider = ({ children }) => {
     }, [fetchUser]);
 
     // Listen for global 'auth:required' events (emitted by the API layer when
-    // token/session refresh fails). Navigate the user to the login page so a
-    // clear login prompt is shown instead of repeated console errors.
+    // token/session refresh fails). Show the login modal instead of navigating
+    // away so users can re-authenticate without losing their current page.
     useEffect(() => {
         const onAuthRequired = (e) => {
             localStorage.removeItem("role");
             setUser(null);
-            navigate("/login");
+            setShowLoginModal(true);
         };
 
         window.addEventListener("auth:required", onAuthRequired);
         return () => window.removeEventListener("auth:required", onAuthRequired);
-    }, [navigate]);
+    }, []);
 
     const login = async (credentials) => {
         try {
@@ -153,18 +155,30 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider
-            value={{
-                user,
-                role: user?.role,
-                district: user?.district_id,
-                login,
-                logout,
-                loading,
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
+        <>
+            <AuthContext.Provider
+                value={{
+                    user,
+                    role: user?.role,
+                    district: user?.district_id,
+                    login,
+                    logout,
+                    loading,
+                }}
+            >
+                {children}
+            </AuthContext.Provider>
+
+            {/* Show login modal when session expires */}
+            <LoginModal
+                show={showLoginModal}
+                onLogin={async (credentials) => {
+                    await login(credentials);
+                    setShowLoginModal(false);
+                }}
+                onClose={() => setShowLoginModal(false)}
+            />
+        </>
     );
 };
 
