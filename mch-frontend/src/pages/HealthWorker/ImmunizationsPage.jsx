@@ -1,9 +1,11 @@
 // src/pages/HealthWorker/ImmunizationsPage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import api from "../../services/api";
+import { AuthContext } from "../../contexts/AuthContext";
 import { FaSyringe, FaClock, FaExclamationTriangle } from "react-icons/fa";
 
 const ImmunizationsPage = () => {
+    const { user, loading: authLoading } = useContext(AuthContext);
     const [immunizations, setImmunizations] = useState({
         past: [],
         upcoming: [],
@@ -11,6 +13,11 @@ const ImmunizationsPage = () => {
     });
 
     useEffect(() => {
+        // Only fetch if user is authenticated and auth is done loading
+        if (!authLoading && !user) {
+            return; // Don't fetch if not authenticated
+        }
+
         const fetchImmunizations = async () => {
             try {
                 const res = await api.get("/dashboard/last-visit"); // ✅ updated to unified visit endpoint
@@ -20,8 +27,10 @@ const ImmunizationsPage = () => {
             }
         };
 
-        fetchImmunizations();
-    }, []);
+        if (user) {
+            fetchImmunizations();
+        }
+    }, [user, authLoading]);
 
     const renderList = (list, icon, label) => (
         <div className="mb-4">

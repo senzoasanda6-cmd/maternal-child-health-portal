@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import LastVisitSummaryCard from "./LastVisitSummaryCard";
 import PregnancyStageCard from "./PregnancyStageCard";
 import UpcomingAppointmentsCard from "./UpcomingAppointmentsCard";
 import { useParams } from "react-router-dom";
 import api from "../../services/api"; // Adjust path if needed
+import { AuthContext } from "../../contexts/AuthContext";
 import AppLoading from "../../components/spinners/AppPageLoading";
 import AppLoadError from "../../components/spinners/AppLoadError";
 
 const Dashboard = () => {
+  const { user, loading: authLoading } = useContext(AuthContext);
   const { childId } = useParams();
 
   const [lastVisit, setLastVisit] = useState(null);
@@ -17,6 +19,11 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Only fetch if user is authenticated and auth is done loading
+    if (!authLoading && !user) {
+      return; // Don't fetch if not authenticated
+    }
+
     const fetchDashboardData = async () => {
       try {
         const [visitRes, stageRes, apptRes] = await Promise.all([
@@ -36,8 +43,10 @@ const Dashboard = () => {
       }
     };
 
-    fetchDashboardData();
-  }, [childId]);
+    if (user) {
+      fetchDashboardData();
+    }
+  }, [childId, user, authLoading]);
 
   if (loading) return <AppLoading loadingText="Loading dashboard..." />;
   if (error) return <AppLoadError errorText={error} />;
