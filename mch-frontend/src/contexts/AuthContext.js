@@ -100,11 +100,21 @@ export const AuthProvider = ({ children }) => {
     }, [fetchUser]);
 
     // Listen for global 'auth:required' events (emitted by the API layer when
-    // token/session refresh fails). Show the login modal instead of navigating
-    // away so users can re-authenticate without losing their current page.
+    // token/session refresh fails). Only show the modal if the user was previously
+    // authenticated (to distinguish between "session expired" vs "never logged in").
     // Debounce to avoid multiple events firing at once.
     useEffect(() => {
         const onAuthRequired = (e) => {
+            // Only show login modal if user was previously logged in (detected by
+            // checking if we had a user or role stored). If they were never logged in,
+            // this is expected and we don't need the modal.
+            const hadPreviousSession = !!localStorage.getItem("role") || user !== null;
+
+            if (!hadPreviousSession) {
+                // User was never logged in; 401 is expected. Don't show modal.
+                return;
+            }
+
             // Debounce: only show modal once per 100ms
             if (authRequiredTimeoutRef.current) {
                 clearTimeout(authRequiredTimeoutRef.current);
@@ -125,7 +135,7 @@ export const AuthProvider = ({ children }) => {
                 clearTimeout(authRequiredTimeoutRef.current);
             }
         };
-    }, []);
+    }, [user]);
 
     const login = async (credentials) => {
         try {
