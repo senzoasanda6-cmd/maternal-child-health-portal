@@ -1,0 +1,28 @@
+.time-slots-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.time-slot-btn {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.time-slot-btn.available:hover {
+  background-color: #d1e7dd;
+}
+
+.time-slot-btn.unavailable {
+  background-color: #f8d7da;
+  cursor: not-allowed;
+}
+
+.time-slot-btn.selected {
+  background-color: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}

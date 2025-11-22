@@ -32,9 +32,9 @@ const Header = () => {
 
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
-            <li className="nav-item"><Link className="nav-link" to="/PregnancyStages">Pregnancy Stages</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/SafeMedicines">Safe Medicines</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/postnatal-visits/1">Visit List</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/pregnancy-stages">Pregnancy Stages</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/safe-medicines">Safe Medicines</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/health/postnatal-visits">Visit List</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/health/dashboard">Hospital Dashboard</Link></li>
             <li className="nav-item">
               <button className="btn btn-outline-danger btn-sm ms-3" onClick={handleLogout}>

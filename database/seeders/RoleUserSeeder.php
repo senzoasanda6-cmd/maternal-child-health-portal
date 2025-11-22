@@ -28,6 +28,7 @@ class RoleUserSeeder extends Seeder
             'hospital_admin',
             'facility_admin',
             'facility_manager',
+            'his_manager',
         ];
 
         // Get a random facility with a valid district
@@ -67,6 +68,20 @@ class RoleUserSeeder extends Seeder
                 ]
             );
         }
+
+        // Seed HIS Manager with provincial district
+        User::updateOrCreate(
+            ['email' => 'his_manager@gauteng.gov.za'],
+            [
+                'name' => 'HIS Manager',
+                'password' => Hash::make('HisM@nager123'),
+                'role' => 'health_worker',
+                'sub_role' => 'his_manager',
+                'district_id' => $facility->district_id,
+                'facility_id' => $facility->id,
+                'is_active' => true,
+            ]
+        );
 
         $this->command->info('Primary and sub-role users seeded successfully.');
     }

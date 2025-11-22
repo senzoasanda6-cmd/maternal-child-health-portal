@@ -21,7 +21,7 @@ const MotherProfile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await api.get("/api/mother-profile"); // Authenticated endpoint
+                const res = await api.get("/mother/profile"); // Authenticated endpoint
                 setMother(res.data);
                 setFormData({
                     name: res.data.name,
@@ -59,7 +59,7 @@ const MotherProfile = () => {
         e.preventDefault();
         setSaving(true);
         try {
-            await api.put("/api/mother-profile", formData);
+            await api.put("/mother/profile", formData);
             alert("Profile updated successfully.");
             setMother(formData);
             setEditing(false);

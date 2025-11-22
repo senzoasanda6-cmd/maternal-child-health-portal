@@ -49,5 +49,25 @@
   "clinicB": "Community Clinic B",
   "reasonForVisit": "Reason for Visit",
   "submitBooking": "Submit Booking",
-  "bookingConfirmation": "Your appointment has been booked successfully!"
+  "bookingConfirmation": "Your appointment has been booked successfully!",
+  "child_growth_milestones": "Child Growth Milestones",
+  "child_growth_milestones_description": "Track your child's physical, cognitive, and emotional development from birth to adolescence.",
+  "learn_more": "Learn More",
+  "child_growth_milestones_intro": "Understand the stages of development from infancy to adolescence.",
+  "infant_age": "Infants (0–12 months)",
+  "infant_milestones": "Smiling, rolling, sitting, crawling, first words.",
+  "toddler_age": "Toddlers (1–3 years)",
+  "toddler_milestones": "Walking, running, basic sentences, parallel play.",
+  "preschool_age": "Preschoolers (3–5 years)",
+  "preschool_milestones": "Dressing themselves, storytelling, cooperative play.",
+  "school_age": "School Age (6–12 years)",
+  "school_milestones": "Reading, writing, sports, friendships.",
+  "adolescent_age": "Adolescents (13+ years)",
+  "adolescent_milestones": "Puberty changes, abstract thinking, identity formation.",
+  "tips_for_parents": "Tips for Parents",
+  "tip_play": "Encourage play to build motor and social skills.",
+  "tip_talk": "Talk and read to your child daily.",
+  "tip_nutrition": "Provide balanced nutrition for healthy growth.",
+  "tip_checkups": "Attend regular health checkups."
 }
+

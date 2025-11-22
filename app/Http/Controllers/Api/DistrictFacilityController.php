@@ -41,10 +41,12 @@ class DistrictFacilityController extends Controller
         // Optional filtering by type or risk (if frontend adds query params)
         $query = Facility::where('district_id', $districtId)
             ->withCount([
-                'visits as monthly_visits' => function ($q) {
+                'appointments as monthly_visits' => function ($q) {
                     $q->whereMonth('date', now()->month);
                 },
-                'riskFlags'
+                'appointments as risk_flags' => function ($q) {
+                    $q->where('is_high_risk', true);
+                }
             ]);
 
         if ($request->has('type')) {
@@ -61,8 +63,9 @@ class DistrictFacilityController extends Controller
                 'name' => $facility->name,
                 'type' => $facility->type,
                 'location' => $facility->location,
-                'monthly_visits' => $facility->monthly_visits,
-                'risk_flags' => $facility->risk_flags_count,
+                // withCount aliases generate attributes with a `_count` suffix
+                'monthly_visits' => $facility->monthly_visits_count ?? 0,
+                'risk_flags' => $facility->risk_flags_count ?? 0,
             ];
         });
 

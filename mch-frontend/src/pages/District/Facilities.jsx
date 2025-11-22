@@ -13,7 +13,7 @@ const Facilities = () => {
     useEffect(() => {
         const fetchFacilities = async () => {
             try {
-                const res = await api.get("/api/district/facilities");
+                const res = await api.get("/district/facilities");
                 setFacilities(res.data || []);
             } catch (err) {
                 console.error("Failed to load facilities:", err);
@@ -51,7 +51,7 @@ const Facilities = () => {
             if (filterRisk) params.append("min_risk", filterRisk);
 
             const response = await api.get(
-                `/api/district/facilities/export?${params.toString()}`,
+                `/district/facilities/export?${params.toString()}`,
                 {
                     responseType: "blob",
                 }

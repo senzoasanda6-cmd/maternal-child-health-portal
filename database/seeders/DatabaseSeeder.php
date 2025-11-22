@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             AuditLogSeeder::class,
             RoleUserSeeder::class,
             VisitAndImmunizationSeeder::class,
+            EventSeeder::class,
+            AppointmentSeeder::class,
             // You can move the logic from the old run() method into a new seeder
             // and call it here, e.g., MotherAndChildSeeder::class
         ]);

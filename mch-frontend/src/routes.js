@@ -15,6 +15,7 @@ import HealthWorkerRoute from "./components/protected/HealthWorkerRoute.jsx";
 // Public Pages
 import LandingPage from "./pages/Landing/LandingPage.jsx";
 import HospitalDetails from "./pages/HospitalDetails/HospitalDetails.jsx";
+import ChildGrowthMilestones from "./components/ChildGrowthMilestones.js";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import Privacy from "./pages/Privacy";
@@ -28,6 +29,7 @@ import AppointmentBooking from "./pages/MchServices/AppointmentBooking.jsx";
 import LabourDelivery from "./pages/MchServices/LabourDelivery.jsx";
 import Immunisations from "./pages/MchServices/Immunisations.jsx";
 import KidsCorner from "./pages/KidsCorner/KidsCorner.jsx";
+import AboutUs from "./components/About-Us.jsx";
 // import HealthyHabits from "./pages/KidsCorner/HealthyHabits.jsx";
 // import ColoringBook from "./pages/KidsCorner/ColoringBook.jsx";
 // import QuizTime from "./pages/KidsCorner/QuizTime.jsx";
@@ -37,7 +39,7 @@ import KidsCorner from "./pages/KidsCorner/KidsCorner.jsx";
 
 // Shared Authenticated Pages
 import Dashboard from "./pages/Dashboard/Dashboard.jsx";
-// import CalendarView from "./pages/CareTimeline/CalendarView.jsx";
+import CalendarView from "./pages/CareTimeline/CalendarView.jsx";
 import CareTimeline from "./pages/CareTimeline/CareTimeline.jsx";
 import TimelineEvent from "./pages/CareTimeline/TimelineEvent.jsx";
 import PostNatalCare from "./pages/HealthEducation/PostNatalCare.jsx";
@@ -97,9 +99,14 @@ import Settings from "./pages/Settings/Settings.jsx";
 import Alerts from "./pages/Notifications/Alerts"; // or wherever Alerts.jsx is located
 
 //District 
-import District from "./pages/District/Dashboard.jsx";
+import District from "./pages/District/DistrictDashboard.jsx";
 import Home from "./pages/District/Home.jsx";
 import Facilities from "./pages/District/Facilities.jsx";
+import Reports from "./pages/District/Reports.jsx";
+import Users from "./pages/District/Users.jsx";
+import DistrictSettings from "./pages/District/DistrictSettings.jsx";
+import Approvals from "./pages/District/Approvals.jsx";
+
 
 const AppRoutes = () => (
     <Routes>
@@ -113,12 +120,15 @@ const AppRoutes = () => (
             <Route path="/gdpr" element={<GDPR />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/child-growth" element={<ChildGrowthMilestones />} />
             <Route path="/mch-services/:slug" element={<MchServicePage />} />
             <Route path="/mch-services/labour-delivery" element={<LabourDelivery />} />
             <Route path="/mch-services/immunisations" element={<Immunisations />} />
             <Route path="/mch-services/:slug/appointment" element={<AppointmentBooking />} />
             <Route path="/hospital-details" element={<HospitalDetails />} />
             <Route path="/main" element={<Main />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/health-education" element={<HealthEducationHome />} />
             <Route
                 path="/resources/breastfeeding"
                 element={<BreastfeedingFAQ />}
@@ -163,14 +173,14 @@ const AppRoutes = () => (
         <Route element={<ProtectedLayout />}>
             {/* Shared Authenticated Routes */}
             <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/calendar" element={<CalendarView />} /> */}{" "}
+            <Route path="/calendar" element={<CalendarView />} />{" "}
             {/* Temporarily disabled */}
             <Route path="/care-timeline" element={<CareTimeline />} />
             <Route path="/timeline-event/:id" element={<TimelineEvent />} />
             <Route path="/postnatal-care" element={<PostNatalCare />} />
             <Route path="/pregnancy-stages" element={<PregnancyStages />} />
             <Route path="/safe-medicines" element={<SafeMedicines />} />
-            <Route path="/health-education" element={<HealthEducationHome />} />
+            
             {/* 👩 Mother Routes */}
             <Route element={<MotherRoute />}>
                 <Route path="/mother/home" element={<MotherHomePage />} />
@@ -256,6 +266,12 @@ const AppRoutes = () => (
                 <Route path="/district/dashboard" element={<District />} />
                 <Route path="/district/home" element={<Home />} />
                 <Route path="/district/facilities" element={<Facilities />} />
+                <Route path="/district/reports" element={<Reports />} />
+                <Route path="/district/users" element={<Users />} />
+                <Route path="/district/settings" element={<DistrictSettings />} />
+                <Route path="/district/approvals" element={<Approvals />} />
+                <Route path="/profile" element={<AdminProfilePage />} />
+
             </Route>
         </Route>
 
