@@ -15,6 +15,7 @@ import HealthWorkerRoute from "./components/protected/HealthWorkerRoute.jsx";
 // Public Pages
 import LandingPage from "./pages/Landing/LandingPage.jsx";
 import HospitalDetails from "./pages/HospitalDetails/HospitalDetails.jsx";
+import ChildGrowthMilestones from "./components/ChildGrowthMilestones.js";
 import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import Privacy from "./pages/Privacy";
@@ -119,6 +120,7 @@ const AppRoutes = () => (
             <Route path="/gdpr" element={<GDPR />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/child-growth" element={<ChildGrowthMilestones />} />
             <Route path="/mch-services/:slug" element={<MchServicePage />} />
             <Route path="/mch-services/labour-delivery" element={<LabourDelivery />} />
             <Route path="/mch-services/immunisations" element={<Immunisations />} />
