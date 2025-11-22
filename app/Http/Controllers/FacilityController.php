@@ -12,32 +12,44 @@ class FacilityController extends Controller
     use AuthorizesRequests;
     public function index(Request $request)
     {
-        $user = $request->user();
-        $query = Facility::query();
+        try {
+            $user = $request->user();
+            $query = Facility::query();
 
-        if (in_array($user->role, ['hospital_admin', 'facility_admin', 'facility_manager'])) {
-            $query->where('id', $user->facility_id);
-        } elseif ($user->role === 'district_admin') {
-            $query->where('district_id', $user->district_id);
+            // Only filter by user if authenticated
+            if ($user) {
+                if (in_array($user->role, ['hospital_admin', 'facility_admin', 'facility_manager'])) {
+                    $query->where('id', $user->facility_id);
+                } elseif ($user->role === 'district_admin') {
+                    $query->where('district_id', $user->district_id);
+                }
+            }
+
+            if ($request->filled('type')) {
+                $query->where('type', $request->type);
+            }
+
+            if ($request->filled('district')) {
+                $query->where('district_id', $request->district);
+            }
+
+            // Eager-load the district relation so frontend can show the district name
+            $facilities = $query->with('district')->orderBy('name')->get();
+
+            return response()->json($facilities);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to fetch facilities',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        if ($request->filled('district')) {
-            $query->where('district_id', $request->district);
-        }
-
-        return response()->json(
-            $query->withCount(['mothers', 'appointments'])->orderBy('name')->get()
-        );
     }
 
     public function show(Request $request, Facility $facility)
     {
         $this->authorize('view', $facility);
-        $facility->load(['mothers', 'appointments']);
+        // include district for frontend display
+        $facility->load(['district', 'mothers', 'appointments']);
         return response()->json($facility);
     }
 
@@ -89,7 +101,7 @@ class FacilityController extends Controller
             $query->where('sub_district', 'like', '%' . $request->sub_district . '%');
         }
 
-        return $query->withCount(['mothers', 'appointments'])->get();
+        return $query->with('district')->withCount(['mothers', 'appointments'])->get();
     }
 
     private function validateRequest(Request $request, bool $update = false): array

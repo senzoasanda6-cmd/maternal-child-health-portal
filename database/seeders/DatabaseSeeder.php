@@ -3,15 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        Artisan::call('facilities:import');
-
         $this->call([
+            FacilitySeeder::class,
             AdminUserSeeder::class,
             MotherUserSeeder::class,
             AuditLogSeeder::class,
@@ -19,8 +17,6 @@ class DatabaseSeeder extends Seeder
             VisitAndImmunizationSeeder::class,
             EventSeeder::class,
             AppointmentSeeder::class,
-            // You can move the logic from the old run() method into a new seeder
-            // and call it here, e.g., MotherAndChildSeeder::class
         ]);
     }
 }

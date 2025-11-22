@@ -202,8 +202,7 @@ const UserList = () => {
                                                 </strong>
                                             </div>
                                             <div className="text-muted small">
-                                                {user.facility.type} –{" "}
-                                                {user.facility.district}
+                                                {user.facility.region}
                                             </div>
                                         </>
                                     ) : (

@@ -30,6 +30,7 @@ const HealthWorkerForm = ({ form, facilities, onChange }) => (
                 <label htmlFor="facility_id">Facility</label>
             </div>
         </div>
+
         <div className="col-md-6">
             <div className="form-floating">
                 <input
@@ -44,6 +45,39 @@ const HealthWorkerForm = ({ form, facilities, onChange }) => (
                 <label htmlFor="designation">Designation</label>
             </div>
         </div>
+
+        <div className="col-md-6">
+            <div className="form-floating">
+                <input
+                    type="text"
+                    className="form-control"
+                    id="district"
+                    name="district"
+                    placeholder="District"
+                    value={form.district}
+                    readOnly
+                    disabled
+                />
+                <label htmlFor="district">District</label>
+            </div>
+        </div>
+
+        <div className="col-md-6">
+            <div className="form-floating">
+                <input
+                    type="text"
+                    className="form-control"
+                    id="sub_district"
+                    name="sub_district"
+                    placeholder="Sub-district"
+                    value={form.sub_district}
+                    readOnly
+                    disabled
+                />
+                <label htmlFor="sub_district">Sub-district</label>
+            </div>
+        </div>
+
         <div className="col-12">
             <div className="form-floating">
                 <textarea
@@ -93,6 +127,7 @@ function RegisterForm() {
         comments: "",
         facility_id: "",
         district: "",
+        sub_district: "",
         designation: "",
         custom_designation: "",
     });
@@ -109,8 +144,7 @@ function RegisterForm() {
             if (!selectedRole) return [];
 
             let url = `/facilities`;
-            if (selectedRole === "health_worker") url += "?type=clinic";
-            else if (
+            if (
                 (selectedRole === "manager" ||
                     selectedRole === "district_admin") &&
                 debouncedDistrict
@@ -140,10 +174,19 @@ function RegisterForm() {
             const selectedFacility = facilities.find(
                 (f) => f.id.toString() === value
             );
+            // Try to derive district name from relation or direct fields
+            const districtName = selectedFacility
+                ? (selectedFacility.district && typeof selectedFacility.district === 'object'
+                      ? selectedFacility.district.name
+                      : selectedFacility.district || selectedFacility.district_id)
+                : "";
+            const subDistrict = selectedFacility ? selectedFacility.sub_district || "" : "";
+
             setForm((prev) => ({
                 ...prev,
                 facility_id: value,
-                district: selectedFacility ? selectedFacility.district : "",
+                district: districtName || "",
+                sub_district: subDistrict,
             }));
         } else {
             setForm((prev) => ({ ...prev, [name]: value }));
@@ -161,6 +204,7 @@ function RegisterForm() {
             comments: "",
             facility_id: "",
             district: "",
+            sub_district: "",
             designation: "",
             custom_designation: "",
         });
