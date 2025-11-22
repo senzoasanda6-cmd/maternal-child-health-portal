@@ -10,7 +10,7 @@ const ChildDirectory = () => {
   const fetchHospitals = async () => {
     try {
       const token = localStorage.getItem('token'); // or wherever you store it
-      const res = await axios.get('/api/admin/hospitals', {
+      const res = await axios.get('/admin/hospitals', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -30,7 +30,7 @@ const ChildDirectory = () => {
   };
 
   const handleSearch = async () => {
-    const response = await axios.get('/api/children/search', { params: filters });
+    const response = await axios.get('/children/search', { params: filters });
     setResults(response.data);
   };
 
