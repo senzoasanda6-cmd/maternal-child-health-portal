@@ -9,7 +9,7 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch("/api/district/dashboard")
+        fetch("/district/dashboard")
             .then((res) => res.json())
             .then((data) => {
                 setStats(data.stats);

@@ -28,6 +28,7 @@ import AppointmentBooking from "./pages/MchServices/AppointmentBooking.jsx";
 import LabourDelivery from "./pages/MchServices/LabourDelivery.jsx";
 import Immunisations from "./pages/MchServices/Immunisations.jsx";
 import KidsCorner from "./pages/KidsCorner/KidsCorner.jsx";
+import AboutUs from "./components/About-Us.jsx";
 // import HealthyHabits from "./pages/KidsCorner/HealthyHabits.jsx";
 // import ColoringBook from "./pages/KidsCorner/ColoringBook.jsx";
 // import QuizTime from "./pages/KidsCorner/QuizTime.jsx";
@@ -97,7 +98,7 @@ import Settings from "./pages/Settings/Settings.jsx";
 import Alerts from "./pages/Notifications/Alerts"; // or wherever Alerts.jsx is located
 
 //District 
-import District from "./pages/District/Dashboard.jsx";
+import District from "./pages/District/DistrictDashboard.jsx";
 import Home from "./pages/District/Home.jsx";
 import Facilities from "./pages/District/Facilities.jsx";
 import Reports from "./pages/District/Reports.jsx";
@@ -124,6 +125,8 @@ const AppRoutes = () => (
             <Route path="/mch-services/:slug/appointment" element={<AppointmentBooking />} />
             <Route path="/hospital-details" element={<HospitalDetails />} />
             <Route path="/main" element={<Main />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/health-education" element={<HealthEducationHome />} />
             <Route
                 path="/resources/breastfeeding"
                 element={<BreastfeedingFAQ />}
@@ -175,7 +178,7 @@ const AppRoutes = () => (
             <Route path="/postnatal-care" element={<PostNatalCare />} />
             <Route path="/pregnancy-stages" element={<PregnancyStages />} />
             <Route path="/safe-medicines" element={<SafeMedicines />} />
-            <Route path="/health-education" element={<HealthEducationHome />} />
+            
             {/* 👩 Mother Routes */}
             <Route element={<MotherRoute />}>
                 <Route path="/mother/home" element={<MotherHomePage />} />

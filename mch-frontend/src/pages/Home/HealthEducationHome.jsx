@@ -38,13 +38,13 @@ const HealthEducationHome = () => {
                     <nav className="nav flex-column px-3 py-4 rounded-4" style={{backgroundColor: "#ccccccff", color:"#1d4189"}}>
                         <h5 className="text-center fs-2 mb-0">Topics</h5>
                         <hr />
-                        <Link to="/PregnancyStages" className="nav-link">
+                        <Link to="/pregnancy-stages" className="nav-link">
                             {t("pregnancy_stages")}
                         </Link>
-                        <Link to="/SafeMedicines" className="nav-link">
+                        <Link to="/safe-medicines" className="nav-link">
                             {t("safe_medicines")}
                         </Link>
-                        <Link to="/postnatal-visits/1" className="nav-link">
+                        <Link to="/health/postnatal-visits" className="nav-link">
                             {t("visit_history")}
                         </Link>
                         <Link to="/dashboard" className="nav-link">
@@ -69,7 +69,7 @@ const HealthEducationHome = () => {
                                     </h5>
                                     <p>{t("pregnancy_stages_description")}</p>
                                     <Link
-                                        to="/PregnancyStages"
+                                        to="/pregnancy-stages"
                                         className="btn btn-outline-primary btn-sm"
                                     >
                                         {t("explore")}
@@ -87,7 +87,7 @@ const HealthEducationHome = () => {
                                     </h5>
                                     <p>{t("safe_medicines_description")}</p>
                                     <Link
-                                        to="/SafeMedicines"
+                                        to="/safe-medicines"
                                         className="btn btn-outline-success btn-sm"
                                     >
                                         {t("view_list")}
@@ -105,7 +105,7 @@ const HealthEducationHome = () => {
                                     </h5>
                                     <p>{t("visit_history_description")}</p>
                                     <Link
-                                        to="/postnatal-visits/1"
+                                        to="/health/postnatal-visits"
                                         className="btn btn-outline-warning btn-sm"
                                     >
                                         {t("view_visits")}

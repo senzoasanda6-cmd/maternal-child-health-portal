@@ -2,11 +2,17 @@ import React, { useEffect, useState, useContext } from "react";
 import LastVisitSummaryCard from "./LastVisitSummaryCard";
 import PregnancyStageCard from "./PregnancyStageCard";
 import UpcomingAppointmentsCard from "./UpcomingAppointmentsCard";
+import AppointmentStatsCard from "./AppointmentStatsCard";
 import { useParams } from "react-router-dom";
-import api from "../../services/api"; // Adjust path if needed
 import { AuthContext } from "../../contexts/AuthContext";
 import AppLoading from "../../components/spinners/AppPageLoading";
 import AppLoadError from "../../components/spinners/AppLoadError";
+import {
+  fetchConsolidatedDashboardData,
+  transformEventsToAppointments,
+  mergeAppointmentsWithEvents,
+  getAppointmentStats,
+} from "../../services/dashboardService";
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useContext(AuthContext);
@@ -15,6 +21,7 @@ const Dashboard = () => {
   const [lastVisit, setLastVisit] = useState(null);
   const [pregnancyStage, setPregnancyStage] = useState(null);
   const [appointments, setAppointments] = useState([]);
+  const [appointmentStats, setAppointmentStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -26,15 +33,26 @@ const Dashboard = () => {
 
     const fetchDashboardData = async () => {
       try {
-        const [visitRes, stageRes, apptRes] = await Promise.all([
-          api.get("/dashboard/last-visit"),
-          api.get("/dashboard/pregnancy-stage"),
-          api.get(`/dashboard/appointments?child_id=${childId}`),
-        ]);
+        // Fetch consolidated data from all endpoints
+        const consolidatedData = await fetchConsolidatedDashboardData(childId);
 
-        setLastVisit(visitRes.data);
-        setPregnancyStage(stageRes.data);
-        setAppointments(apptRes.data);
+        setLastVisit(consolidatedData.lastVisit);
+        setPregnancyStage(consolidatedData.pregnancyStage);
+
+        // Merge appointments from API with calendar events
+        const apiAppointments = consolidatedData.appointments?.appointments || [];
+        const events = consolidatedData.events || [];
+
+        const mergedAppointments = mergeAppointmentsWithEvents(
+          apiAppointments,
+          events
+        );
+
+        setAppointments(mergedAppointments);
+
+        // Calculate statistics from events
+        const stats = getAppointmentStats(events);
+        setAppointmentStats(stats);
       } catch (err) {
         console.error("Dashboard fetch failed:", err);
         setError("Failed to load dashboard data.");
@@ -54,6 +72,10 @@ const Dashboard = () => {
   return (
     <div className="container p-4">
       <h2 className="mb-4">👩‍⚕️ Mother Dashboard</h2>
+
+      {/* Quick stats row */}
+      {appointmentStats && <AppointmentStatsCard stats={appointmentStats} />}
+
       <LastVisitSummaryCard visit={lastVisit} />
       <PregnancyStageCard stage={pregnancyStage} />
       <UpcomingAppointmentsCard appointments={appointments} />

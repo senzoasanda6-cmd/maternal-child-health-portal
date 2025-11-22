@@ -7,7 +7,7 @@ const AdminRescheduleDashboard = () => {
 
   const fetchBookings = async () => {
     try {
-      const res = await api.get("/admin/reschedule-requests");
+      const res = await api.get("/reschedule-requests");
       setBookings(res.data);
     } catch (error) {
       console.error("Failed to fetch reschedule requests:", error);
@@ -18,7 +18,7 @@ const AdminRescheduleDashboard = () => {
 
   const approveReschedule = async (id) => {
     try {
-      await api.patch(`/admin/bookings/${id}/approve-reschedule`);
+      await api.patch(`/bookings/${id}/approve-reschedule`);
       alert("Reschedule approved.");
       fetchBookings(); // refresh list
     } catch (error) {

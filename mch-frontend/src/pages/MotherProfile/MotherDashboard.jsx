@@ -9,6 +9,11 @@ import QuickLinks from "../../components/QuickLinks";
 import AppLoading from "../../components/spinners/AppPageLoading";
 import AppLoadError from "../../components/spinners/AppLoadError";
 import AppCarousel from "../../components/AppCarousel";
+import {
+  getUpcomingAppointments,
+  mergeAppointmentsWithEvents,
+  getAppointmentStats,
+} from "../../services/dashboardService";
 
 const CHILDREN_PER_PAGE = 3;
 
@@ -16,6 +21,7 @@ export default function Dashboard() {
     const [children, setChildren] = useState([]);
     const [activeChildId, setActiveChildId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [calendarEvents, setCalendarEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -29,9 +35,17 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const res = await api.get("/children");
-                const data = Array.isArray(res.data) ? res.data : [];
+                const [childRes, eventsRes] = await Promise.all([
+                    api.get("/children"),
+                    api.get("/events").catch(() => ({ data: [] })),
+                ]);
+
+                const data = Array.isArray(childRes.data) ? childRes.data : [];
+                const events = Array.isArray(eventsRes.data) ? eventsRes.data : [];
+
                 setChildren(data);
+                setCalendarEvents(events);
+
                 if (data.length > 0) {
                     setActiveChildId(data[0].id);
                 }
@@ -57,6 +71,19 @@ export default function Dashboard() {
     const activeChild = Array.isArray(children)
         ? children.find((c) => c.id === activeChildId)
         : null;
+
+    // Merge calendar events with child appointments
+    const enhancedAppointments = React.useMemo(() => {
+        if (!activeChild) return [];
+        return mergeAppointmentsWithEvents(
+            activeChild.appointments || [],
+            calendarEvents
+        );
+    }, [activeChild, calendarEvents]);
+
+    const upcomingAppointments = React.useMemo(() => {
+        return getUpcomingAppointments(calendarEvents, 30).slice(0, 5);
+    }, [calendarEvents]);
 
     if (loading)
         return <AppLoading loadingText="Loading dashboard..." />;
@@ -126,7 +153,7 @@ export default function Dashboard() {
                     <ChildCard {...activeChild} />
                     <GrowthChart data={activeChild.growthData || []} />
                     <AppointmentsList
-                        appointments={activeChild.appointments || []}
+                        appointments={enhancedAppointments}
                     />
                     <MilestoneTracker
                         milestones={activeChild.milestones || []}
