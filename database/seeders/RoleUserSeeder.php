@@ -11,24 +11,23 @@ class RoleUserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Facility role mappings
+        // Hospital-level health worker sub-roles
         $hospitalRoles = [
             'midwife',
             'facility_worker',
             'facility_nurse',
             'facility_doctor',
-            'hospital_admin',
-            'facility_admin',
             'facility_manager',
         ];
 
+        // PHC-level health worker sub-roles
         $phcRoles = [
             'facility_worker',
             'facility_nurse',
             'facility_doctor',
         ];
 
-        // High-level hospital types
+        // Facility Level-of-Care Mapping
         $hospitalLevels = [
             'Dental Hospital',
             'District Hospital',
@@ -38,23 +37,31 @@ class RoleUserSeeder extends Seeder
             'Regional Hospital',
         ];
 
-        // Fetch all facilities once
+        $phcLevel = 'PHC Clinic';
+
         $facilities = Facility::all();
 
         foreach ($facilities as $facility) {
 
-            // Skip management facilities
-            if ($facility->type === 'management') continue;
+            // Skip management facilities entirely
+            if ($facility->type === 'management') {
+                continue;
+            }
 
-            // Assign roles based on level of care
-            $roles = in_array($facility->level_of_care, $hospitalLevels)
-                ? $hospitalRoles
-                : ($facility->level_of_care === 'Primary Health Care' ? $phcRoles : []);
+            // Decide roles based on facility level of care
+            if (in_array($facility->level_of_care, $hospitalLevels)) {
+                $roles = $hospitalRoles;
+            } elseif ($facility->level_of_care === $phcLevel) {
+                $roles = $phcRoles;
+            } else {
+                continue; // Unknown level of care → no workers
+            }
 
-            if (empty($roles)) continue;
-
+            // Seed workers for this facility
             foreach ($roles as $role) {
-                $email = strtolower(str_replace(' ', '_', $role) . '_' . $facility->id . '@example.com');
+
+                $email = strtolower(str_replace(' ', '_', $role)) . "_{$facility->id}@example.com";
+
                 User::updateOrCreate(
                     ['email' => $email],
                     [
@@ -70,24 +77,35 @@ class RoleUserSeeder extends Seeder
             }
         }
 
-        // HIS Manager - provincial level
-        $provincialFacility = Facility::where('sub_district', 'Province')->inRandomOrder()->first();
-        if ($provincialFacility) {
+        
+        // Seed HIS Manager (Provincial-level health information manager)
+        
+        $provinceFacility = Facility::where('type', 'management')
+            ->where('level_of_care', 'Head Office')
+            ->first();
+
+        if (!$provinceFacility) {
+            // fallback: any management office
+            $provinceFacility = Facility::where('type', 'management')->first();
+        }
+
+        if ($provinceFacility) {
             User::updateOrCreate(
                 ['email' => 'his_manager@gauteng.gov.za'],
                 [
                     'name' => 'HIS Manager',
                     'password' => Hash::make('HisM@nager123'),
-                    'role' => 'health_worker',
-                    'sub_role' => 'his_manager',
-                    'facility_id' => $provincialFacility->id,
-                    'district_id' => $provincialFacility->district_id,
-                    'is_active' => true,
+                    'role'       => 'health_worker',
+                    'sub_role'   => 'his_manager',
+                    'facility_id' => $provinceFacility->id,
+                    'district_id' => $provinceFacility->district_id,
+                    'is_active'  => true,
                 ]
             );
-            $this->command->info('HIS Manager seeded at Provincial Office.');
+
+            $this->command->info('HIS Manager assigned to Provincial Office.');
         }
 
-        $this->command->info('All health worker users seeded according to facility level of care.');
+        $this->command->info('Health worker roles seeded successfully.');
     }
 }
