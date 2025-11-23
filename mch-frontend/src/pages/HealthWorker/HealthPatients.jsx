@@ -48,14 +48,15 @@ const HealthPatients = () => {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const res = await api.get("/health/patients");
-                // It's better to filter on the backend if possible, e.g., /health/patients?hospital_id=${user.hospital_id}
-                // For now, we'll keep the client-side filter.
-                const hospitalPatients = res.data.filter(
-                    (p) => p.user?.hospital_id === user.hospital_id,
-                );
-
-                setPatients(hospitalPatients);
+                let endpoint = "/health/patients";
+                
+                // HIS Manager can view all mothers from all facilities
+                if (user?.role === "manager") {
+                    endpoint = "/health/patients?all=true";
+                }
+                
+                const res = await api.get(endpoint);
+                setPatients(res.data || []);
             } catch (err) {
                 console.error("Failed to load patients:", err);
                 setError("Unable to fetch patient list.");
@@ -64,7 +65,7 @@ const HealthPatients = () => {
             }
         };
 
-        if (user?.hospital_id) {
+        if (user?.id) {
             fetchPatients();
         }
     }, [user]);
@@ -80,22 +81,26 @@ const HealthPatients = () => {
     if (loading) return <div className="p-6 text-center">Loading patients...</div>;
     if (error) return <div className="p-6 text-center text-danger">{error}</div>;
 
+    const title = user?.role === "manager" 
+        ? "All Mothers (All Facilities)" 
+        : "Mothers at Your Facility";
+
     return (
         <div className="p-6">
             <h2 className="mb-4 text-2xl font-bold">
-                Patients at {user.hospital?.name || "your hospital"}
+                {title}
             </h2>
 
             <input
                 type="text"
-                placeholder="Search by patient name"
+                placeholder="Search by mother name"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="form-control mb-4"
             />
 
             {filteredPatients.length === 0 ? (
-                <p className="text-muted">No patients found.</p>
+                <p className="text-muted">No mothers found.</p>
             ) : (
                 <PatientList patients={filteredPatients} />
             )}

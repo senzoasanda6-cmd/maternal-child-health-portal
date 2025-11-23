@@ -333,26 +333,41 @@ const CalendarView = () => {
             const props = ev.extendedProps || {};
             if (!props.recurrence || props.recurrence === "none") return ev;
 
-            const freq = Frequency[props.recurrence.toUpperCase()];
-            const byweekday =
-                props.recurrenceDays?.map((d) => RRule[d]) || undefined;
+            try {
+                const freq = Frequency[props.recurrence.toUpperCase()];
+                
+                // Only add byweekday if we have valid recurrence days
+                const rruleOptions = {
+                    freq,
+                    dtstart: ev.start,
+                    until: visibleRange.end,
+                };
+                
+                if (props.recurrenceDays && Array.isArray(props.recurrenceDays)) {
+                    const byweekday = props.recurrenceDays
+                        .map((d) => RRule[d])
+                        .filter((d) => d !== undefined);
+                    
+                    if (byweekday.length > 0) {
+                        rruleOptions.byweekday = byweekday;
+                    }
+                }
 
-            const rule = new RRule({
-                freq,
-                dtstart: ev.start,
-                until: visibleRange.end,
-                byweekday,
-            });
+                const rule = new RRule(rruleOptions);
 
-            const duration = ev.end - ev.start;
+                const duration = ev.end - ev.start;
 
-            return rule
-                .between(visibleRange.start, visibleRange.end, true)
-                .map((date) => ({
-                    ...ev,
-                    start: new Date(date),
-                    end: new Date(date.getTime() + duration),
-                }));
+                return rule
+                    .between(visibleRange.start, visibleRange.end, true)
+                    .map((date) => ({
+                        ...ev,
+                        start: new Date(date),
+                        end: new Date(date.getTime() + duration),
+                    }));
+            } catch (err) {
+                console.error("RRule error for event:", ev, err);
+                return ev;
+            }
         });
     }, [allEvents, filters, visibleRange]);
 

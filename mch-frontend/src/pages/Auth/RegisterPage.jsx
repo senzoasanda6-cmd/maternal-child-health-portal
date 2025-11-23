@@ -96,8 +96,30 @@ const HealthWorkerForm = ({ form, facilities, onChange }) => (
 );
 
 /* ---------- Mother Form Component ---------- */
-const MotherForm = ({ form, onChange }) => (
+const MotherForm = ({ form, facilities, onChange }) => (
     <div className="row g-3">
+        <div className="col-12">
+            <div className="form-floating" title="Pick the nearest facility for your prenatal and postnatal care">
+                <select
+                    className="form-select"
+                    id="facility_id"
+                    name="facility_id"
+                    value={form.facility_id}
+                    onChange={onChange}
+                >
+                    <option value="">Select Facility</option>
+                    {facilities.map((f) => (
+                        <option key={f.id} value={f.id}>
+                            {f.name}
+                        </option>
+                    ))}
+                </select>
+                <label htmlFor="facility_id">Nearest Facility</label>
+            </div>
+            <small className="text-muted d-block mt-2">
+                💡 Please select the health facility closest to your home for easier access to care.
+            </small>
+        </div>
         <div className="col-12">
             <div className="form-floating">
                 <textarea
@@ -222,7 +244,7 @@ function RegisterForm() {
             return;
         }
 
-        if (!form.facility_id) {
+        if (!form.facility_id && (form.role === "health_worker" || form.role === "mother")) {
             setError("Facility is required.");
             setLoading(false);
             return;
@@ -430,6 +452,7 @@ function RegisterForm() {
                                     {selectedRole === "mother" && (
                                         <MotherForm
                                             form={form}
+                                            facilities={facilities}
                                             onChange={handleChange}
                                         />
                                     )}

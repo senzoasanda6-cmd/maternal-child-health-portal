@@ -37,6 +37,7 @@ use App\Http\Controllers\{
     Api\DistrictReportsController,
     Api\DistrictApprovalsController,
     Api\DistrictSettingsController,
+    Api\MotherAuthController,
 };
 use Illuminate\Session\Middleware\StartSession;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
@@ -57,6 +58,15 @@ Route::middleware([ // This group will wrap all stateful API routes
 
     Route::get('/facilities', [FacilityController::class, 'index']);
     Route::post('/registration-request', [RegistrationRequestController::class, 'store']);
+    // Mother login
+    Route::post('/mother/login', [\App\Http\Controllers\Api\MotherLoginController::class, 'login']);
+    Route::post('/register', [\App\Http\Controllers\Api\MotherAuthController::class, 'register']);
+
+    // Mother password reset routes
+    Route::post('/mother/forgot-password', [\App\Http\Controllers\Api\MotherPasswordResetController::class, 'sendResetLink']);
+    Route::post('/mother/reset-password', [\App\Http\Controllers\Api\MotherPasswordResetController::class, 'resetPassword']);
+    Route::post('/mother/password/email', [\App\Http\Controllers\Api\MotherPasswordResetController::class, 'sendResetLinkEmail']);
+    Route::post('/mother/password/reset', [\App\Http\Controllers\Api\MotherPasswordResetController::class, 'reset']);
 
     // Authenticated Routes
     Route::middleware([
@@ -69,6 +79,8 @@ Route::middleware([ // This group will wrap all stateful API routes
             'message' => 'Session refreshed successfully',
         ]));
         Route::get('/user', fn(Request $request) => $request->user());
+        Route::post('/mother/logout', [\App\Http\Controllers\Api\MotherLoginController::class, 'logout']);
+        Route::post('/register', [\App\Http\Controllers\Api\MotherAuthController::class, 'register']);
 
         Route::post('/logout', function (Request $request) {
             /** @var \App\Models\User|null $user */
@@ -121,22 +133,22 @@ Route::middleware([ // This group will wrap all stateful API routes
             // Facilities
             Route::get('/facilities', [DistrictFacilityController::class, 'index']);
             Route::get('/facilities/export', [DistrictFacilityController::class, 'export']);
-            
+
             // Dashboard
             Route::get('/dashboard', [DistrictDashboardController::class, 'index']);
-            
+
             // Users/Health Workers
             Route::get('/users', [DistrictUsersController::class, 'index']);
             Route::get('/users/{id}', [DistrictUsersController::class, 'show']);
             Route::put('/users/{id}', [DistrictUsersController::class, 'update']);
             Route::delete('/users/{id}', [DistrictUsersController::class, 'destroy']);
-            
+
             // Reports
             Route::get('/reports/appointments', [DistrictReportsController::class, 'appointmentStats']);
             Route::get('/reports/trends', [DistrictReportsController::class, 'visitTrends']);
             Route::get('/reports/vaccination-progress', [DistrictReportsController::class, 'vaccinationProgress']);
             Route::get('/reports/high-risk-cases', [DistrictReportsController::class, 'highRiskCases']);
-            
+
             // Approvals
             Route::get('/approvals/registrations', [DistrictApprovalsController::class, 'pendingRegistrations']);
             Route::post('/approvals/registrations/{id}/approve', [DistrictApprovalsController::class, 'approveRegistration']);
@@ -144,7 +156,7 @@ Route::middleware([ // This group will wrap all stateful API routes
             Route::get('/approvals/reschedules', [DistrictApprovalsController::class, 'pendingReschedules']);
             Route::post('/approvals/reschedules/{appointmentId}/approve', [DistrictApprovalsController::class, 'approveReschedule']);
             Route::post('/approvals/reschedules/{appointmentId}/reject', [DistrictApprovalsController::class, 'rejectReschedule']);
-            
+
             // Settings
             Route::get('/settings', [DistrictSettingsController::class, 'index']);
             Route::put('/settings', [DistrictSettingsController::class, 'update']);
@@ -193,10 +205,6 @@ Route::middleware([ // This group will wrap all stateful API routes
         // Postnatal Bookings
         Route::post('/postnatal-bookings', [PostnatalBookingController::class, 'store']);
 
-        // Events & Contact
-        Route::get('/events', [EventController::class, 'index']);
-        Route::post('/contact-message', [ContactController::class, 'send']);
-
         // Dashboard Widgets
         Route::get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
         Route::get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
@@ -208,6 +216,9 @@ Route::middleware([ // This group will wrap all stateful API routes
         Route::get('/events/{event}', [EventController::class, 'show']);
         Route::put('/events/{event}', [EventController::class, 'update']);
         Route::delete('/events/{event}', [EventController::class, 'destroy']);
+
+        // Contact
+        Route::post('/contact-message', [ContactController::class, 'send']);
 
         // Appointment Routes
         Route::get('/appointments', [AppointmentController::class, 'index']);
