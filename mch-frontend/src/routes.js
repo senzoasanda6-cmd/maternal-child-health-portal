@@ -47,6 +47,8 @@ import TimelineEvent from "./pages/CareTimeline/TimelineEvent.jsx";
 import PostNatalCare from "./pages/HealthEducation/PostNatalCare.jsx";
 import PregnancyStages from "./pages/HealthEducation/PregnancyStages.jsx";
 import SafeMedicines from "./pages/HealthEducation/SafeMedicines.jsx";
+// import ChildGrowth from "./pages/HealthEducation/ChildGrowth.jsx";
+import AppointmentsForm from "./components/AppointmentsForm.js";
 
 // Mother Pages
 import MotherHomePage from "./pages/Home/MotherHome.jsx";
@@ -67,6 +69,7 @@ import VaccineProgressChart from "./pages/ChildProfile/Vaccinations/VaccineProgr
 import HealthPatients from "./pages/HealthWorker/HealthPatients.jsx";
 import HealthDashboard from "./pages/HealthWorker/HealthDashboard.jsx";
 import ImmunizationsPage from "./pages/HealthWorker/ImmunizationsPage";
+
 
 // Admin Pages
 import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
@@ -193,6 +196,8 @@ const AppRoutes = () => (
             <Route path="/postnatal-care" element={<PostNatalCare />} />
             <Route path="/pregnancy-stages" element={<PregnancyStages />} />
             <Route path="/safe-medicines" element={<SafeMedicines />} />
+            {/* <Route path="/child-growth" element={<ChildGrowth />} /> */}
+            <Route path="/appointments-form" element={<AppointmentsForm />} />
             {/* 👩 Mother Routes */}
             <Route element={<MotherRoute />}>
                 <Route path="/mother/home" element={<MotherHomePage />} />

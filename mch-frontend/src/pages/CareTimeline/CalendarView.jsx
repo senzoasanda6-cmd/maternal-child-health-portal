@@ -10,7 +10,6 @@ import moment from "moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import api from "../../services/api";
 import EventModal from "./EventModal";
-import { RRule, Frequency } from "rrule";
 import { AuthContext } from "../../contexts/AuthContext";
 import {
     Form,
@@ -25,12 +24,13 @@ import {
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import { useNavigate } from "react-router-dom";
 
 const localizer = momentLocalizer(moment);
 const DnDCalendar = withDragAndDrop(Calendar);
 
 /* ---------------------------------------------
-   EVENT TOOLTIP (cleaned)
+   EVENT TOOLTIP
 ------------------------------------------------*/
 const EventWithTooltip = ({ event, title }) => {
     const renderTooltip = (props) => {
@@ -43,39 +43,44 @@ const EventWithTooltip = ({ event, title }) => {
                 {moment(event.end).format("LT")}
                 {propsObj.facilityName && (
                     <>
-                        <br />
-                        Location: {propsObj.facilityName}
+                        <br /> Location: {propsObj.facilityName}
                     </>
                 )}
                 {propsObj.childName && (
                     <>
-                        <br />
-                        Child: {propsObj.childName}
+                        <br /> Child: {propsObj.childName}
                     </>
                 )}
                 {propsObj.motherName && (
                     <>
-                        <br />
-                        Mother: {propsObj.motherName}
+                        <br /> Mother: {propsObj.motherName}
                     </>
                 )}
                 {propsObj.healthWorker && (
                     <>
-                        <br />
-                        Health Worker: {propsObj.healthWorker}
+                        <br /> Health Worker: {propsObj.healthWorker}
                     </>
                 )}
                 {propsObj.status && (
                     <>
-                        <br />
-                        Status: <strong>{propsObj.status}</strong>
+                        <br /> Status: <strong>{propsObj.status}</strong>
                     </>
                 )}
                 {propsObj.notes && (
                     <>
-                        <br />
-                        Notes: {propsObj.notes}
+                        <br /> Notes: {propsObj.notes}
                     </>
+                )}
+                {event.type === "appointment" && (
+                    <div className="mt-2">
+                        <a
+                            href={`/appointments/${event.originalId}`}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            View / Edit Appointment
+                        </a>
+                    </div>
                 )}
             </Tooltip>
         );
@@ -89,7 +94,7 @@ const EventWithTooltip = ({ event, title }) => {
 };
 
 /* ---------------------------------------------
-   CUSTOM TOOLBAR (clean but unchanged UI)
+   CUSTOM TOOLBAR
 ------------------------------------------------*/
 const CustomToolbar = ({
     label,
@@ -164,7 +169,7 @@ const CustomToolbar = ({
 
                 <Col md={3}>
                     <Form.Group>
-                        <Form.Label>Clinic</Form.Label>
+                        <Form.Label>Facility</Form.Label>
                         <Form.Select
                             value={filters.clinic}
                             onChange={(e) =>
@@ -174,7 +179,7 @@ const CustomToolbar = ({
                                 }))
                             }
                         >
-                            <option value="all">All Clinics</option>
+                            <option value="all">All Facilities</option>
                             {facilities.map((facility) => (
                                 <option key={facility.id} value={facility.id}>
                                     {facility.name}
@@ -209,7 +214,7 @@ const CustomToolbar = ({
 );
 
 /* ---------------------------------------------
-   MAIN COMPONENT (refactored + optimized)
+   MAIN COMPONENT
 ------------------------------------------------*/
 const CalendarView = () => {
     const { user } = useContext(AuthContext);
@@ -230,20 +235,17 @@ const CalendarView = () => {
     const [showModal, setShowModal] = useState(false);
     const [view, setView] = useState(Views.MONTH);
     const [loading, setLoading] = useState(true);
-
+    const navigate = useNavigate();
     /* ---------------------------------------------
-       FETCH EVENTS (cleaned & unchanged logic)
+       FETCH EVENTS
     ------------------------------------------------*/
     const fetchEvents = useCallback(async () => {
-        try {
-            setLoading(true);
+        if (!visibleRange.start || !visibleRange.end) return;
 
-            const startDate = moment(visibleRange.start)
-                .subtract(1, "month")
-                .format("YYYY-MM-DD");
-            const endDate = moment(visibleRange.end)
-                .add(1, "month")
-                .format("YYYY-MM-DD");
+        setLoading(true);
+        try {
+            const startDate = moment(visibleRange.start).format("YYYY-MM-DD");
+            const endDate = moment(visibleRange.end).format("YYYY-MM-DD");
 
             const [eventsRes, appointmentsRes, facilitiesRes] =
                 await Promise.all([
@@ -271,7 +273,6 @@ const CalendarView = () => {
 
             const appointmentsData =
                 appointmentsRes.data?.data || appointmentsRes.data || [];
-
             const formattedAppointments = appointmentsData.map((apt) => {
                 const dateStr = new Date(apt.date).toISOString().split("T")[0];
                 return {
@@ -302,6 +303,8 @@ const CalendarView = () => {
 
             setAllEvents([...formattedEvents, ...formattedAppointments]);
             setFacilities(facilitiesRes.data);
+        } catch (err) {
+            console.error("Error fetching events:", err);
         } finally {
             setLoading(false);
         }
@@ -312,10 +315,10 @@ const CalendarView = () => {
     }, [fetchEvents]);
 
     /* ---------------------------------------------
-       FILTER + RECURRENCE (memoized + optimized)
+       FILTERED EVENTS
     ------------------------------------------------*/
     const filteredEvents = useMemo(() => {
-        const filtered = allEvents.filter((ev) => {
+        return allEvents.filter((ev) => {
             const props = ev.extendedProps || {};
             const careMatch =
                 filters.careType === "all" ||
@@ -327,52 +330,10 @@ const CalendarView = () => {
                 filters.status === "all" || props.status === filters.status;
             return careMatch && clinicMatch && statusMatch;
         });
-
-        /* ----- Recurrence generation only inside visible range ----- */
-        return filtered.flatMap((ev) => {
-            const props = ev.extendedProps || {};
-            if (!props.recurrence || props.recurrence === "none") return ev;
-
-            try {
-                const freq = Frequency[props.recurrence.toUpperCase()];
-                
-                // Only add byweekday if we have valid recurrence days
-                const rruleOptions = {
-                    freq,
-                    dtstart: ev.start,
-                    until: visibleRange.end,
-                };
-                
-                if (props.recurrenceDays && Array.isArray(props.recurrenceDays)) {
-                    const byweekday = props.recurrenceDays
-                        .map((d) => RRule[d])
-                        .filter((d) => d !== undefined);
-                    
-                    if (byweekday.length > 0) {
-                        rruleOptions.byweekday = byweekday;
-                    }
-                }
-
-                const rule = new RRule(rruleOptions);
-
-                const duration = ev.end - ev.start;
-
-                return rule
-                    .between(visibleRange.start, visibleRange.end, true)
-                    .map((date) => ({
-                        ...ev,
-                        start: new Date(date),
-                        end: new Date(date.getTime() + duration),
-                    }));
-            } catch (err) {
-                console.error("RRule error for event:", ev, err);
-                return ev;
-            }
-        });
-    }, [allEvents, filters, visibleRange]);
+    }, [allEvents, filters]);
 
     /* ---------------------------------------------
-       EVENT HANDLERS (clean)
+       EVENT HANDLERS
     ------------------------------------------------*/
     const handleSelectSlot = useCallback(({ start }) => {
         setSelectedEvent({
@@ -382,10 +343,19 @@ const CalendarView = () => {
         setShowModal(true);
     }, []);
 
-    const handleSelectEvent = useCallback((ev) => {
-        setSelectedEvent(ev);
-        setShowModal(true);
-    }, []);
+    const handleSelectEvent = useCallback(
+        (ev) => {
+            if (ev.type === "appointment") {
+                // SPA navigation to AppointmentsForm with state
+                navigate(`/appointments-form`, { state: { appointment: ev } });
+                return;
+            }
+
+            setSelectedEvent(ev);
+            setShowModal(true);
+        },
+        [navigate]
+    );
 
     const handleCreateNewEvent = () => {
         setSelectedEvent({
@@ -396,21 +366,9 @@ const CalendarView = () => {
     };
 
     const handleEventDrop = async ({ event, start, end }) => {
+        if (event.type !== "event") return; // appointments cannot be dragged
         try {
-            if (event.type === "appointment") {
-                await api.put(`/appointments/${event.originalId}`, {
-                    ...event,
-                    start_time: moment(start).format("HH:mm:ss"),
-                    end_time: moment(end).format("HH:mm:ss"),
-                });
-            } else {
-                await api.put(`/events/${event.id}`, {
-                    ...event,
-                    start,
-                    end,
-                });
-            }
-
+            await api.put(`/events/${event.id}`, { ...event, start, end });
             setAllEvents((prev) =>
                 prev.map((e) => (e.id === event.id ? { ...e, start, end } : e))
             );
@@ -452,11 +410,9 @@ const CalendarView = () => {
         setShowModal(false);
     };
 
-    /* ---------------------------------------------
-       DRAG-ALLOWED ROLES (memoized)
-    ------------------------------------------------*/
     const draggableAccessor = useCallback(
-        () =>
+        (event) =>
+            event.type === "event" &&
             [
                 "admin",
                 "health_worker",
@@ -468,22 +424,15 @@ const CalendarView = () => {
         [user]
     );
 
-    /* ---------------------------------------------
-       EVENT COLORS (memoized)
-    ------------------------------------------------*/
     const eventStyleGetter = useCallback((event) => {
         const props = event.extendedProps || {};
-        const care = props.careType;
-        const status = props.status;
-
-        let color = "#0d6efd";
-        if (care === "prenatal") color = "#6f42c1";
-        if (care === "postnatal") color = "#0d6efd";
-        if (care === "vaccination") color = "#198754";
-
-        if (status === "pending") color = "#ffc107";
-        if (status === "cancelled") color = "#6c757d";
-        if (status === "completed") color = "#198754";
+        let color = "#0d6efd"; // default
+        if (props.careType === "prenatal") color = "#6f42c1";
+        if (props.careType === "postnatal") color = "#0d6efd";
+        if (props.careType === "vaccination") color = "#198754";
+        if (props.status === "pending") color = "#ffc107";
+        if (props.status === "cancelled") color = "#6c757d";
+        if (props.status === "completed") color = "#198754";
 
         return {
             style: {
@@ -498,9 +447,6 @@ const CalendarView = () => {
         };
     }, []);
 
-    /* ---------------------------------------------
-       RENDER
-    ------------------------------------------------*/
     return (
         <div className="container-fluid p-4">
             {loading && (
@@ -538,9 +484,14 @@ const CalendarView = () => {
                         view={view}
                         onView={setView}
                         onRangeChange={(range) => {
-                            // Normalize range for all views
-                            const start = range.start || range[0];
-                            const end = range.end || range[range.length - 1];
+                            let start, end;
+                            if (Array.isArray(range)) {
+                                start = range[0];
+                                end = range[range.length - 1];
+                            } else {
+                                start = range.start;
+                                end = range.end;
+                            }
                             setVisibleRange({ start, end });
                         }}
                         views={[
@@ -553,7 +504,7 @@ const CalendarView = () => {
                 </Card.Body>
             </Card>
 
-            {showModal && (
+            {showModal && selectedEvent?.type !== "appointment" && (
                 <EventModal
                     show={showModal}
                     event={selectedEvent}

@@ -58,9 +58,7 @@ const EventModal = ({
         handleSave(eventData);
     };
 
-    const onDelete = () => {
-        handleDelete(event.id);
-    };
+    const onDelete = () => handleDelete(event.id);
 
     const handleDayToggle = (day) => {
         if (recurrenceDays.includes(day)) {
@@ -71,7 +69,7 @@ const EventModal = ({
     };
 
     return (
-        <Modal show={show} onHide={handleClose} centered>
+        <Modal show={show} onHide={handleClose} centered size="lg">
             <Modal.Header closeButton>
                 <Modal.Title>
                     {event?.id ? "Edit Event" : "Create Event"}
@@ -113,12 +111,9 @@ const EventModal = ({
                                         setFacilityId(e.target.value)
                                     }
                                 >
-                                    {facilities.map((facility) => (
-                                        <option
-                                            key={facility.id}
-                                            value={facility.id}
-                                        >
-                                            {facility.name}
+                                    {facilities.map((f) => (
+                                        <option key={f.id} value={f.id}>
+                                            {f.name}
                                         </option>
                                     ))}
                                 </Form.Select>
@@ -140,23 +135,37 @@ const EventModal = ({
                         </Col>
                     </Row>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Start Time</Form.Label>
-                        <DateTimePicker
-                            onChange={setStart}
-                            value={start}
-                            className="form-control"
-                        />
-                    </Form.Group>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Start Time</Form.Label>
+                                <DateTimePicker
+                                    onChange={setStart}
+                                    value={start}
+                                    className="w-100"
+                                    calendarIcon={null}
+                                    clearIcon={null}
+                                    disableClock={true} // removes the popup clock
+                                    format="h:mm a" // ensures AM/PM is inline
+                                />
+                            </Form.Group>
+                        </Col>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>End Time</Form.Label>
-                        <DateTimePicker
-                            onChange={setEnd}
-                            value={end}
-                            className="form-control"
-                        />
-                    </Form.Group>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>End Time</Form.Label>
+                                <DateTimePicker
+                                    onChange={setEnd}
+                                    value={end}
+                                    className="w-100"
+                                    calendarIcon={null}
+                                    clearIcon={null}
+                                    disableClock={true}
+                                    format="h:mm a"
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Recurrence</Form.Label>
@@ -187,7 +196,7 @@ const EventModal = ({
                                             onClick={() =>
                                                 handleDayToggle(index)
                                             }
-                                            className="me-1"
+                                            className="me-1 mb-1"
                                         >
                                             {day}
                                         </Button>

@@ -100,8 +100,13 @@ Route::middleware([ // This group will wrap all stateful API routes
 
             return response()->json(['message' => 'Logged out successfully']);
         });
+        Route::get('/health-workers', [HealthWorkerController::class, 'index']);
 
+        // List patients for the logged-in health worker
+        Route::get('/health-workers/patients', [HealthWorkerController::class, 'patients']);
 
+        // Optional: facility postnatal visit trends
+        Route::get('/facilities/{id}/visit-trends', [HealthWorkerController::class, 'visitTrends']);
         // Admin Routes
         Route::middleware('checkrole:admin')->prefix('admin')->group(function () {
             Route::get('/dashboard', fn() => response()->json(['message' => 'Welcome Admin']));
