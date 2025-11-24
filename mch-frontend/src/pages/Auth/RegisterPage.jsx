@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "react-query";
 import Spinner from "../../components/spinners/Spinner";
 import api, { csrf } from "../../services/api";
 import { BsArrowLeft } from "react-icons/bs";

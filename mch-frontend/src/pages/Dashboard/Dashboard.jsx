@@ -9,7 +9,7 @@ import AppLoading from "../../components/spinners/AppPageLoading";
 import AppLoadError from "../../components/spinners/AppLoadError";
 import {
   fetchConsolidatedDashboardData,
-  transformEventsToAppointments,
+  // transformEventsToAppointments,
   mergeAppointmentsWithEvents,
   getAppointmentStats,
 } from "../../services/dashboardService";

@@ -60,7 +60,7 @@ Route::middleware([ // This group will wrap all stateful API routes
     Route::post('/registration-request', [RegistrationRequestController::class, 'store']);
     // Mother login
     Route::post('/mother/login', [\App\Http\Controllers\Api\MotherLoginController::class, 'login']);
-    Route::post('/register', [\App\Http\Controllers\Api\MotherAuthController::class, 'register']);
+    Route::post('/register', [MotherAuthController::class, 'register']);
 
     // Mother password reset routes
     Route::post('/mother/forgot-password', [\App\Http\Controllers\Api\MotherPasswordResetController::class, 'sendResetLink']);
@@ -80,7 +80,7 @@ Route::middleware([ // This group will wrap all stateful API routes
         ]));
         Route::get('/user', fn(Request $request) => $request->user());
         Route::post('/mother/logout', [\App\Http\Controllers\Api\MotherLoginController::class, 'logout']);
-        Route::post('/register', [\App\Http\Controllers\Api\MotherAuthController::class, 'register']);
+        Route::post('/register', [MotherAuthController::class, 'register']);
 
         Route::post('/logout', function (Request $request) {
             /** @var \App\Models\User|null $user */
@@ -205,6 +205,7 @@ Route::middleware([ // This group will wrap all stateful API routes
             Route::delete('/profile', [MotherProfileController::class, 'destroy']);
             Route::get('/dashboard', [MotherDashboardController::class, 'show']);
             Route::get('/{id}/dashboard', [MotherDashboardController::class, 'show']);
+            Route::get('/children', [MotherDashboardController::class, 'children']);
         });
 
         // Postnatal Bookings

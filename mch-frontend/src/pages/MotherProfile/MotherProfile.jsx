@@ -1,12 +1,30 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/api"; // Adjust path if needed
+import api from "../../services/api";
 import AppLoading from "../../components/spinners/AppPageLoading";
-import { Link } from "react-router-dom";
 import AppLoadError from "../../components/spinners/AppLoadError";
+import { Link } from "react-router-dom";
+
+const normalizeChildren = (children) => {
+    if (!Array.isArray(children)) return [];
+
+    return children.map((child) => {
+        if (typeof child === "string") {
+            return { name: child, dob: "" };
+        }
+        return {
+            name: child.name || "",
+            dob: child.dob || "",
+        };
+    });
+};
 
 const MotherProfile = () => {
     const [mother, setMother] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
     const [editing, setEditing] = useState(false);
+    const [saving, setSaving] = useState(false);
+
     const [formData, setFormData] = useState({
         name: "",
         dob: "",
@@ -14,28 +32,32 @@ const MotherProfile = () => {
         address: "",
         children: [],
     });
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
 
+    // -----------------------------
+    // LOAD PROFILE
+    // -----------------------------
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await api.get("/mother/profile"); // Authenticated endpoint
-                setMother(res.data);
-                setFormData({
-                    name: res.data.name,
-                    dob: res.data.dob,
-                    contact: res.data.contact,
-                    address: res.data.address,
-                    children: res.data.children || [],
-                });
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    setError("Session expired. Please login again.");
-                }
+                const res = await api.get("/mother/profile");
 
-                console.error("Failed to fetch profile:", error);
+                const normalizedChildren = normalizeChildren(res.data.children);
+
+                setMother({ ...res.data, children: normalizedChildren });
+
+                setFormData({
+                    name: res.data.name || "",
+                    dob: res.data.dob || "",
+                    contact: res.data.contact || "",
+                    address: res.data.address || "",
+                    children: normalizedChildren,
+                });
+            } catch (err) {
+                if (err.response?.status === 401) {
+                    setError("Session expired. Please login again.");
+                } else {
+                    setError("Failed to load profile.");
+                }
             } finally {
                 setLoading(false);
             }
@@ -44,67 +66,93 @@ const MotherProfile = () => {
         fetchProfile();
     }, []);
 
+    // -----------------------------
+    // INPUT HANDLERS
+    // -----------------------------
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
     const handleChildChange = (index, field, value) => {
         const updatedChildren = [...formData.children];
-        updatedChildren[index][field] = value;
+        updatedChildren[index] = { ...updatedChildren[index], [field]: value };
+
         setFormData((prev) => ({ ...prev, children: updatedChildren }));
     };
 
+    // -----------------------------
+    // SAVE CHANGES
+    // -----------------------------
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
+
         try {
-            await api.put("/mother/profile", formData);
+            const payload = { ...formData };
+            await api.put("/mother/profile", payload);
+
             alert("Profile updated successfully.");
-            setMother(formData);
+
+            setMother(payload);
             setEditing(false);
-        } catch (error) {
-            console.error("Update failed:", error);
+        } catch (err) {
+            console.error("Update failed:", err);
             alert("Something went wrong.");
         } finally {
             setSaving(false);
         }
     };
 
+    // -----------------------------
+    // UI STATES
+    // -----------------------------
     if (loading) return <AppLoading loadingText="Loading profile..." />;
+
     if (error) {
         return (
             <div className="container py-4 text-center">
-                <div className="alert alert-danger" role="alert">
+                <div className="alert alert-danger">
                     {error}
                     <br />
-                    <Link to="/login" className="btn btn-primary mt-3">Login</Link>
+                    <Link className="btn btn-primary mt-3" to="/login">
+                        Login
+                    </Link>
                 </div>
             </div>
         );
     }
-    if (!mother) return <AppLoadError errorText="Profile not found." />;
 
+    if (!mother) {
+        return <AppLoadError errorText="Profile not found." />;
+    }
+
+    // -----------------------------
+    // MAIN VIEW
+    // -----------------------------
     return (
         <div className="container p-4">
             <h2 className="mb-4 text-center">👩🏽 Mother Profile</h2>
 
             <div className="row">
+                {/* IMAGE */}
                 <div className="col-md-4">
-                    {/* <img src={MotherImage} alt="Mother" className="img-fluid rounded" /> */}
                     <div className="bg-secondary text-white p-4 rounded text-center">
                         Image Placeholder
                     </div>
                 </div>
 
+                {/* DETAILS */}
                 <div className="col-md-8">
                     {editing ? (
+                        // -----------------------------
+                        // EDIT MODE
+                        // -----------------------------
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label className="form-label">Full Name</label>
                                 <input
-                                    type="text"
                                     name="name"
+                                    type="text"
                                     className="form-control"
                                     value={formData.name}
                                     onChange={handleChange}
@@ -117,8 +165,8 @@ const MotherProfile = () => {
                                     Date of Birth
                                 </label>
                                 <input
-                                    type="date"
                                     name="dob"
+                                    type="date"
                                     className="form-control"
                                     value={formData.dob}
                                     onChange={handleChange}
@@ -129,8 +177,8 @@ const MotherProfile = () => {
                             <div className="mb-3">
                                 <label className="form-label">Contact</label>
                                 <input
-                                    type="text"
                                     name="contact"
+                                    type="text"
                                     className="form-control"
                                     value={formData.contact}
                                     onChange={handleChange}
@@ -141,8 +189,8 @@ const MotherProfile = () => {
                             <div className="mb-3">
                                 <label className="form-label">Address</label>
                                 <input
-                                    type="text"
                                     name="address"
+                                    type="text"
                                     className="form-control"
                                     value={formData.address}
                                     onChange={handleChange}
@@ -150,26 +198,48 @@ const MotherProfile = () => {
                                 />
                             </div>
 
+                            {/* CHILDREN EDIT SECTION */}
                             <div className="mb-3">
                                 <label className="form-label">Children</label>
-                                {formData.children.map((child, index) => (
-                                    <input
-                                        key={index}
-                                        type="text"
-                                        className="form-control mb-2"
-                                        value={child}
-                                        onChange={(e) =>
-                                            handleChildChange(
-                                                index,
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                ))}
+                                {(formData.children || []).map(
+                                    (child, index) => (
+                                        <div
+                                            key={index}
+                                            className="border p-2 rounded mb-3"
+                                        >
+                                            <label>Name</label>
+                                            <input
+                                                type="text"
+                                                className="form-control mb-2"
+                                                value={child.name}
+                                                onChange={(e) =>
+                                                    handleChildChange(
+                                                        index,
+                                                        "name",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+
+                                            <label>Date of Birth</label>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                value={child.dob}
+                                                onChange={(e) =>
+                                                    handleChildChange(
+                                                        index,
+                                                        "dob",
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                        </div>
+                                    )
+                                )}
                             </div>
 
                             <button
-                                type="submit"
                                 className="btn btn-primary"
                                 disabled={saving}
                             >
@@ -184,8 +254,12 @@ const MotherProfile = () => {
                             </button>
                         </form>
                     ) : (
+                        // -----------------------------
+                        // VIEW MODE
+                        // -----------------------------
                         <>
                             <h4>{mother.name}</h4>
+
                             <p>
                                 <strong>Date of Birth:</strong> {mother.dob}
                             </p>
@@ -195,44 +269,13 @@ const MotherProfile = () => {
                             <p>
                                 <strong>Address:</strong> {mother.address}
                             </p>
-                            {formData.children.map((child, index) => (
-                                <div key={index} className="mb-3">
-                                    <label className="form-label">
-                                        Child {index + 1} Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="form-control mb-2"
-                                        value={child.name}
-                                        onChange={(e) =>
-                                            handleChildChange(
-                                                index,
-                                                "name",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                    <label className="form-label">
-                                        Child {index + 1} Birth Date
-                                    </label>
-                                    <input
-                                        type="date"
-                                        className="form-control"
-                                        value={child.dob}
-                                        onChange={(e) =>
-                                            handleChildChange(
-                                                index,
-                                                "dob",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-                                </div>
-                            ))}
+
+                            <h5 className="mt-3">Children</h5>
                             <ul>
-                                {mother.children.map((child, index) => (
+                                {(mother.children || []).map((child, index) => (
                                     <li key={index}>
-                                        {child.name} — {child.dob}
+                                        <strong>{child.name}</strong> —{" "}
+                                        {child.dob || "N/A"}
                                     </li>
                                 ))}
                             </ul>
