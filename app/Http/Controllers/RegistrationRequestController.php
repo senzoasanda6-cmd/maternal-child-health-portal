@@ -24,29 +24,50 @@ class RegistrationRequestController extends Controller
 
     public function store(Request $request)
     {
+        // Validate based on role
         $validated = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email|unique:registration_requests,email',
+            'email' => 'required|email|unique:registration_requests,email|unique:users,email',
             'role' => 'required|string|in:mother,health_worker',
-            'designation' => 'nullable|string', // NEW
+            'password' => $request->role === 'mother' ? 'required|string|min:8' : 'nullable',
+            'password_confirmation' => $request->role === 'mother' ? 'required|string|same:password' : 'nullable',
+            'designation' => 'nullable|string',
+            'custom_designation' => 'nullable|string|max:100',
             'facility_id' => 'nullable|integer',
             'district' => 'nullable|string',
             'sub_district' => 'nullable|string',
-            'custom_designation' => 'nullable|string|max:100',
-
         ]);
 
+        if ($validated['role'] === 'mother') {
+            // Immediate registration for mothers
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'mother',
+                'facility_id' => $validated['facility_id'] ?? null,
+                'must_reset_password' => false,
+            ]);
 
+            // Optional: send welcome email
+            Mail::to($user->email)->queue(new RegistrationApproved([
+                'name' => $user->name,
+                'role' => $user->role,
+                'location' => $user->facility?->name ?? 'N/A',
+                'message' => 'Your account has been created. You can now track your child’s health journey.',
+            ]));
 
+            return response()->json(['message' => 'Account created successfully'], 201);
+        }
 
-        $registrationData = $validated;
+        // Health workers: create a pending registration request
+        unset($validated['password'], $validated['password_confirmation']);
 
-        unset($registrationData['password_confirmation']);
-        $registrationData['status'] = 'pending';
+        $validated['status'] = 'pending';
 
-        RegistrationRequest::create($registrationData);
+        $registration = RegistrationRequest::create($validated);
 
-        return response()->json(['message' => 'Request submitted'], 201);
+        return response()->json(['message' => 'Registration request submitted for approval'], 201);
     }
 
     public function index()
@@ -68,10 +89,11 @@ class RegistrationRequestController extends Controller
             ?: $registration->designation;
 
         $facilityId = match ($registration->role) {
-            'mother', 'health_worker' => Facility::find($registration->facility_id)?->id,
+            'health_worker' => Facility::find($registration->facility_id)?->id,
             default => null,
         };
 
+        // Generate a random password
         $generatedPassword = Str::random(12);
 
         $user = User::create([
@@ -84,18 +106,21 @@ class RegistrationRequestController extends Controller
             'must_reset_password' => true,
         ]);
 
+        // Update registration request status
         $registration->update([
             'status' => 'approved',
             'approved_at' => now(),
             'approved_by' => Auth::id(),
         ]);
 
+        // Audit log
         AuditLog::create([
             'action' => 'registration_approved',
             'details' => "Approved registration for {$registration->email} (role: {$registration->role}, sub-role: {$subRole})",
             'performed_by' => Auth::id(),
         ]);
 
+        // Send password reset link
         $token = Password::createToken($user);
         $resetLink = url("/password/reset/{$token}?email=" . urlencode($user->email));
 
@@ -105,39 +130,53 @@ class RegistrationRequestController extends Controller
             'location' => $user->facility?->name ?? 'N/A',
             'reset_link' => $resetLink,
             'sub_role' => $user->sub_role,
-            'message' => match ($user->role) {
-                'health_worker' => "Welcome to the health team as a {$user->sub_role}. You can now manage patient care.",
-                'mother' => 'Your account has been approved. You can now track your child’s health journey.',
-                default => 'Your account has been approved.',
-            },
+            'message' => "Welcome to the health team as a {$user->sub_role}. You can now manage patient care.",
         ];
 
         Mail::to($user->email)->queue(new RegistrationApproved($details));
-        Log::info("User {$registration->email} approved by admin ID: " . Auth::id());
 
         return response()->json(['message' => 'User approved and notified']);
     }
 
 
 
-    public function reject($id)
-    {
-        $request = RegistrationRequest::findOrFail($id);
-        $request->update(['status' => 'rejected']);
 
-        Mail::to($request->email)->send(new RegistrationRejected([
-            'name' => $request->name,
-            'role' => $request->role,
+    public function reject(Request $request, $id)
+    {
+        $registration = RegistrationRequest::findOrFail($id);
+
+        // Authorization: ensure only admins or authorized users can reject
+        $this->authorize('update', $registration);
+
+        // Optional rejection reason from admin
+        $validated = $request->validate([
+            'reason' => 'nullable|string|max:500',
+        ]);
+
+        $reason = $validated['reason'] ?? 'No specific reason provided';
+
+        // Update the registration request status
+        $registration->update([
+            'status' => 'rejected',
+            'rejected_at' => now(),
+            'rejected_by' => Auth::id(),
+            'rejection_reason' => $reason,
+        ]);
+
+        // Send rejection email
+        Mail::to($registration->email)->queue(new RegistrationRejected([
+            'name' => $registration->name,
+            'role' => $registration->role,
+            'reason' => $reason,
         ]));
 
+        // Log the action
         AuditLog::create([
             'action' => 'registration_rejected',
-            'details' => "Rejected registration for {$request->email} (role: {$request->role})",
+            'details' => "Rejected registration for {$registration->email} (role: {$registration->role}). Reason: {$reason}",
             'performed_by' => Auth::id(),
         ]);
 
-        Log::info("User {$request->email} rejected by admin ID: " . Auth::id());
-
-        return response()->json(['message' => 'User rejected and notified']);
+        return response()->json(['message' => 'Registration request rejected and user notified']);
     }
 }

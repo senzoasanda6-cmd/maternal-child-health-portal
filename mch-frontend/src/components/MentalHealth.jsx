@@ -67,7 +67,7 @@ export default function MentalHealth() {
     const handleQuizSubmit = () => setQuizSubmitted(true);
     const handleFormSubmit = async () => {
         try {
-            await api.post("/api/contact-message", formData);
+            await api.post("/contact-message", formData);
             alert("Message sent successfully!");
             setFormData({ name: "", message: "" });
         } catch (err) {

@@ -14,7 +14,7 @@ const PostnatalVisitList = ({ childId }) => {
   useEffect(() => {
     const fetchVisits = async () => {
       try {
-        const response = await axios.get(`/api/children/${childId}/postnatal-visits`);
+        const response = await axios.get(`/children/${childId}/postnatal-visits`);
         setVisits(response.data);
       } catch (err) {
         setError("Failed to load visits.");

@@ -11,22 +11,23 @@ class MotherProfile extends Model
 
     protected $fillable = [
         'user_id',
-        'name',
         'dob',
-        'contact',
+        'contact_number',
         'address',
-        'children',
+        'last_menstrual_date',
+        'trimester',
     ];
 
     protected $casts = [
-        'children' => 'array',
         'dob' => 'date',
+        'last_menstrual_date' => 'date',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
     public function children()
     {
         return $this->hasMany(Child::class);

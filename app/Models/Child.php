@@ -48,7 +48,10 @@ class Child extends Model
         return $this->belongsTo(User::class, 'mother_id');
     }
 
-
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 
     // 📊 Age-based vaccine schedule logic
     public function getDueVaccines()
