@@ -80,7 +80,6 @@ Route::middleware([ // This group will wrap all stateful API routes
         ]));
         Route::get('/user', fn(Request $request) => $request->user());
         Route::post('/mother/logout', [\App\Http\Controllers\Api\MotherLoginController::class, 'logout']);
-        Route::post('/register', [MotherAuthController::class, 'register']);
 
         Route::post('/logout', function (Request $request) {
             /** @var \App\Models\User|null $user */
@@ -200,12 +199,10 @@ Route::middleware([ // This group will wrap all stateful API routes
 
         // Mother Routes
         Route::prefix('mother')->group(function () {
-            Route::get('/profile', [MotherProfileController::class, 'show']);
-            Route::put('/profile', [MotherProfileController::class, 'update']);
-            Route::delete('/profile', [MotherProfileController::class, 'destroy']);
+            Route::get('/profile', [MotherController::class, 'show']);
+            Route::put('/profile', [MotherController::class, 'update']);
+            Route::delete('/profile', [MotherController::class, 'destroy']);
             Route::get('/dashboard', [MotherDashboardController::class, 'show']);
-            Route::get('/{id}/dashboard', [MotherDashboardController::class, 'show']);
-            Route::get('/children', [MotherDashboardController::class, 'children']);
         });
 
         // Postnatal Bookings
@@ -249,3 +246,6 @@ Route::get('/db-test', function () {
         return response()->json(['message' => 'Database connection failed', 'error' => $e->getMessage()], 500);
     }
 });
+
+
+

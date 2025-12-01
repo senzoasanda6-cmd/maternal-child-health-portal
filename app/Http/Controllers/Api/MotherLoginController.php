@@ -54,15 +54,17 @@ class MotherLoginController extends Controller
 
     public function logout(Request $request)
     {
-        $token = $request->user()->currentAccessToken();
-
-        if ($token instanceof PersonalAccessToken) {
-            $token->delete();
+        // Check if the user is authenticated via an API token
+        if ($request->user() && $request->user()->currentAccessToken()) {
+            $request->user()->currentAccessToken()->delete();
+        } 
+        // Else, if the user is authenticated via the web guard (session)
+        else if (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+    
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
         }
-
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
         return response()->json(['message' => 'Logged out successfully.']);
     }

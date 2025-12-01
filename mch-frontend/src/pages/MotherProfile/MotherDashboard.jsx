@@ -35,7 +35,7 @@ export default function MotherDashboard() {
         const fetchDashboardData = async () => {
             try {
                 const [childrenRes, eventsRes] = await Promise.all([
-                    api.get("/mother/children"),
+                    api.get("/children"),
                     api.get("/events").catch(() => ({ data: [] })),
                 ]);
 
@@ -83,7 +83,7 @@ export default function MotherDashboard() {
     const upcomingAppointments = useMemo(() => {
         if (!activeChild) return [];
         return getUpcomingAppointments(enhancedAppointments, 30).slice(0, 5);
-    }, [enhancedAppointments]);
+    }, [activeChild, enhancedAppointments]);
 
     if (loading) return <AppLoading loadingText="Loading dashboard..." />;
     if (error) return <AppLoadError errorText={error} />;

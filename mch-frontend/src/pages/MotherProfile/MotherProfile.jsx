@@ -2,35 +2,29 @@ import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import AppLoading from "../../components/spinners/AppPageLoading";
 import AppLoadError from "../../components/spinners/AppLoadError";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const normalizeChildren = (children) => {
-    if (!Array.isArray(children)) return [];
-
-    return children.map((child) => {
-        if (typeof child === "string") {
-            return { name: child, dob: "" };
-        }
-        return {
-            name: child.name || "",
-            dob: child.dob || "",
-        };
-    });
-};
+// Helper to format date for input[type=date]
+const formatDateForInput = (dateString) => {
+    if (!dateString) return "";
+    return dateString.split("T")[0];
+}
 
 const MotherProfile = () => {
+    const navigate = useNavigate();
     const [mother, setMother] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [editing, setEditing] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
 
     const [formData, setFormData] = useState({
         name: "",
         dob: "",
         contact: "",
         address: "",
-        children: [],
+        lastMenstrualDate: "",
     });
 
     // -----------------------------
@@ -40,17 +34,16 @@ const MotherProfile = () => {
         const fetchProfile = async () => {
             try {
                 const res = await api.get("/mother/profile");
-
-                const normalizedChildren = normalizeChildren(res.data.children);
-
-                setMother({ ...res.data, children: normalizedChildren });
+                setMother(res.data);
 
                 setFormData({
                     name: res.data.name || "",
-                    dob: res.data.dob || "",
-                    contact: res.data.contact || "",
+                    dob: formatDateForInput(res.data.dob),
+                    contact: res.data.contact_number || "",
                     address: res.data.address || "",
-                    children: normalizedChildren,
+                    lastMenstrualDate: formatDateForInput(
+                        res.data.last_menstrual_date
+                    ),
                 });
             } catch (err) {
                 if (err.response?.status === 401) {
@@ -73,13 +66,6 @@ const MotherProfile = () => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleChildChange = (index, field, value) => {
-        const updatedChildren = [...formData.children];
-        updatedChildren[index] = { ...updatedChildren[index], [field]: value };
-
-        setFormData((prev) => ({ ...prev, children: updatedChildren }));
-    };
-
     // -----------------------------
     // SAVE CHANGES
     // -----------------------------
@@ -87,17 +73,21 @@ const MotherProfile = () => {
         e.preventDefault();
         setSaving(true);
 
+        setError("");
+        setSuccessMessage("");
+
         try {
             const payload = { ...formData };
-            await api.put("/mother/profile", payload);
+            const response = await api.put("/mother/profile", payload);
 
-            alert("Profile updated successfully.");
+            setSuccessMessage("Profile updated successfully.");
 
-            setMother(payload);
+            setMother(response.data); // Update view with fresh data from server
             setEditing(false);
         } catch (err) {
             console.error("Update failed:", err);
-            alert("Something went wrong.");
+            const message = err.response?.data?.message || "An error occurred while saving.";
+            setError(message);
         } finally {
             setSaving(false);
         }
@@ -114,7 +104,7 @@ const MotherProfile = () => {
                 <div className="alert alert-danger">
                     {error}
                     <br />
-                    <Link className="btn btn-primary mt-3" to="/login">
+                    <Link className="btn btn-primary mt-3" to="/mother/login">
                         Login
                     </Link>
                 </div>
@@ -132,6 +122,11 @@ const MotherProfile = () => {
     return (
         <div className="container p-4">
             <h2 className="mb-4 text-center">👩🏽 Mother Profile</h2>
+
+            {successMessage && (
+                <div className="alert alert-success">{successMessage}</div>
+            )}
+            {editing && error && <div className="alert alert-danger">{error}</div>}
 
             <div className="row">
                 {/* IMAGE */}
@@ -198,45 +193,17 @@ const MotherProfile = () => {
                                 />
                             </div>
 
-                            {/* CHILDREN EDIT SECTION */}
                             <div className="mb-3">
-                                <label className="form-label">Children</label>
-                                {(formData.children || []).map(
-                                    (child, index) => (
-                                        <div
-                                            key={index}
-                                            className="border p-2 rounded mb-3"
-                                        >
-                                            <label>Name</label>
-                                            <input
-                                                type="text"
-                                                className="form-control mb-2"
-                                                value={child.name}
-                                                onChange={(e) =>
-                                                    handleChildChange(
-                                                        index,
-                                                        "name",
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-
-                                            <label>Date of Birth</label>
-                                            <input
-                                                type="date"
-                                                className="form-control"
-                                                value={child.dob}
-                                                onChange={(e) =>
-                                                    handleChildChange(
-                                                        index,
-                                                        "dob",
-                                                        e.target.value
-                                                    )
-                                                }
-                                            />
-                                        </div>
-                                    )
-                                )}
+                                <label className="form-label">
+                                    Last Menstrual Date
+                                </label>
+                                <input
+                                    name="lastMenstrualDate"
+                                    type="date"
+                                    className="form-control"
+                                    value={formData.lastMenstrualDate}
+                                    onChange={handleChange}
+                                />
                             </div>
 
                             <button
@@ -248,7 +215,11 @@ const MotherProfile = () => {
                             <button
                                 type="button"
                                 className="btn btn-secondary ms-2"
-                                onClick={() => setEditing(false)}
+                                onClick={() => {
+                                    setEditing(false);
+                                    setError("");
+                                    setSuccessMessage("");
+                                }}
                             >
                                 Cancel
                             </button>
@@ -264,21 +235,30 @@ const MotherProfile = () => {
                                 <strong>Date of Birth:</strong> {mother.dob}
                             </p>
                             <p>
-                                <strong>Contact:</strong> {mother.contact}
+                                <strong>Contact:</strong> {mother.contact_number || 'N/A'}
                             </p>
                             <p>
-                                <strong>Address:</strong> {mother.address}
+                                <strong>Address:</strong> {mother.address || 'N/A'}
+                            </p>
+                            <p>
+                                <strong>Last Menstrual Date:</strong> {mother.last_menstrual_date ? formatDateForInput(mother.last_menstrual_date) : 'N/A'}
                             </p>
 
                             <h5 className="mt-3">Children</h5>
-                            <ul>
-                                {(mother.children || []).map((child, index) => (
-                                    <li key={index}>
-                                        <strong>{child.name}</strong> —{" "}
-                                        {child.dob || "N/A"}
-                                    </li>
-                                ))}
-                            </ul>
+                            {mother.children && mother.children.length > 0 ? (
+                                <ul>
+                                    {mother.children.map((child) => (
+                                        <li key={child.id}>
+                                            <strong>{child.name}</strong> — Born on {formatDateForInput(child.dob) || "N/A"}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No children added yet.</p>
+                            )}
+                            <button className="btn btn-info mt-2" onClick={() => navigate('/mother/children')}>
+                                Manage Children
+                            </button>
 
                             <button
                                 className="btn btn-warning mt-3"

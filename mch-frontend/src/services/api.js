@@ -60,6 +60,8 @@ api.interceptors.response.use(
             !originalRequest.url.includes("/user") &&
             !originalRequest.url.includes("/refresh") &&
             !originalRequest.url.includes("/login") &&
+            !originalRequest.url.includes("/logout") &&
+            !originalRequest.url.includes("/register") &&
             !originalRequest.url.includes("/sanctum/csrf-cookie")
         ) {
             originalRequest._retry = true;

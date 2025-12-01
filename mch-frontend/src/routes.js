@@ -49,6 +49,7 @@ import PregnancyStages from "./pages/HealthEducation/PregnancyStages.jsx";
 import SafeMedicines from "./pages/HealthEducation/SafeMedicines.jsx";
 // import ChildGrowth from "./pages/HealthEducation/ChildGrowth.jsx";
 import AppointmentsForm from "./components/AppointmentsForm.js";
+import PostnatalVisits from "./pages/ChildProfile/PostnatalVisits.jsx";
 
 // Mother Pages
 import MotherHomePage from "./pages/Home/MotherHome.jsx";
@@ -191,6 +192,7 @@ const AppRoutes = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/calendar" element={<CalendarView />} />{" "}
             {/* Temporarily disabled */}
+            <Route path="/postnatal-visits" element={<PostnatalVisits />} />
             <Route path="/care-timeline" element={<CareTimeline />} />
             <Route path="/timeline-event/:id" element={<TimelineEvent />} />
             <Route path="/postnatal-care" element={<PostNatalCare />} />

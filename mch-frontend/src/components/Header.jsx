@@ -34,7 +34,7 @@ const Header = () => {
           <ul className="navbar-nav ms-auto">
             <li className="nav-item"><Link className="nav-link" to="/pregnancy-stages">Pregnancy Stages</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/safe-medicines">Safe Medicines</Link></li>
-            <li className="nav-item"><Link className="nav-link" to="/health/postnatal-visits">Visit List</Link></li>
+            <li className="nav-item"><Link className="nav-link" to="/postnatal-visits">Visit List</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/health/dashboard">Hospital Dashboard</Link></li>
             <li className="nav-item">
               <button className="btn btn-outline-danger btn-sm ms-3" onClick={handleLogout}>
