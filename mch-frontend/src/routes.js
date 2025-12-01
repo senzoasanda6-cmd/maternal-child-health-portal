@@ -41,6 +41,7 @@ import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import CareTimeline from "./pages/CareTimeline/CareTimeline.jsx";
 import TimelineEvent from "./pages/CareTimeline/TimelineEvent.jsx";
 import PostNatalCare from "./pages/HealthEducation/PostNatalCare.jsx";
+import PostNatalCarePlus from "./pages/HealthEducation/PostNatalCare+";
 import PregnancyStages from "./pages/HealthEducation/PregnancyStages.jsx";
 import SafeMedicines from "./pages/HealthEducation/SafeMedicines.jsx";
 
@@ -168,6 +169,7 @@ const AppRoutes = () => (
             <Route path="/care-timeline" element={<CareTimeline />} />
             <Route path="/timeline-event/:id" element={<TimelineEvent />} />
             <Route path="/postnatal-care" element={<PostNatalCare />} />
+            <Route path="/postnatal-care+" element={<PostNatalCarePlus />} />
             <Route path="/pregnancy-stages" element={<PregnancyStages />} />
             <Route path="/safe-medicines" element={<SafeMedicines />} />
             <Route path="/health-education" element={<HealthEducationHome />} />
