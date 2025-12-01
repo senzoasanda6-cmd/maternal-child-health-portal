@@ -199,7 +199,7 @@ const EmotionExplorer = () => {
                                 marginRight: '10px',
                             }}
                         >
-                            💬 Chat with Buddy
+                            💬 Chat with Inga
                         </button>
                         <button
                             onClick={handleClosePopup}
