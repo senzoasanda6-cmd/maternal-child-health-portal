@@ -30,6 +30,6 @@ class MotherProfile extends Model
 
     public function children()
     {
-        return $this->hasMany(Child::class);
+        return $this->hasManyThrough(Child::class, User::class, 'id', 'mother_id', 'user_id', 'id');
     }
 }

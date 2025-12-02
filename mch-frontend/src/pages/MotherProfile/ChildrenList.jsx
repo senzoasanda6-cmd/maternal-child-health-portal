@@ -1,18 +1,92 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import AppLoading from "../../components/spinners/AppPageLoading";
+
+// Helper to format date for display and input
+const formatDate = (dateString) => {
+    if (!dateString) return "";
+    return new Date(dateString).toISOString().split("T")[0];
+};
+
+const ChildFormRow = ({ formData, onSave, onCancel, onChange, saving }) => (
+    <tr>
+        <td>
+            <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={onChange}
+                className="form-control"
+                placeholder="Child's Name"
+            />
+        </td>
+        <td>
+            <input
+                type="number"
+                name="age"
+                value={formData.age}
+                readOnly
+                className="form-control"
+                placeholder="Age"
+            />
+        </td>
+        <td>
+            <input
+                type="date"
+                name="dob"
+                value={formData.dob}
+                onChange={onChange}
+                className="form-control"
+            />
+        </td>
+        <td>
+            <select
+                name="gender"
+                value={formData.gender}
+                onChange={onChange}
+                className="form-control"
+            >
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </td>
+        <td>
+            {formData.id === 'new' && <span className="badge bg-warning">New</span>}
+        </td>
+        <td>
+            <button
+                className="btn btn-success btn-sm me-2"
+                onClick={onSave}
+                disabled={saving}
+            >
+                {saving ? "Saving..." : "Save"}
+            </button>
+            <button
+                className="btn btn-secondary btn-sm"
+                onClick={onCancel}
+                disabled={saving}
+            >
+                Cancel
+            </button>
+        </td>
+    </tr>
+);
 
 const ChildrenList = () => {
     const [children, setChildren] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [editingId, setEditingId] = useState(null);
+    const [saving, setSaving] = useState(false);
     const [formData, setFormData] = useState({
+        id: null,
         name: "",
         dob: "",
         gender: "",
         age: "",
     });
     const [error, setError] = useState("");
-    const [addingNew, setAddingNew] = useState(false);
 
     const navigate = useNavigate();
 
@@ -21,11 +95,15 @@ const ChildrenList = () => {
     }, []);
 
     const fetchChildren = async () => {
+        setLoading(true);
         try {
             const res = await api.get("/children");
             setChildren(res.data);
         } catch (err) {
             console.error("Failed to fetch children:", err);
+            setError("Failed to load your children's data. Please try again later.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -42,14 +120,15 @@ const ChildrenList = () => {
     };
 
     const handleEdit = (child = {}, isNew = false) => {
-        setEditingId(child.id ?? "new");
+        const id = isNew ? "new" : child.id;
+        setEditingId(id);
         setFormData({
+            id: id,
             name: child.name || "",
-            dob: child.dob || "",
+            dob: formatDate(child.dob) || "",
             gender: child.gender || "",
             age: child.dob ? calculateAge(child.dob) : "",
         });
-        setAddingNew(isNew);
         setError("");
     };
 
@@ -63,36 +142,45 @@ const ChildrenList = () => {
     };
 
     const handleSave = async () => {
+        setSaving(true);
+        setError("");
+
         const trimmedName = formData.name.trim().toLowerCase();
         const duplicate = children.some(
             (c) =>
-                (addingNew || c.id !== editingId) &&
+                c.id !== editingId &&
                 c.name.trim().toLowerCase() === trimmedName
         );
 
         if (duplicate) {
             setError("Child name must be unique across all profiles.");
+            setSaving(false);
             return;
         }
 
         try {
-            let res;
-            if (addingNew) {
-                res = await api.post("/children", formData);
-                setChildren([...children, res.data]);
+            const isNew = editingId === "new";
+            const payload = { name: formData.name, dob: formData.dob, gender: formData.gender };
+
+            let savedChild;
+            if (isNew) {
+                const res = await api.post("/children", payload);
+                savedChild = res.data;
+                setChildren([...children, savedChild]);
             } else {
-                res = await api.patch(`/children/${editingId}`, formData);
+                const res = await api.patch(`/children/${editingId}`, payload);
+                savedChild = res.data;
                 setChildren(
-                    children.map((c) => (c.id === editingId ? res.data : c))
+                    children.map((c) => (c.id === editingId ? savedChild : c))
                 );
             }
 
             setEditingId(null);
-            setAddingNew(false);
-            setFormData({ name: "", dob: "", gender: "", age: "" });
         } catch (err) {
             console.error("Save failed:", err);
-            setError("Something went wrong while saving.");
+            setError(err.response?.data?.message || "Something went wrong while saving.");
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -109,7 +197,7 @@ const ChildrenList = () => {
     };
 
     const renderRiskBadge = (child) => {
-        if (editingId === child.id || editingId === "new") return null;
+        if (editingId === child.id) return null;
         if (child.high_risk) {
             return (
                 <span
@@ -123,6 +211,13 @@ const ChildrenList = () => {
         return <span className="badge bg-success ms-2">Normal</span>;
     };
 
+    const handleCancel = () => {
+        setEditingId(null);
+        setError("");
+    };
+
+    if (loading) return <AppLoading loadingText="Loading children..." />;
+
     return (
         <div className="container p-4">
             <h2 className="mb-4">👨🏽‍👩🏻‍👧🏽‍👦🏽 My Children</h2>
@@ -132,6 +227,7 @@ const ChildrenList = () => {
                 <button
                     className="btn btn-success"
                     onClick={() => handleEdit({}, true)}
+                    disabled={editingId !== null}
                 >
                     + New Child
                 </button>
@@ -149,194 +245,62 @@ const ChildrenList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {Array.isArray(children) &&
+                    {editingId === "new" && (
+                        <ChildFormRow
+                            formData={formData}
+                            onSave={handleSave}
+                            onCancel={handleCancel}
+                            onChange={handleChange}
+                            saving={saving}
+                        />
+                    )}
+                    {children.length > 0 &&
                         children.map((child) => (
-                            <tr key={child.id}>
-                                <td>
-                                    {editingId === child.id ? (
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            className="form-control"
-                                        />
-                                    ) : (
+                            editingId === child.id ? (
+                                <ChildFormRow
+                                    key={child.id}
+                                    formData={formData}
+                                    onSave={handleSave}
+                                    onCancel={handleCancel}
+                                    onChange={handleChange}
+                                    saving={saving}
+                                />
+                            ) : (
+                                <tr key={child.id}>
+                                    <td>
                                         <span
                                             className="text-primary"
-                                            style={{
-                                                cursor: "pointer",
-                                                textDecoration: "underline",
-                                            }}
-                                            onClick={() =>
-                                                navigate(
-                                                    `/children/${child.id}`
-                                                )
-                                            }
+                                            style={{ cursor: "pointer", textDecoration: "underline" }}
+                                            onClick={() => navigate(`/children/${child.id}`)}
                                         >
                                             {child.name}
                                         </span>
-                                    )}
-                                </td>
-                                <td>
-                                    {editingId === child.id ? (
-                                        <input
-                                            type="number"
-                                            name="age"
-                                            value={formData.age}
-                                            readOnly
-                                            className="form-control"
-                                        />
-                                    ) : (
-                                        calculateAge(child.dob)
-                                    )}
-                                </td>
-                                <td>
-                                    {editingId === child.id ? (
-                                        <input
-                                            type="date"
-                                            name="dob"
-                                            value={formData.dob}
-                                            onChange={handleChange}
-                                            className="form-control"
-                                        />
-                                    ) : (
-                                        child.dob
-                                    )}
-                                </td>
-                                <td>
-                                    {editingId === child.id ? (
-                                        <select
-                                            name="gender"
-                                            value={formData.gender}
-                                            onChange={handleChange}
-                                            className="form-control"
+                                    </td>
+                                    <td>{calculateAge(child.dob)}</td>
+                                    <td>{formatDate(child.dob)}</td>
+                                    <td>{child.gender}</td>
+                                    <td>{renderRiskBadge(child)}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-secondary btn-sm me-2"
+                                            onClick={() => handleEdit(child)}
+                                            disabled={editingId !== null}
                                         >
-                                            <option value="">Select</option>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">
-                                                Female
-                                            </option>
-                                        </select>
-                                    ) : (
-                                        child.gender
-                                    )}
-                                </td>
-                                <td>{renderRiskBadge(child)}</td>
-                                <td>
-                                    {editingId === child.id ? (
-                                        <>
-                                            <button
-                                                className="btn btn-success btn-sm me-2"
-                                                onClick={handleSave}
-                                            >
-                                                Save
-                                            </button>
-                                            <button
-                                                className="btn btn-secondary btn-sm"
-                                                onClick={() => {
-                                                    setEditingId(null);
-                                                    setAddingNew(false);
-                                                    setFormData({
-                                                        name: "",
-                                                        dob: "",
-                                                        gender: "",
-                                                        age: "",
-                                                    });
-                                                }}
-                                            >
-                                                Cancel
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button
-                                                className="btn btn-secondary btn-sm me-2"
-                                                onClick={() =>
-                                                    handleEdit(child)
-                                                }
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() =>
-                                                    handleDelete(child.id)
-                                                }
-                                            >
-                                                Delete
-                                            </button>
-                                        </>
-                                    )}
-                                </td>
-                            </tr>
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() => handleDelete(child.id)}
+                                            disabled={editingId !== null}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            )
                         ))}
 
-                    {addingNew && editingId === "new" && (
-                        <tr>
-                            <td>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    className="form-control"
-                                    placeholder="Child's Name"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="number"
-                                    name="age"
-                                    value={formData.age}
-                                    readOnly
-                                    className="form-control"
-                                    placeholder="Age"
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="date"
-                                    name="dob"
-                                    value={formData.dob}
-                                    onChange={handleChange}
-                                    className="form-control"
-                                />
-                            </td>
-                            <td>
-                                <select
-                                    name="gender"
-                                    value={formData.gender}
-                                    onChange={handleChange}
-                                    className="form-control"
-                                >
-                                    <option value="">Select</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </td>
-                            <td>
-                                <span className="badge bg-warning">New</span>
-                            </td>
-                            <td>
-                                <button
-                                    className="btn btn-success btn-sm me-2"
-                                    onClick={handleSave}
-                                >
-                                    Save
-                                </button>
-                                <button
-                                    className="btn btn-secondary btn-sm"
-                                    onClick={() => setAddingNew(false)}
-                                >
-                                    Cancel
-                                </button>
-                            </td>
-                        </tr>
-                    )}
-
-                    {(!Array.isArray(children) || children.length === 0) &&
-                        !addingNew && (
+                    {children.length === 0 && editingId !== "new" && (
                             <tr>
                                 <td colSpan="6" className="text-center">
                                     No children found. Click "+ New Child" to

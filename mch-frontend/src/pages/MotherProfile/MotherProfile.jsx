@@ -4,106 +4,108 @@ import AppLoading from "../../components/spinners/AppPageLoading";
 import AppLoadError from "../../components/spinners/AppLoadError";
 import { Link, useNavigate } from "react-router-dom";
 
-// Helper to format date for input[type=date]
-const formatDateForInput = (dateString) => {
-    if (!dateString) return "";
-    return dateString.split("T")[0];
-}
+const formatDate = (dateString) => (dateString ? dateString.split("T")[0] : "");
+const isDateField = (key) =>
+    key.toLowerCase().includes("date") || key.toLowerCase().includes("dob");
+
+const FIELD_CONFIG = {
+    district_id: { label: "District", type: "select" },
+    contact_number: { label: "Primary Contact", type: "text" },
+    name: { label: "Full Name", type: "text" },
+    email: { label: "Email Address", type: "email" },
+    phone: { label: "Phone Number", type: "text" },
+    dob: { label: "Date of Birth", type: "date" },
+    address: { label: "Residential Address", type: "text" },
+    last_menstrual_date: { label: "Last Menstrual Date", type: "date" },
+    trimester: { label: "Current Trimester", type: "select", readOnly: true },
+};
 
 const MotherProfile = () => {
     const navigate = useNavigate();
     const [mother, setMother] = useState(null);
+    const [formData, setFormData] = useState({});
+    const [children, setChildren] = useState([]);
+    const [districts, setDistricts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-    const [editing, setEditing] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [error, setError] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
-    const [formData, setFormData] = useState({
-        name: "",
-        dob: "",
-        contact: "",
-        address: "",
-        lastMenstrualDate: "",
-    });
-
-    // -----------------------------
-    // LOAD PROFILE
-    // -----------------------------
     useEffect(() => {
-        const fetchProfile = async () => {
+        const loadProfileAndDistricts = async () => {
             try {
-                const res = await api.get("/mother/profile");
-                setMother(res.data);
+                const [profileRes, facilitiesRes] = await Promise.all([
+                    api.get("/mother/profile"),
+                    api.get("/facilities"),
+                ]);
 
-                setFormData({
-                    name: res.data.name || "",
-                    dob: formatDateForInput(res.data.dob),
-                    contact: res.data.contact_number || "",
-                    address: res.data.address || "",
-                    lastMenstrualDate: formatDateForInput(
-                        res.data.last_menstrual_date
-                    ),
-                });
+                const profile = profileRes.data;
+                setMother(profile);
+                setChildren(profile.children || []);
+
+                // Build formData
+                const initialFormData = Object.keys(FIELD_CONFIG).reduce(
+                    (acc, key) => {
+                        acc[key] = profile[key] || "";
+                        return acc;
+                    },
+                    {}
+                );
+                setFormData(initialFormData);
+
+                // Extract unique districts
+                const facilities = facilitiesRes.data || [];
+                const uniqueDistricts = [
+                    ...new Map(
+                        facilities
+                            .filter((f) => f.district)
+                            .map((f) => [f.district.id, f.district])
+                    ).values(),
+                ];
+                setDistricts(uniqueDistricts);
             } catch (err) {
-                if (err.response?.status === 401) {
-                    setError("Session expired. Please login again.");
-                } else if (err.response?.data?.message) {
-                    setError(`Failed to load profile: ${err.response.data.message}`);
-                } else {
-                    setError("Failed to load profile. The server encountered an internal error.");
-                }
+                setError(
+                    err.response?.data?.message ||
+                        "Failed to load profile/facilities"
+                );
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchProfile();
+        loadProfileAndDistricts();
     }, []);
 
-    // -----------------------------
-    // INPUT HANDLERS
-    // -----------------------------
     const handleChange = (e) => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    // -----------------------------
-    // SAVE CHANGES
-    // -----------------------------
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
-
         setError("");
         setSuccessMessage("");
 
         try {
-            const payload = {
-                ...formData,
-                lastMenstrualDate: formData.lastMenstrualDate || null,
-            };
-            const response = await api.put("/mother/profile", payload);
+            const payload = { ...formData };
+            delete payload.trimester; // backend calculates trimester
 
+            const res = await api.put("/mother/profile", payload);
+            setMother(res.data);
+            setChildren(res.data.children || []);
             setSuccessMessage("Profile updated successfully.");
-
-            setMother(response.data); // Update view with fresh data from server
             setEditing(false);
         } catch (err) {
-            console.error("Update failed:", err);
-            const message = err.response?.data?.message || "An error occurred while saving.";
-            setError(message);
+            setError(err.response?.data?.message || "Failed to save changes.");
         } finally {
             setSaving(false);
         }
     };
 
-    // -----------------------------
-    // UI STATES
-    // -----------------------------
     if (loading) return <AppLoading loadingText="Loading profile..." />;
 
-    if (error) {
+    if (error && !mother) {
         return (
             <div className="container py-4 text-center">
                 <div className="alert alert-danger">
@@ -117,99 +119,78 @@ const MotherProfile = () => {
         );
     }
 
-    if (!mother) {
-        return <AppLoadError errorText="Profile not found." />;
-    }
+    if (!mother) return <AppLoadError errorText="Profile not found." />;
 
-    // -----------------------------
-    // MAIN VIEW
-    // -----------------------------
     return (
         <div className="container p-4">
             <h2 className="mb-4 text-center">👩🏽 Mother Profile</h2>
-
             {successMessage && (
                 <div className="alert alert-success">{successMessage}</div>
             )}
-            {editing && error && <div className="alert alert-danger">{error}</div>}
 
-            <div className="row">
-                {/* IMAGE */}
-                <div className="col-md-4">
-                    <div className="bg-secondary text-white p-4 rounded text-center">
-                        Image Placeholder
-                    </div>
-                </div>
-
-                {/* DETAILS */}
-                <div className="col-md-8">
+            <div className="card">
+                <div className="card-body">
                     {editing ? (
-                        // -----------------------------
-                        // EDIT MODE
-                        // -----------------------------
                         <form onSubmit={handleSubmit}>
-                            <div className="mb-3">
-                                <label className="form-label">Full Name</label>
-                                <input
-                                    name="name"
-                                    type="text"
-                                    className="form-control"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
+                            {Object.entries(FIELD_CONFIG).map(
+                                ([key, config]) => (
+                                    <div className="mb-3" key={key}>
+                                        <label className="form-label">
+                                            {config.label}
+                                        </label>
 
-                            <div className="mb-3">
-                                <label className="form-label">
-                                    Date of Birth
-                                </label>
-                                <input
-                                    name="dob"
-                                    type="date"
-                                    className="form-control"
-                                    value={formData.dob}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="mb-3">
-                                <label className="form-label">Contact</label>
-                                <input
-                                    name="contact"
-                                    type="text"
-                                    className="form-control"
-                                    value={formData.contact}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="mb-3">
-                                <label className="form-label">Address</label>
-                                <input
-                                    name="address"
-                                    type="text"
-                                    className="form-control"
-                                    value={formData.address}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="mb-3">
-                                <label className="form-label">
-                                    Last Menstrual Date
-                                </label>
-                                <input
-                                    name="lastMenstrualDate"
-                                    type="date"
-                                    className="form-control"
-                                    value={formData.lastMenstrualDate}
-                                    onChange={handleChange}
-                                />
-                            </div>
+                                        {key === "district_id" ? (
+                                            <select
+                                                name="district_id"
+                                                className="form-select"
+                                                value={
+                                                    formData.district_id || ""
+                                                }
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="">
+                                                    Select District
+                                                </option>
+                                                {districts.map((d) => (
+                                                    <option
+                                                        key={d.id}
+                                                        value={d.id}
+                                                    >
+                                                        {d.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        ) : config.type === "select" ? (
+                                            <select
+                                                name={key}
+                                                className="form-select"
+                                                value={formData[key]}
+                                                onChange={handleChange}
+                                                disabled={config.readOnly}
+                                            >
+                                                <option value="">
+                                                    Select Trimester
+                                                </option>
+                                                <option value="1">First</option>
+                                                <option value="2">
+                                                    Second
+                                                </option>
+                                                <option value="3">Third</option>
+                                            </select>
+                                        ) : (
+                                            <input
+                                                type={config.type}
+                                                name={key}
+                                                className="form-control"
+                                                value={formData[key]}
+                                                onChange={handleChange}
+                                                readOnly={config.readOnly}
+                                            />
+                                        )}
+                                    </div>
+                                )
+                            )}
 
                             <button
                                 className="btn btn-primary"
@@ -217,6 +198,7 @@ const MotherProfile = () => {
                             >
                                 {saving ? "Saving..." : "Save Changes"}
                             </button>
+
                             <button
                                 type="button"
                                 className="btn btn-secondary ms-2"
@@ -230,38 +212,44 @@ const MotherProfile = () => {
                             </button>
                         </form>
                     ) : (
-                        // -----------------------------
-                        // VIEW MODE
-                        // -----------------------------
                         <>
                             <h4>{mother.name}</h4>
 
-                            <p>
-                                <strong>Date of Birth:</strong> {formatDateForInput(mother.dob) || 'N/A'}
-                            </p>
-                            <p>
-                                <strong>Contact:</strong> {mother.contact_number || 'N/A'}
-                            </p>
-                            <p>
-                                <strong>Address:</strong> {mother.address || "N/A"}
-                            </p>
-                            <p>
-                                <strong>Last Menstrual Date:</strong> {formatDateForInput(mother.last_menstrual_date) || 'N/A'}
-                            </p>
+                            {Object.entries(FIELD_CONFIG).map(
+                                ([key, config]) => {
+                                    let value = mother[key];
+                                    if (key === "district_id") {
+                                        value = mother.district?.name || "N/A";
+                                    } else if (isDateField(key)) {
+                                        value = formatDate(value);
+                                    }
+                                    return (
+                                        <p key={key}>
+                                            <strong>{config.label}: </strong>
+                                            {value || "N/A"}
+                                        </p>
+                                    );
+                                }
+                            )}
 
                             <h5 className="mt-3">Children</h5>
-                            {mother.children && mother.children.length > 0 ? (
+                            {children.length > 0 ? (
                                 <ul>
-                                    {mother.children.map((child) => (
-                                        <li key={child.id}>
-                                            <strong>{child.name}</strong> — Born on {formatDateForInput(child.dob) || "N/A"}
+                                    {children.map((c) => (
+                                        <li key={c.id}>
+                                            <strong>{c.name}</strong> — Born on{" "}
+                                            {formatDate(c.dob)}
                                         </li>
                                     ))}
                                 </ul>
                             ) : (
                                 <p>No children added yet.</p>
                             )}
-                            <button className="btn btn-info mt-2" onClick={() => navigate('/mother/children')}>
+
+                            <button
+                                className="btn btn-info mt-2"
+                                onClick={() => navigate("/mother/children")}
+                            >
                                 Manage Children
                             </button>
 
