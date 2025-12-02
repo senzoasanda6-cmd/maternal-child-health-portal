@@ -3,7 +3,6 @@ import api from "../../services/api";
 
 const Settings = () => {
     const [profile, setProfile] = useState(null);
-    const [settings, setSettings] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState("profile");
     const [formData, setFormData] = useState({
@@ -31,7 +30,6 @@ const Settings = () => {
                 ]);
 
                 setProfile(profileRes.data);
-                setSettings(settingsRes.data);
                 setFormData({
                     name: profileRes.data.name,
                     email: profileRes.data.email,

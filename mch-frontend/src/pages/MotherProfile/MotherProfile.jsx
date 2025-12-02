@@ -48,8 +48,10 @@ const MotherProfile = () => {
             } catch (err) {
                 if (err.response?.status === 401) {
                     setError("Session expired. Please login again.");
+                } else if (err.response?.data?.message) {
+                    setError(`Failed to load profile: ${err.response.data.message}`);
                 } else {
-                    setError("Failed to load profile.");
+                    setError("Failed to load profile. The server encountered an internal error.");
                 }
             } finally {
                 setLoading(false);
@@ -77,7 +79,10 @@ const MotherProfile = () => {
         setSuccessMessage("");
 
         try {
-            const payload = { ...formData };
+            const payload = {
+                ...formData,
+                lastMenstrualDate: formData.lastMenstrualDate || null,
+            };
             const response = await api.put("/mother/profile", payload);
 
             setSuccessMessage("Profile updated successfully.");
@@ -232,16 +237,16 @@ const MotherProfile = () => {
                             <h4>{mother.name}</h4>
 
                             <p>
-                                <strong>Date of Birth:</strong> {mother.dob}
+                                <strong>Date of Birth:</strong> {formatDateForInput(mother.dob) || 'N/A'}
                             </p>
                             <p>
                                 <strong>Contact:</strong> {mother.contact_number || 'N/A'}
                             </p>
                             <p>
-                                <strong>Address:</strong> {mother.address || 'N/A'}
+                                <strong>Address:</strong> {mother.address || "N/A"}
                             </p>
                             <p>
-                                <strong>Last Menstrual Date:</strong> {mother.last_menstrual_date ? formatDateForInput(mother.last_menstrual_date) : 'N/A'}
+                                <strong>Last Menstrual Date:</strong> {formatDateForInput(mother.last_menstrual_date) || 'N/A'}
                             </p>
 
                             <h5 className="mt-3">Children</h5>
