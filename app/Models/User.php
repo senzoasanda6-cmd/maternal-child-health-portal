@@ -11,10 +11,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * App\Models\User
  *
+ * @property int $id
  * @property int|null $facility_id
+ * @property int|null $district_id
+ * @property string $name
+ * @property string $email
+ * @property string $password
  * @property string $role
+ * @property string|null $phone
  * @property string|null $sub_role
  * @property string|null $designation
+ * @property bool $is_active
+ * @property \Carbon\Carbon|null $email_verified_at
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
  */
 class User extends Authenticatable
 {
@@ -24,6 +35,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
         'role',
         'sub_role',
         'designation',
@@ -77,6 +89,11 @@ class User extends Authenticatable
         return $this->role === 'district_admin';
     }
 
+    public function isHisManager(): bool
+    {
+        return $this->role === 'health_worker' && $this->sub_role === 'his_manager';
+    }
+
     // Relationships
     public function facility()
     {
@@ -85,7 +102,7 @@ class User extends Authenticatable
 
     public function children()
     {
-        return $this->hasMany(Child::class);
+        return $this->hasMany(Child::class, 'mother_id');
     }
 
     public function motherProfile()

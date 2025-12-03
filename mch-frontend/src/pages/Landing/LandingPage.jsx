@@ -458,7 +458,7 @@ const LandingPage = () => {
                     </p>
                     <div className="d-flex flex-wrap justify-content-center gap-3 mt-3">
                         <Link
-                            to="/health/education"
+                            to="/health-education"
                             className="button button-accent"
                         >
                             Explore Health Education

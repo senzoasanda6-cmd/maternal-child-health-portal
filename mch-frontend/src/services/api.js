@@ -53,19 +53,35 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        // Only attempt refresh for 401 errors on certain endpoints, and only once per request
         if (
             error.response?.status === 401 &&
             !originalRequest._retry &&
+            !originalRequest.url.includes("/user") &&
             !originalRequest.url.includes("/refresh") &&
-            !originalRequest.url.includes("/login")
+            !originalRequest.url.includes("/login") &&
+            !originalRequest.url.includes("/logout") &&
+            !originalRequest.url.includes("/register") &&
+            !originalRequest.url.includes("/sanctum/csrf-cookie")
         ) {
             originalRequest._retry = true;
             try {
+                // Try to refresh the CSRF cookie
                 await csrf.get("/sanctum/csrf-cookie");
-                await api.post("/refresh");
-                return api(originalRequest);
+                // Attempt to fetch current user without triggering another 401 retry
+                const userRes = await api.get("/user");
+                if (userRes?.status === 200 && userRes.data) {
+                    // Session is valid, retry the original request
+                    return api(originalRequest);
+                }
             } catch (refreshError) {
-                console.error("Session refresh failed:", refreshError);
+                // Session refresh failed. Emit global event so UI can show login modal.
+                try {
+                    window.dispatchEvent(new CustomEvent("auth:required", { detail: { error: refreshError } }));
+                } catch (e) {
+                    // ignore in non-browser environments
+                }
+                console.warn("Session refresh failed:", refreshError.response?.status || refreshError.message);
             }
         }
 

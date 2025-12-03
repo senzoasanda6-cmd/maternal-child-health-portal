@@ -11,11 +11,12 @@ use App\Models\Facility;
 use App\Http\Controllers\{
     PostnatalVisitController,
     VaccinationController,
-    EventController,
+    Api\EventController,
     DashboardController,
     Api\MotherController,
     Api\ChildController,
     Api\MotherDashboardController,
+    Api\AppointmentController,
     PostnatalBookingController,
     CalendarEventController,
     AdminBookingController,
@@ -30,10 +31,17 @@ use App\Http\Controllers\{
     AdminController,
     AdminSettingsController,
     AuditLogController,
-    Dashboard\UnifiedVisitController,
+    Api\DistrictFacilityController,
+    Api\DistrictDashboardController,
+    Api\DistrictUsersController,
+    Api\DistrictReportsController,
+    Api\DistrictApprovalsController,
+    Api\DistrictSettingsController,
+    Api\MotherAuthController,
 };
 use Illuminate\Session\Middleware\StartSession;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+
 
 // Public Routes
 Route::middleware([ // This group will wrap all stateful API routes
@@ -50,22 +58,28 @@ Route::middleware([ // This group will wrap all stateful API routes
 
     Route::get('/facilities', [FacilityController::class, 'index']);
     Route::post('/registration-request', [RegistrationRequestController::class, 'store']);
+    // Mother login
+    Route::post('/mother/login', [\App\Http\Controllers\Api\MotherLoginController::class, 'login']);
+    Route::post('/register', [MotherAuthController::class, 'register']);
+
+    // Mother password reset routes
+    Route::post('/mother/forgot-password', [\App\Http\Controllers\Api\MotherPasswordResetController::class, 'sendResetLink']);
+    Route::post('/mother/reset-password', [\App\Http\Controllers\Api\MotherPasswordResetController::class, 'resetPassword']);
+    Route::post('/mother/password/email', [\App\Http\Controllers\Api\MotherPasswordResetController::class, 'sendResetLinkEmail']);
+    Route::post('/mother/password/reset', [\App\Http\Controllers\Api\MotherPasswordResetController::class, 'reset']);
 
     // Authenticated Routes
     Route::middleware([
         'auth:sanctum',
         \App\Http\Middleware\CheckLoginDuration::class,
     ])->group(function () {
-        Route::get('/dashboard/unified-visit', [UnifiedVisitController::class, 'unifiedVisit']);
-
         // User session and logout
         Route::post('/refresh', fn() => response()->json([
             'user' => Auth::user(),
             'message' => 'Session refreshed successfully',
         ]));
         Route::get('/user', fn(Request $request) => $request->user());
-
-
+        Route::post('/mother/logout', [\App\Http\Controllers\Api\MotherLoginController::class, 'logout']);
 
         Route::post('/logout', function (Request $request) {
             /** @var \App\Models\User|null $user */
@@ -85,8 +99,13 @@ Route::middleware([ // This group will wrap all stateful API routes
 
             return response()->json(['message' => 'Logged out successfully']);
         });
+        Route::get('/health-workers', [HealthWorkerController::class, 'index']);
 
+        // List patients for the logged-in health worker
+        Route::get('/health-workers/patients', [HealthWorkerController::class, 'patients']);
 
+        // Optional: facility postnatal visit trends
+        Route::get('/facilities/{id}/visit-trends', [HealthWorkerController::class, 'visitTrends']);
         // Admin Routes
         Route::middleware('checkrole:admin')->prefix('admin')->group(function () {
             Route::get('/dashboard', fn() => response()->json(['message' => 'Welcome Admin']));
@@ -115,10 +134,38 @@ Route::middleware([ // This group will wrap all stateful API routes
 
         // District Admin Routes
         Route::middleware('checkrole:district_admin')->prefix('district')->group(function () {
-            Route::get('/facilities', [FacilityController::class, 'districtFacilities']);
-            Route::get('/facilities/export', [FacilityController::class, 'exportDistrictFacilities']);
-            Route::get('/dashboard', fn() => response()->json(['message' => 'Welcome District Admin']));
-            Route::get('/home', fn() => response()->json(['message' => 'District Admin Home']));
+            // Facilities
+            Route::get('/facilities', [DistrictFacilityController::class, 'index']);
+            Route::get('/facilities/export', [DistrictFacilityController::class, 'export']);
+
+            // Dashboard
+            Route::get('/dashboard', [DistrictDashboardController::class, 'index']);
+
+            // Users/Health Workers
+            Route::get('/users', [DistrictUsersController::class, 'index']);
+            Route::get('/users/{id}', [DistrictUsersController::class, 'show']);
+            Route::put('/users/{id}', [DistrictUsersController::class, 'update']);
+            Route::delete('/users/{id}', [DistrictUsersController::class, 'destroy']);
+
+            // Reports
+            Route::get('/reports/appointments', [DistrictReportsController::class, 'appointmentStats']);
+            Route::get('/reports/trends', [DistrictReportsController::class, 'visitTrends']);
+            Route::get('/reports/vaccination-progress', [DistrictReportsController::class, 'vaccinationProgress']);
+            Route::get('/reports/high-risk-cases', [DistrictReportsController::class, 'highRiskCases']);
+
+            // Approvals
+            Route::get('/approvals/registrations', [DistrictApprovalsController::class, 'pendingRegistrations']);
+            Route::post('/approvals/registrations/{id}/approve', [DistrictApprovalsController::class, 'approveRegistration']);
+            Route::post('/approvals/registrations/{id}/reject', [DistrictApprovalsController::class, 'rejectRegistration']);
+            Route::get('/approvals/reschedules', [DistrictApprovalsController::class, 'pendingReschedules']);
+            Route::post('/approvals/reschedules/{appointmentId}/approve', [DistrictApprovalsController::class, 'approveReschedule']);
+            Route::post('/approvals/reschedules/{appointmentId}/reject', [DistrictApprovalsController::class, 'rejectReschedule']);
+
+            // Settings
+            Route::get('/settings', [DistrictSettingsController::class, 'index']);
+            Route::put('/settings', [DistrictSettingsController::class, 'update']);
+            Route::get('/profile', [DistrictSettingsController::class, 'profile']);
+            Route::put('/profile', [DistrictSettingsController::class, 'updateProfile']);
         });
 
         // Health Worker Routes
@@ -152,24 +199,41 @@ Route::middleware([ // This group will wrap all stateful API routes
 
         // Mother Routes
         Route::prefix('mother')->group(function () {
-            Route::get('/profile', [MotherProfileController::class, 'show']);
-            Route::put('/profile', [MotherProfileController::class, 'update']);
-            Route::delete('/profile', [MotherProfileController::class, 'destroy']);
+            Route::get('/profile', [MotherController::class, 'show']);
+            Route::put('/profile', [MotherController::class, 'update']);
+            Route::delete('/profile', [MotherController::class, 'destroy']);
             Route::get('/dashboard', [MotherDashboardController::class, 'show']);
-            Route::get('/{id}/dashboard', [MotherDashboardController::class, 'show']);
         });
 
         // Postnatal Bookings
         Route::post('/postnatal-bookings', [PostnatalBookingController::class, 'store']);
 
-        // Events & Contact
-        Route::get('/events', [EventController::class, 'index']);
-        Route::post('/contact-message', [ContactController::class, 'send']);
-
         // Dashboard Widgets
         Route::get('/dashboard/last-visit', [DashboardController::class, 'lastVisit']);
         Route::get('/dashboard/pregnancy-stage', [DashboardController::class, 'pregnancyStage']);
         Route::get('/dashboard/appointments', [DashboardController::class, 'appointments']);
+
+        // Event Routes
+        Route::get('/events', [EventController::class, 'index']);
+        Route::post('/events', [EventController::class, 'store']);
+        Route::get('/events/{event}', [EventController::class, 'show']);
+        Route::put('/events/{event}', [EventController::class, 'update']);
+        Route::delete('/events/{event}', [EventController::class, 'destroy']);
+
+        // Contact
+        Route::post('/contact-message', [ContactController::class, 'send']);
+
+        // Appointment Routes
+        Route::get('/appointments', [AppointmentController::class, 'index']);
+        Route::post('/appointments', [AppointmentController::class, 'store']);
+        Route::get('/appointments/{appointment}', [AppointmentController::class, 'show']);
+        Route::put('/appointments/{appointment}', [AppointmentController::class, 'update']);
+        Route::delete('/appointments/{appointment}', [AppointmentController::class, 'destroy']);
+        Route::post('/appointments/{appointment}/mark-completed', [AppointmentController::class, 'markCompleted']);
+        Route::post('/appointments/{appointment}/flag-high-risk', [AppointmentController::class, 'flagHighRisk']);
+        Route::post('/appointments/{appointment}/request-reschedule', [AppointmentController::class, 'requestReschedule']);
+        Route::post('/appointments/{appointment}/reschedule', [AppointmentController::class, 'reschedule']);
+        Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel']);
     });
 });
 
@@ -182,3 +246,6 @@ Route::get('/db-test', function () {
         return response()->json(['message' => 'Database connection failed', 'error' => $e->getMessage()], 500);
     }
 });
+
+
+

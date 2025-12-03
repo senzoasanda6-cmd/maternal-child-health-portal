@@ -11,63 +11,101 @@ class RoleUserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Define primary roles with distinct portals
-        $primaryRoles = [
-            'mother',
-            'health_worker',
-            'admin',
-            'district_admin',
-        ];
-
-        // Define sub-roles that map to health_worker portal
-        $subRoles = [
+        // Hospital-level health worker sub-roles
+        $hospitalRoles = [
             'midwife',
             'facility_worker',
             'facility_nurse',
             'facility_doctor',
-            'hospital_admin',
-            'facility_admin',
             'facility_manager',
         ];
 
-        // Get a random facility with a valid district
-        $facility = Facility::whereNotNull('district_id')->inRandomOrder()->first();
+        // PHC-level health worker sub-roles
+        $phcRoles = [
+            'facility_worker',
+            'facility_nurse',
+            'facility_doctor',
+        ];
 
-        if (!$facility) {
-            $this->command->warn('No facilities with district_id found. Skipping role user seeding.');
-            return;
+        // Facility Level-of-Care Mapping
+        $hospitalLevels = [
+            'Dental Hospital',
+            'District Hospital',
+            'National Central Hospital',
+            'Tertiary Hospital',
+            'Specialized Hospital',
+            'Regional Hospital',
+        ];
+
+        $phcLevel = 'PHC Clinic';
+
+        $facilities = Facility::all();
+
+        foreach ($facilities as $facility) {
+
+            // Skip management facilities entirely
+            if ($facility->type === 'management') {
+                continue;
+            }
+
+            // Decide roles based on facility level of care
+            if (in_array($facility->level_of_care, $hospitalLevels)) {
+                $roles = $hospitalRoles;
+            } elseif ($facility->level_of_care === $phcLevel) {
+                $roles = $phcRoles;
+            } else {
+                continue; // Unknown level of care → no workers
+            }
+
+            // Seed workers for this facility
+            foreach ($roles as $role) {
+
+                $email = strtolower(str_replace(' ', '_', $role)) . "_{$facility->id}@example.com";
+
+                User::updateOrCreate(
+                    ['email' => $email],
+                    [
+                        'name' => ucfirst(str_replace('_', ' ', $role)) . ' - ' . $facility->name,
+                        'password' => Hash::make('password'),
+                        'role' => 'health_worker',
+                        'sub_role' => $role,
+                        'facility_id' => $facility->id,
+                        'district_id' => $facility->district_id,
+                        'is_active' => true,
+                    ]
+                );
+            }
         }
 
-        // Seed primary roles
-        foreach ($primaryRoles as $role) {
+        
+        // Seed HIS Manager (Provincial-level health information manager)
+        
+        $provinceFacility = Facility::where('type', 'management')
+            ->where('level_of_care', 'Head Office')
+            ->first();
+
+        if (!$provinceFacility) {
+            // fallback: any management office
+            $provinceFacility = Facility::where('type', 'management')->first();
+        }
+
+        if ($provinceFacility) {
             User::updateOrCreate(
-                ['email' => "$role@example.com"],
+                ['email' => 'his_manager@gauteng.gov.za'],
                 [
-                    'name' => ucfirst(str_replace('_', ' ', $role)),
-                    'password' => Hash::make('password'),
-                    'role' => $role,
-                    'facility_id' => $facility->id,
-                    'district_id' => $facility->district_id,
-                    'is_active' => true,
+                    'name' => 'HIS Manager',
+                    'password' => Hash::make('HisM@nager123'),
+                    'role'       => 'health_worker',
+                    'sub_role'   => 'his_manager',
+                    'facility_id' => $provinceFacility->id,
+                    'district_id' => $provinceFacility->district_id,
+                    'is_active'  => true,
                 ]
             );
+
+            $this->command->info('HIS Manager assigned to Provincial Office.');
         }
 
-        // Seed sub-roles as health_worker variants
-        foreach ($subRoles as $subRole) {
-            User::updateOrCreate(
-                ['email' => "$subRole@example.com"],
-                [
-                    'name' => ucfirst(str_replace('_', ' ', $subRole)),
-                    'password' => Hash::make('password'),
-                    'role' => $subRole,
-                    'facility_id' => $facility->id,
-                    'district_id' => $facility->district_id,
-                    'is_active' => true,
-                ]
-            );
-        }
-
-        $this->command->info('Primary and sub-role users seeded successfully.');
+        $this->command->info('Health worker roles seeded successfully.');
     }
 }

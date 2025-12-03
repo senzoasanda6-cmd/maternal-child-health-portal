@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('mother_profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->date('dob');
-            $table->string('contact');
-            $table->string('address');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->date('dob')->nullable();
+            $table->string('contact_number')->nullable();
+            $table->string('address')->nullable();
+            $table->date('last_menstrual_date')->nullable();
+            $table->enum('trimester', ['First', 'Second', 'Third'])->nullable();
             $table->timestamps();
         });
     }

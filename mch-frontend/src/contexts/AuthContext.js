@@ -1,6 +1,7 @@
-import React, { createContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useState, useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api, { csrf } from "../services/api";
+import LoginModal from "../components/modals/LoginModal";
 
 export const AuthContext = createContext();
 
@@ -26,6 +27,8 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const authRequiredTimeoutRef = useRef(null);
 
     const logout = useCallback(async () => {
         try {
@@ -42,9 +45,15 @@ export const AuthProvider = ({ children }) => {
 
     const refreshToken = useCallback(async () => {
         try {
+            // Refresh CSRF cookie and attempt to GET /user. The POST /refresh
+            // route in this project is behind auth:sanctum, so calling it when
+            // unauthenticated will return 401. Using GET /user after
+            // requesting the CSRF cookie is a safe way to detect whether a
+            // session cookie is valid and recover the user without hitting a
+            // protected refresh endpoint.
             await csrf.get("/sanctum/csrf-cookie");
-            const res = await api.post("/refresh");
-            const refreshedUser = res.data.user;
+            const res = await api.get("/user");
+            const refreshedUser = res.data;
             if (!refreshedUser) throw new Error("Missing user data on refresh");
 
             const normalizedRole = refreshedUser.role?.toLowerCase();
@@ -90,6 +99,44 @@ export const AuthProvider = ({ children }) => {
         fetchUser();
     }, [fetchUser]);
 
+    // Listen for global 'auth:required' events (emitted by the API layer when
+    // token/session refresh fails). Only show the modal if the user was previously
+    // authenticated (to distinguish between "session expired" vs "never logged in").
+    // Debounce to avoid multiple events firing at once.
+    useEffect(() => {
+        const onAuthRequired = (e) => {
+            // Only show login modal if user was previously logged in (detected by
+            // checking if we had a user or role stored). If they were never logged in,
+            // this is expected and we don't need the modal.
+            const hadPreviousSession = !!localStorage.getItem("role") || user !== null;
+
+            if (!hadPreviousSession) {
+                // User was never logged in; 401 is expected. Don't show modal.
+                return;
+            }
+
+            // Debounce: only show modal once per 100ms
+            if (authRequiredTimeoutRef.current) {
+                clearTimeout(authRequiredTimeoutRef.current);
+            }
+            authRequiredTimeoutRef.current = setTimeout(() => {
+                localStorage.removeItem("role");
+                localStorage.removeItem("api_token");
+                setUser(null);
+                setShowLoginModal(true);
+                authRequiredTimeoutRef.current = null;
+            }, 100);
+        };
+
+        window.addEventListener("auth:required", onAuthRequired);
+        return () => {
+            window.removeEventListener("auth:required", onAuthRequired);
+            if (authRequiredTimeoutRef.current) {
+                clearTimeout(authRequiredTimeoutRef.current);
+            }
+        };
+    }, [user]);
+
     const login = async (credentials) => {
         try {
             // Step 1: Check if already authenticated
@@ -133,18 +180,30 @@ export const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider
-            value={{
-                user,
-                role: user?.role,
-                district: user?.district_id,
-                login,
-                logout,
-                loading,
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
+        <>
+            <AuthContext.Provider
+                value={{
+                    user,
+                    role: user?.role,
+                    district: user?.district_id,
+                    login,
+                    logout,
+                    loading,
+                }}
+            >
+                {children}
+            </AuthContext.Provider>
+
+            {/* Show login modal when session expires */}
+            <LoginModal
+                show={showLoginModal}
+                onLogin={async (credentials) => {
+                    await login(credentials);
+                    setShowLoginModal(false);
+                }}
+                onClose={() => setShowLoginModal(false)}
+            />
+        </>
     );
 };
 
