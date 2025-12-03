@@ -43,17 +43,43 @@ class MotherChildAppointmentSeeder extends Seeder
         $this->command->info('HIS Manager created at Provincial Office.');
 
         // --- Fetch facilities excluding management ---
-        $facilities = Facility::where('type', '!=', 'management')->get();
+        $facilityQuery = Facility::where('type', '!=', 'management');
+        $limit = env('SEED_FACILITY_LIMIT');
+        if (!empty($limit) && is_numeric($limit)) {
+            $facilityQuery->take((int) $limit);
+            $this->command->info("SEED_FACILITY_LIMIT set: limiting to {$limit} facility(ies).");
+        }
+
+        $facilities = $facilityQuery->get();
         if ($facilities->isEmpty()) {
             $this->command->warn('No facilities available. Seeder skipped.');
             return;
         }
 
-        $allMothers = collect();
-        $allChildren = collect();
+        // --- Fetch health workers once and group by facility to avoid repeated queries ---
+        $healthWorkers = User::whereIn('role', ['health_worker', 'midwife', 'facility_worker', 'facility_nurse', 'facility_doctor', 'hospital_admin', 'facility_admin', 'facility_manager'])
+            ->orWhereIn('sub_role', ['midwife', 'facility_worker', 'facility_nurse', 'facility_doctor', 'hospital_admin', 'facility_admin', 'facility_manager'])
+            ->get()
+            ->groupBy('facility_id');
 
-        // --- Create mother users + profiles ---
-        foreach ($facilities as $facility) {
+        $phases = ['prenatal', 'delivery', 'postnatal', 'vaccination'];
+        $statuses = ['scheduled', 'completed', 'cancelled', 'rescheduled', 'no_show'];
+        $appointmentTypes = [
+            'prenatal' => ['Routine Check-up', 'Ultrasound', 'Lab Work', 'First Trimester Check'],
+            'delivery' => ['Delivery Appointment', 'Pre-delivery Assessment'],
+            'postnatal' => ['Post-delivery Check-up', 'Follow-up Visit', 'Breastfeeding Support'],
+            'vaccination' => ['Routine Immunization', 'Catch-up Vaccination', 'Booster Shot'],
+        ];
+
+        $globalCount = 0;
+
+        // Process facility-by-facility to avoid holding large collections in memory
+        foreach ($facilities as $idx => $facility) {
+            $this->command->info(sprintf('Processing facility %d/%d: %s', $idx + 1, $facilities->count(), $facility->name));
+
+            $facilityMothers = collect();
+            $facilityChildren = collect();
+
             $numMothers = rand(2, 6);
             for ($i = 0; $i < $numMothers; $i++) {
                 $motherUser = User::create([
@@ -73,9 +99,9 @@ class MotherChildAppointmentSeeder extends Seeder
                     'trimester' => $faker->randomElement(['First', 'Second', 'Third']),
                 ]);
 
-                $allMothers->push($motherUser);
+                $facilityMothers->push($motherUser);
 
-                // --- Create 1-2 children per mother ---
+                // Create 1-2 children per mother
                 $numChildren = rand(1, 2);
                 for ($j = 0; $j < $numChildren; $j++) {
                     $child = Child::create([
@@ -84,54 +110,17 @@ class MotherChildAppointmentSeeder extends Seeder
                         'dob' => $faker->date('Y-m-d', '-5 years'),
                         'gender' => $faker->randomElement(['Male', 'Female']),
                     ]);
-                    $allChildren->push($child);
+                    $facilityChildren->push($child);
                 }
             }
-        }
 
-        $this->command->info("Created {$allMothers->count()} mothers and {$allChildren->count()} children.");
-
-        // --- Fetch health workers ---
-        $healthWorkers = User::whereIn('role', ['health_worker', 'midwife', 'facility_worker', 'facility_nurse', 'facility_doctor', 'hospital_admin', 'facility_admin', 'facility_manager'])
-            ->orWhereIn('sub_role', ['midwife', 'facility_worker', 'facility_nurse', 'facility_doctor', 'hospital_admin', 'facility_admin', 'facility_manager'])
-            ->get();
-
-        $healthWorkersByFacility = $healthWorkers->groupBy('facility_id');
-
-        $phases = ['prenatal', 'delivery', 'postnatal', 'vaccination'];
-        $statuses = ['scheduled', 'completed', 'cancelled', 'rescheduled', 'no_show'];
-        $appointmentTypes = [
-            'prenatal' => ['Routine Check-up', 'Ultrasound', 'Lab Work', 'First Trimester Check'],
-            'delivery' => ['Delivery Appointment', 'Pre-delivery Assessment'],
-            'postnatal' => ['Post-delivery Check-up', 'Follow-up Visit', 'Breastfeeding Support'],
-            'vaccination' => ['Routine Immunization', 'Catch-up Vaccination', 'Booster Shot'],
-        ];
-
-        $appointments = [];
-        $count = 0;
-
-        // --- Create appointments ---
-        foreach ($facilities as $facility) {
-            $facilityMothers = $allMothers->where('facility_id', $facility->id);
-            $facilityChildren = $allChildren->whereIn('mother_id', $facilityMothers->pluck('id'));
-
-            $allowedRoles = match ($facility->level_of_care) {
-                'Primary Health Care Center', 'PHC' => ['facility_worker', 'facility_nurse', 'facility_doctor'],
-                'Dental Hospital', 'District Hospital', 'National Central Hospital', 'Tertiary Hospital', 'Specialized Hospital', 'Regional Hospital' => [
-                    'midwife',
-                    'facility_worker',
-                    'facility_nurse',
-                    'facility_doctor',
-                    'hospital_admin',
-                    'facility_admin',
-                    'facility_manager'
-                ],
-                default => [],
-            };
-
-            $facilityHealthWorkers = $healthWorkersByFacility->get($facility->id)?->filter(function ($hw) use ($allowedRoles) {
-                return in_array($hw->sub_role, $allowedRoles);
+            // Prepare facility-specific appointments and insert in batches
+            $facilityHealthWorkers = $healthWorkers->get($facility->id)?->filter(function ($hw) use ($facility) {
+                return true; // caller logic will filter by sub_role below
             }) ?? collect();
+
+            $appointments = [];
+            $count = 0;
 
             foreach ($phases as $phase) {
                 foreach ($statuses as $status) {
@@ -139,6 +128,25 @@ class MotherChildAppointmentSeeder extends Seeder
 
                     $child = $facilityChildren->random();
                     $mother = $facilityMothers->where('id', $child->mother_id)->first();
+
+                    $allowedRoles = match ($facility->level_of_care) {
+                        'Primary Health Care Center', 'PHC' => ['facility_worker', 'facility_nurse', 'facility_doctor'],
+                        'Dental Hospital', 'District Hospital', 'National Central Hospital', 'Tertiary Hospital', 'Specialized Hospital', 'Regional Hospital' => [
+                            'midwife',
+                            'facility_worker',
+                            'facility_nurse',
+                            'facility_doctor',
+                            'hospital_admin',
+                            'facility_admin',
+                            'facility_manager'
+                        ],
+                        default => [],
+                    };
+
+                    $facilityHealthWorkers = $facilityHealthWorkers->filter(function ($hw) use ($allowedRoles) {
+                        return in_array($hw->sub_role, $allowedRoles);
+                    });
+
                     $healthWorker = $facilityHealthWorkers->isNotEmpty() ? $facilityHealthWorkers->random() : null;
                     $appointmentType = $appointmentTypes[$phase][array_rand($appointmentTypes[$phase])];
 
@@ -177,6 +185,7 @@ class MotherChildAppointmentSeeder extends Seeder
                     ];
 
                     $count++;
+                    $globalCount++;
                     if ($count >= 50) {
                         Appointment::insert($appointments);
                         $appointments = [];
@@ -184,10 +193,12 @@ class MotherChildAppointmentSeeder extends Seeder
                     }
                 }
             }
-        }
 
-        if (!empty($appointments)) {
-            Appointment::insert($appointments);
+            if (!empty($appointments)) {
+                Appointment::insert($appointments);
+            }
+
+            $this->command->info("Facility '{$facility->name}' seeded: {$facilityMothers->count()} mothers, {$facilityChildren->count()} children, and appointments created (total so far: {$globalCount}).");
         }
 
         $this->command->info('Seeder completed: HIS Manager, Mothers, Children, and Appointments successfully created!');
