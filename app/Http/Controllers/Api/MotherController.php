@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Mother;
 use Carbon\Carbon;
+use App\Models\MotherProfile;
 
 
 class MotherController extends Controller
@@ -23,26 +23,10 @@ class MotherController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'fullName' => 'required|string',
-            'dob' => 'required|date',
-            'contactNumber' => 'required|string',
-            'address' => 'required|string',
-            'lastMenstrualDate' => 'required|date',
-        ]);
-
-        $trimester = $this->calculateTrimester($request->lastMenstrualDate);
-
-        $mother = Mother::create([
-            'name' => $request->fullName,
-            'dob' => $request->dob,
-            'contact_number' => $request->contactNumber,
-            'address' => $request->address,
-            'last_menstrual_date' => $request->lastMenstrualDate,
-            'trimester' => $trimester,
-        ]);
-
-        return response()->json($mother, 201);
+        // This method seems to be for a different flow.
+        // The registration is handled by Auth controllers.
+        // We can leave this empty or implement a profile creation for an existing user.
+        return response()->json(['message' => 'Not implemented'], 501);
     }
 
     private function calculateTrimester($lmd)
@@ -57,50 +41,68 @@ class MotherController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        $mother = Mother::with('children')->findOrFail($id);
-        return response()->json($mother);
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        // Ensure the user is a mother and load her profile and children
+        if ($user->role !== 'mother') {
+            return response()->json(['message' => 'User is not a mother.'], 403);
+        }
+
+        // Load the mother's profile and her children through the User model
+        $user->load('motherProfile', 'children');
+
+        return response()->json($user);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
         $request->validate([
-            'fullName' => 'string',
-            'dob' => 'date',
-            'contactNumber' => 'string',
-            'address' => 'string',
-            'lastMenstrualDate' => 'date',
+            'name' => 'sometimes|string|max:255',
+            'dob' => 'sometimes|date',
+            'contact' => 'sometimes|string|max:20',
+            'address' => 'sometimes|string|max:255',
+            'lastMenstrualDate' => 'sometimes|nullable|date',
         ]);
 
-        $mother = Mother::findOrFail($id);
+        // Update the User model's name
+        if ($request->has('name')) {
+            $user->update(['name' => $request->name]);
+        }
 
-        $mother->update([
-            'name' => $request->fullName ?? $mother->name,
-            'dob' => $request->dob ?? $mother->dob,
-            'contact_number' => $request->contactNumber ?? $mother->contact_number,
-            'address' => $request->address ?? $mother->address,
-            'last_menstrual_date' => $request->lastMenstrualDate ?? $mother->last_menstrual_date,
-            'trimester' => $request->lastMenstrualDate
-                ? $this->calculateTrimester($request->lastMenstrualDate)
-                : $mother->trimester,
-        ]);
+        // Update or create the MotherProfile
+        $profileData = $request->only(['dob', 'contact_number' => 'contact', 'address', 'last_menstrual_date']);
+        $profileData = array_filter($profileData, fn($value) => !is_null($value));
 
-        return response()->json($mother);
+        if (!empty($profileData)) {
+            $user->motherProfile()->updateOrCreate(['user_id' => $user->id], $profileData);
+        }
+
+        // Reload the user with updated relations and return it
+        $user->load('motherProfile', 'children');
+        return response()->json($user);
     }
 
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        $mother = Mother::findOrFail($id);
-        $mother->delete();
+        /** @var \App\Models\User $user */
+        $user = $request->user();
 
-        return response()->json(['message' => 'Mother deleted successfully']);
+        // Deleting the user will cascade delete related profiles/children if set up in migrations.
+        $user->delete();
+
+        return response()->json(['message' => 'Mother profile and user account deleted successfully']);
     }
 }

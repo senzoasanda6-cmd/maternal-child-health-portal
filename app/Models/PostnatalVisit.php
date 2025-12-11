@@ -2,33 +2,41 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class PostnatalVisit extends Model
 {
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'child_id',
-        'facility_id',
+        'mother_id',
         'visit_date',
+        'weight',
+        'blood_pressure',
+        'temperature',
         'notes',
     ];
 
-    public function facility()
+    public function mother(): BelongsTo
     {
-        return $this->belongsTo(Facility::class);
+        return $this->belongsTo(User::class, 'mother_id');
     }
 
-    public function provider()
-    {
-        return $this->belongsTo(User::class, 'provider_id');
-    }
-
-    public function child()
+    public function child(): BelongsTo
     {
         return $this->belongsTo(Child::class);
     }
 
-    public function immunizations()
+    public function immunizations(): MorphMany
     {
         return $this->morphMany(Immunization::class, 'visitable');
     }

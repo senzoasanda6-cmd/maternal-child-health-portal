@@ -1,6 +1,7 @@
 // src/pages/HealthWorker/HealthDashboard.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import api from "../../services/api";
+import { AuthContext } from "../../contexts/AuthContext";
 import DashboardCard from "../../components/DashboardCard";
 import {
     FaCalendarAlt,
@@ -10,6 +11,7 @@ import {
 } from "react-icons/fa";
 
 const HealthDashboard = () => {
+    const { user, loading: authLoading } = useContext(AuthContext);
     const [data, setData] = useState({
         appointments: 0,
         lastVisit: "N/A",
@@ -19,12 +21,17 @@ const HealthDashboard = () => {
     });
 
     useEffect(() => {
+        // Only fetch if user is authenticated and auth is done loading
+        if (!authLoading && !user) {
+            return; // Don't fetch if not authenticated
+        }
+
         const fetchDashboard = async () => {
             try {
                 const [appointmentsRes, lastVisitRes, stageRes] =
                     await Promise.all([
                         api.get("/dashboard/appointments"),
-                        api.get("/dashboard/unified-visit"), // ✅ updated to unified visit endpoint
+                        api.get("/dashboard/last-visit"), // ✅ updated to unified visit endpoint
                         api.get("/dashboard/pregnancy-stage"),
                     ]);
 
@@ -41,8 +48,10 @@ const HealthDashboard = () => {
             }
         };
 
-        fetchDashboard();
-    }, []);
+        if (user) {
+            fetchDashboard();
+        }
+    }, [user, authLoading]);
 
     return (
         <div className="container py-4">

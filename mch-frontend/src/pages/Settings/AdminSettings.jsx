@@ -12,7 +12,7 @@ export default function AdminSettings() {
     const [message, setMessage] = useState(null);
 
     useEffect(() => {
-        api.get("/api/admin/settings")
+        api.get("/admin/settings")
             .then((res) => {
                 setForm((f) => ({
                     ...f,
@@ -31,7 +31,7 @@ export default function AdminSettings() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        api.post("/api/admin/settings", form)
+        api.post("/admin/settings", form)
             .then((res) => setMessage("Settings updated successfully."))
             .catch((err) => setMessage("Update failed."));
     };

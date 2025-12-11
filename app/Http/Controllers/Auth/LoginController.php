@@ -22,8 +22,18 @@ class LoginController extends Controller
         $request->session()->regenerate(); // ✅ Important for session tracking
         $request->session()->put('login_time', now()); // ✅ Track login timestamp
 
+        // Also create a personal access token for API use (useful for programmatic tests)
+        /** @var \App\Models\User $user */
+        $user = Auth::user(); // Add type hint for static analysis
+        if (method_exists($user, 'createToken')) {
+            $token = $user->createToken('api-token')->plainTextToken;
+        } else {
+            $token = null;
+        }
+
         return response()->json([
-            'user' => Auth::user(),
+            'user' => $user,
+            'token' => $token,
             'message' => 'Login successful',
         ]);
     }

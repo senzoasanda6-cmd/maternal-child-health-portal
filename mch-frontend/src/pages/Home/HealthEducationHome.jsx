@@ -33,18 +33,30 @@ const HealthEducationHome = () => {
     return (
         <div className="container-fluid p-4">
             <LanguageSwitcher />
-            <div className="row" >
-                <aside className="col-md-3 bg-light border-end py-4 rounded-4" style={{backgroundColor: "#ccccccff", color:"#ccc"}}>
-                    <nav className="nav flex-column px-3 py-4 rounded-4" style={{backgroundColor: "#ccccccff", color:"#1d4189"}}>
+            <div className="row">
+                <aside
+                    className="col-md-3 bg-light border-end py-4 rounded-4"
+                    style={{ backgroundColor: "#ccccccff", color: "#ccc" }}
+                >
+                    <nav
+                        className="nav flex-column px-3 py-4 rounded-4"
+                        style={{
+                            backgroundColor: "#ccccccff",
+                            color: "#1d4189",
+                        }}
+                    >
                         <h5 className="text-center fs-2 mb-0">Topics</h5>
                         <hr />
-                        <Link to="/PregnancyStages" className="nav-link">
+                        <Link to="/pregnancy-stages" className="nav-link">
                             {t("pregnancy_stages")}
                         </Link>
-                        <Link to="/SafeMedicines" className="nav-link">
+                        <Link to="/safe-medicines" className="nav-link">
                             {t("safe_medicines")}
                         </Link>
-                        <Link to="/postnatal-visits/1" className="nav-link">
+                        <Link
+                            to="/health/postnatal-visits"
+                            className="nav-link"
+                        >
                             {t("visit_history")}
                         </Link>
                         <Link to="/dashboard" className="nav-link">
@@ -69,7 +81,7 @@ const HealthEducationHome = () => {
                                     </h5>
                                     <p>{t("pregnancy_stages_description")}</p>
                                     <Link
-                                        to="/PregnancyStages"
+                                        to="/pregnancy-stages"
                                         className="btn btn-outline-primary btn-sm"
                                     >
                                         {t("explore")}
@@ -87,7 +99,7 @@ const HealthEducationHome = () => {
                                     </h5>
                                     <p>{t("safe_medicines_description")}</p>
                                     <Link
-                                        to="/SafeMedicines"
+                                        to="/safe-medicines"
                                         className="btn btn-outline-success btn-sm"
                                     >
                                         {t("view_list")}
@@ -99,16 +111,20 @@ const HealthEducationHome = () => {
                         <div className="col-md-4 mb-4">
                             <div className="card h-100 shadow-sm">
                                 <div className="card-body">
-                                    <i className="bi bi-clipboard-data fs-1 text-warning"></i>
+                                    <i className="bi bi-people fs-1 text-warning"></i>
                                     <h5 className="mt-3">
-                                        {t("visit_history")}
+                                        {t("child_growth_milestones")}
                                     </h5>
-                                    <p>{t("visit_history_description")}</p>
+                                    <p>
+                                        {t(
+                                            "child_growth_milestones_description"
+                                        )}
+                                    </p>
                                     <Link
-                                        to="/postnatal-visits/1"
+                                        to="/child-growth"
                                         className="btn btn-outline-warning btn-sm"
                                     >
-                                        {t("view_visits")}
+                                        {t("learn_more")}
                                     </Link>
                                 </div>
                             </div>

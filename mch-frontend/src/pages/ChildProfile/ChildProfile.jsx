@@ -9,8 +9,8 @@ const ChildProfileView = () => {
   const [newGrowth, setNewGrowth] = useState({ height: '', weight: '', date: '' });
 
   useEffect(() => {
-    axios.get(`/api/children/${id}`).then(res => setChild(res.data));
-    axios.get(`/api/children/${id}/growth`).then(res => setGrowthRecords(res.data));
+    axios.get(`/children/${id}`).then(res => setChild(res.data));
+    axios.get(`/children/${id}/growth`).then(res => setGrowthRecords(res.data));
   }, [id]);
 
   const calculateAgeInMonths = (dob) => {
@@ -23,8 +23,8 @@ const ChildProfileView = () => {
   const handleGrowthSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/children/${id}/growth`, newGrowth);
-      const updated = await axios.get(`/api/children/${id}/growth`);
+      await axios.post(`/children/${id}/growth`, newGrowth);
+      const updated = await axios.get(`/children/${id}/growth`);
       setGrowthRecords(updated.data);
       setNewGrowth({ height: '', weight: '', date: '' });
     } catch (err) {

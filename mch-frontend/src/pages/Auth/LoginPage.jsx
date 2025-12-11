@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import Spinner from "../../components/spinners/Spinner";
-import "./LoginPage.css"; 
+import "./LoginPage.css";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -84,7 +84,12 @@ function LoginPage() {
                             >
                                 Login
                             </button>
-                            <p style={{ marginBottom: "12px", marginTop: "12px" }}>
+                            <p
+                                style={{
+                                    marginBottom: "12px",
+                                    marginTop: "12px",
+                                }}
+                            >
                                 Or
                             </p>
                             <button
@@ -95,6 +100,15 @@ function LoginPage() {
                             >
                                 Register
                             </button>
+                            <p className="mt-3 text-center">
+                                <span
+                                    className="link-primary"
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => navigate("/forgot-password")}
+                                >
+                                    Forgot your password?
+                                </span>
+                            </p>
                         </form>
                     </div>
                 </div>

@@ -12,7 +12,7 @@ class Facility extends Model
     protected $fillable = [
         'name',
         'title',
-        'district',
+        'district_id',
         'sub_district',
         'type',
         'level_of_care',

@@ -9,6 +9,7 @@ use App\Models\Child;
 class ChildController extends Controller
 {
     use AuthorizesRequests;
+
     /**
      * List all children associated with the authenticated user's mother profile.
      */
@@ -20,7 +21,7 @@ class ChildController extends Controller
             return response()->json(['error' => 'Mother profile not found'], 404);
         }
 
-        return response()->json($profile->children);
+        return response()->json($profile->children, 200);
     }
 
     /**
@@ -47,11 +48,39 @@ class ChildController extends Controller
     }
 
     /**
+     * Show a specific child profile.
+     */
+    public function show(Request $request, $id)
+    {
+        $profile = $request->user()->motherProfile;
+
+        if (!$profile) {
+            return response()->json(['error' => 'Mother profile not found'], 404);
+        }
+
+        $child = $profile->children()->find($id);
+
+        if (!$child) {
+            return response()->json(['error' => 'Child not found'], 404);
+        }
+
+        return response()->json([
+            'id' => $child->id,
+            'name' => $child->name,
+            'dob' => $child->dob,
+            'age' => $child->age,
+            'gender' => $child->gender,
+            'nextCheckup' => $child->next_checkup ?? 'Not scheduled',
+            'growthStatus' => $child->growth_status ?? 'Unknown',
+        ]);
+    }
+
+    /**
      * Update an existing child profile.
      */
     public function update(Request $request, Child $child)
     {
-        $this->authorize('update', $child); // Optional: add policy for access control
+        $this->authorize('update', $child);
 
         $validated = $request->validate([
             'name' => 'required|string|max:100|unique:children,name,' . $child->id,
@@ -64,43 +93,13 @@ class ChildController extends Controller
 
         return response()->json($child);
     }
-    public function show(Request $request)
-    {
-        $user = $request->user();
-
-        if (!$user) {
-            return response()->json(['error' => 'Unauthenticated'], 401);
-        }
-
-        $profile = $user->motherProfile;
-
-        if (!$profile) {
-            return response()->json(['error' => 'Mother profile not found'], 404);
-        }
-
-        $child = $profile->children()->first();
-
-        if (!$child) {
-            return response()->json(['error' => 'No child found'], 404);
-        }
-
-        return response()->json([
-            'name' => $child->name,
-            'age' => $child->age . ' months',
-            'gender' => $child->gender,
-            'nextCheckup' => $child->next_checkup ?? 'Not scheduled',
-            'growthStatus' => $child->growth_status ?? 'Unknown',
-        ]);
-    }
-
-
 
     /**
      * Delete a child profile.
      */
     public function destroy(Request $request, Child $child)
     {
-        $this->authorize('delete', $child); // Optional: add policy for access control
+        $this->authorize('delete', $child);
 
         $child->delete();
 

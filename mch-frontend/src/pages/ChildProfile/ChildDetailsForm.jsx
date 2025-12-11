@@ -15,7 +15,7 @@ const ChildDetailsForm = ({ child = null, onSave }) => {
         const fetchHospitals = async () => {
             try {
                 const token = localStorage.getItem("token"); // adjust if stored elsewhere
-                const res = await axios.get("/api/admin/hospitals", {
+                const res = await axios.get("/admin/hospitals", {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -40,8 +40,8 @@ const ChildDetailsForm = ({ child = null, onSave }) => {
         try {
             const token = localStorage.getItem("token");
             const endpoint = child
-                ? `/api/children/${child.id}`
-                : "/api/children";
+                ? `/children/${child.id}`
+                : "/children";
             const method = child ? "put" : "post";
             await axios[method](endpoint, form, {
                 headers: {

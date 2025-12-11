@@ -1,13 +1,144 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
 import Spinner from "../../components/spinners/Spinner";
-import api, { csrf } from "../../services/api"; // ✅ Import centralized api and csrf instances
+import api, { csrf } from "../../services/api";
 import { BsArrowLeft } from "react-icons/bs";
+import { useDebounce } from "../../hooks/useDebounce"; // import debounce
 import "./LoginPage.css";
+
+/* ---------- HealthWorker Form Component ---------- */
+const HealthWorkerForm = ({ form, facilities, onChange }) => (
+    <div className="row g-3">
+        <div className="col-md-6">
+            <div className="form-floating">
+                <select
+                    className="form-select"
+                    id="facility_id"
+                    name="facility_id"
+                    value={form.facility_id}
+                    onChange={onChange}
+                    required
+                >
+                    <option value="">Select Facility</option>
+                    {facilities.map((f) => (
+                        <option key={f.id} value={f.id}>
+                            {f.name}
+                        </option>
+                    ))}
+                </select>
+                <label htmlFor="facility_id">Facility</label>
+            </div>
+        </div>
+
+        <div className="col-md-6">
+            <div className="form-floating">
+                <input
+                    type="text"
+                    className="form-control"
+                    id="designation"
+                    name="designation"
+                    placeholder="Designation"
+                    value={form.designation}
+                    onChange={onChange}
+                />
+                <label htmlFor="designation">Designation</label>
+            </div>
+        </div>
+
+        <div className="col-md-6">
+            <div className="form-floating">
+                <input
+                    type="text"
+                    className="form-control"
+                    id="district"
+                    name="district"
+                    placeholder="District"
+                    value={form.district}
+                    readOnly
+                    disabled
+                />
+                <label htmlFor="district">District</label>
+            </div>
+        </div>
+
+        <div className="col-md-6">
+            <div className="form-floating">
+                <input
+                    type="text"
+                    className="form-control"
+                    id="sub_district"
+                    name="sub_district"
+                    placeholder="Sub-district"
+                    value={form.sub_district}
+                    readOnly
+                    disabled
+                />
+                <label htmlFor="sub_district">Sub-district</label>
+            </div>
+        </div>
+
+        <div className="col-12">
+            <div className="form-floating">
+                <textarea
+                    className="form-control"
+                    id="comments"
+                    name="comments"
+                    placeholder="Comments"
+                    value={form.comments}
+                    onChange={onChange}
+                    rows="3"
+                />
+                <label htmlFor="comments">Comments</label>
+            </div>
+        </div>
+    </div>
+);
+
+/* ---------- Mother Form Component ---------- */
+const MotherForm = ({ form, facilities, onChange }) => (
+    <div className="row g-3">
+        <div className="col-12">
+            <div className="form-floating" title="Pick the nearest facility for your prenatal and postnatal care">
+                <select
+                    className="form-select"
+                    id="facility_id"
+                    name="facility_id"
+                    value={form.facility_id}
+                    onChange={onChange}
+                >
+                    <option value="">Select Facility</option>
+                    {facilities.map((f) => (
+                        <option key={f.id} value={f.id}>
+                            {f.name}
+                        </option>
+                    ))}
+                </select>
+                <label htmlFor="facility_id">Nearest Facility</label>
+            </div>
+            <small className="text-muted d-block mt-2">
+                💡 Please select the health facility closest to your home for easier access to care.
+            </small>
+        </div>
+        <div className="col-12">
+            <div className="form-floating">
+                <textarea
+                    className="form-control"
+                    id="comments"
+                    name="comments"
+                    placeholder="Additional Information"
+                    value={form.comments}
+                    onChange={onChange}
+                    rows="3"
+                />
+                <label htmlFor="comments">Additional Information</label>
+            </div>
+        </div>
+    </div>
+);
 
 function RegisterForm() {
     const navigate = useNavigate();
-
     const [selectedRole, setSelectedRole] = useState("");
     const [form, setForm] = useState({
         name: "",
@@ -18,48 +149,43 @@ function RegisterForm() {
         comments: "",
         facility_id: "",
         district: "",
-        designation: "", 
+        sub_district: "",
+        designation: "",
         custom_designation: "",
     });
-
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const [facilities, setFacilities] = useState([]);
 
-    useEffect(() => {
-        if (!selectedRole) return;
+    // Debounce the district input
+    const debouncedDistrict = useDebounce(form.district, 500);
 
-        let url = `/facilities`; // ✅ Use relative path
+    /* ---------- React Query: Fetch facilities ---------- */
+    const { data: facilities = [], isLoading: facilitiesLoading } = useQuery({
+        queryKey: ["facilities", selectedRole, debouncedDistrict],
+        queryFn: async () => {
+            if (!selectedRole) return [];
 
-        if (selectedRole === "health_worker") {
-            url += "?type=clinic";
-        } else if (
-            (selectedRole === "manager" || selectedRole === "district_admin") &&
-            form.district
-        ) {
-            url += `?district=${encodeURIComponent(form.district)}`; // This part is fine
-        }
+            let url = `/facilities`;
+            if (
+                (selectedRole === "manager" ||
+                    selectedRole === "district_admin") &&
+                debouncedDistrict
+            ) {
+                url += `?district=${encodeURIComponent(debouncedDistrict)}`;
+            }
 
-        api // ✅ Use the 'api' instance
-            .get(url)
-            .then((data) => {
-                setFacilities(data.data);
-            })
-            .catch(() => {
-                setFacilities([]);
-            });
-    }, [selectedRole, form.district]);
+            const res = await api.get(url);
+            return res.data;
+        },
+        enabled: !!selectedRole, // Only fetch when role is selected
+        staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    });
 
+    /* ---------- Handlers ---------- */
     const handleRoleSelect = (e) => {
         const role = e.target.value;
         setSelectedRole(role);
-        setForm((prev) => ({
-            ...prev,
-            role,
-            district: "",
-            facility_id: "",
-        }));
-        setFacilities([]);
+        setForm((prev) => ({ ...prev, role, district: "", facility_id: "" }));
         setError("");
     };
 
@@ -68,13 +194,21 @@ function RegisterForm() {
 
         if (name === "facility_id") {
             const selectedFacility = facilities.find(
-                (facility) => facility.id.toString() === value
+                (f) => f.id.toString() === value
             );
+            // Try to derive district name from relation or direct fields
+            const districtName = selectedFacility
+                ? (selectedFacility.district && typeof selectedFacility.district === 'object'
+                      ? selectedFacility.district.name
+                      : selectedFacility.district || selectedFacility.district_id)
+                : "";
+            const subDistrict = selectedFacility ? selectedFacility.sub_district || "" : "";
 
             setForm((prev) => ({
                 ...prev,
                 facility_id: value,
-                district: selectedFacility ? selectedFacility.district : "",
+                district: districtName || "",
+                sub_district: subDistrict,
             }));
         } else {
             setForm((prev) => ({ ...prev, [name]: value }));
@@ -92,71 +226,73 @@ function RegisterForm() {
             comments: "",
             facility_id: "",
             district: "",
+            sub_district: "",
+            designation: "",
+            custom_designation: "",
         });
         setError("");
-        setFacilities([]);
     };
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+        e.preventDefault();
+        setLoading(true);
+        setError("");
 
-    if (form.password !== form.password_confirmation) {
-        setError("Passwords do not match.");
-        setLoading(false);
-        return;
-    }
+        if (form.password !== form.password_confirmation) {
+            setError("Passwords do not match.");
+            setLoading(false);
+            return;
+        }
 
-    if (!form.facility_id) {
-        setError("Facility is required.");
-        setLoading(false);
-        return;
-    }
+        if (!form.facility_id && (form.role === "health_worker" || form.role === "mother")) {
+            setError("Facility is required.");
+            setLoading(false);
+            return;
+        }
 
-    // Adjust designation if "other" is selected
-    const submissionData = {
-        ...form,
-        designation:
-            form.designation === "other"
-                ? form.custom_designation
-                : form.designation,
+        const submissionData = {
+            ...form,
+            designation:
+                form.designation === "other"
+                    ? form.custom_designation
+                    : form.designation,
+        };
+
+        const endpoint =
+            form.role === "mother" ? "/register" : "/registration-request";
+
+        try {
+            await csrf.get("/sanctum/csrf-cookie");
+            const response = await api.post(endpoint, submissionData);
+
+            if (response.status === 200 || response.status === 201) {
+                if (form.role === "mother") {
+                    navigate("/dashboard");
+                } else {
+                    alert(
+                        "Your registration request has been submitted for review. You will be notified once approved."
+                    );
+                    navigate("/login");
+                }
+            } else {
+                setError(response.data.message || "Submission failed.");
+            }
+        } catch (err) {
+            setError(
+                err.response?.data?.message ||
+                    "An error occurred. Please try again."
+            );
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const endpoint =
-        form.role === "mother" ? `/register` : `/registration-request`; // ✅ Use relative paths
-
-    try {
-        // ✅ Use the 'csrf' instance for the cookie, and 'api' for the POST request
-        await csrf.get("/sanctum/csrf-cookie");
-
-        const response = await api.post(endpoint, submissionData);
-
-        if (response.status === 200 || response.status === 201) {
-            if (form.role === "mother") {
-                navigate("/dashboard");
-            } else {
-                alert("Your registration request has been submitted for review.");
-                navigate("/login");
-            }
-        } else {
-            setError(response.data.message || "Submission failed.");
-        }
-    } catch (err) {
-        const errorMessage =
-            err.response?.data?.message ||
-            "An error occurred. Please try again.";
-        setError(errorMessage);
-    } finally {
-        setLoading(false);
-    }
-};
-
-
+    /* ---------- JSX ---------- */
     return (
         <div className="login-page">
-            {loading && <Spinner />}
+            {(loading || facilitiesLoading) && <Spinner />}
             <div className="container login-wrapper">
+                {/* left side image */}
                 <div className="login-left">
                     <div className="image-container">
                         <img
@@ -179,6 +315,7 @@ function RegisterForm() {
                     </div>
                 </div>
 
+                {/* right side form */}
                 <div className="login-right" style={{ minWidth: "400px" }}>
                     <div className="login-card h-100 overflow-y-auto pt-0">
                         {!selectedRole ? (
@@ -194,13 +331,9 @@ function RegisterForm() {
                                     <button
                                         className="btn btn-outline-secondary btn-sm d-flex align-items-center m-0"
                                         onClick={() => navigate("/login")}
-                                        type="button"
                                     >
                                         <BsArrowLeft className="me-2" />
-                                        <span
-                                            className="flex-fill"
-                                            style={{ fontSize: "10px" }}
-                                        >
+                                        <span style={{ fontSize: "10px" }}>
                                             Have an account? Login
                                         </span>
                                     </button>
@@ -209,7 +342,6 @@ function RegisterForm() {
                                 <div className="form-floating mb-3">
                                     <select
                                         className="form-select"
-                                        id="floatingRoleSelect"
                                         value={selectedRole}
                                         onChange={handleRoleSelect}
                                         required
@@ -218,14 +350,11 @@ function RegisterForm() {
                                             Choose a role to continue
                                         </option>
                                         <option value="mother">Mother</option>
-
                                         <option value="health_worker">
                                             Health Worker
                                         </option>
                                     </select>
-                                    <label htmlFor="floatingRoleSelect">
-                                        Role
-                                    </label>
+                                    <label>Role</label>
                                 </div>
                             </>
                         ) : (
@@ -239,10 +368,9 @@ function RegisterForm() {
                                     }}
                                 >
                                     <button
-                                        className="btn button-secondary btn-smz d-flex align-items-center m-0"
+                                        className="btn btn-secondary btn-sm d-flex align-items-center m-0"
                                         onClick={handleBackToRole}
                                         style={{ maxWidth: "80px" }}
-                                        type="button"
                                     >
                                         <BsArrowLeft className="me-2" />
                                         <span>Back</span>
@@ -262,16 +390,13 @@ function RegisterForm() {
                                         <input
                                             type="text"
                                             className="form-control"
-                                            id="floatingName"
                                             name="name"
                                             value={form.name}
                                             onChange={handleChange}
                                             placeholder="Name"
                                             required
                                         />
-                                        <label htmlFor="floatingName">
-                                            Name
-                                        </label>
+                                        <label>Name</label>
                                     </div>
 
                                     {/* Email */}
@@ -279,16 +404,13 @@ function RegisterForm() {
                                         <input
                                             type="email"
                                             className="form-control"
-                                            id="floatingEmail"
                                             name="email"
                                             value={form.email}
                                             onChange={handleChange}
                                             placeholder="Email"
                                             required
                                         />
-                                        <label htmlFor="floatingEmail">
-                                            Email
-                                        </label>
+                                        <label>Email</label>
                                     </div>
 
                                     {/* Password */}
@@ -296,16 +418,13 @@ function RegisterForm() {
                                         <input
                                             type="password"
                                             className="form-control"
-                                            id="floatingPassword"
                                             name="password"
                                             value={form.password}
                                             onChange={handleChange}
                                             placeholder="Password"
                                             required
                                         />
-                                        <label htmlFor="floatingPassword">
-                                            Password
-                                        </label>
+                                        <label>Password</label>
                                     </div>
 
                                     {/* Confirm Password */}
@@ -313,134 +432,42 @@ function RegisterForm() {
                                         <input
                                             type="password"
                                             className="form-control"
-                                            id="floatingConfirmPassword"
                                             name="password_confirmation"
                                             value={form.password_confirmation}
                                             onChange={handleChange}
                                             placeholder="Confirm Password"
                                             required
                                         />
-                                        <label htmlFor="floatingConfirmPassword">
-                                            Confirm Password
-                                        </label>
+                                        <label>Confirm Password</label>
                                     </div>
 
-                                    {/* Facility Dropdown for all roles */}
-                                    <div className="form-floating mb-3">
-                                        <select
-                                            className="form-select"
-                                            id="floatingFacility"
-                                            name="facility_id"
-                                            value={form.facility_id}
-                                            onChange={handleChange}
-                                            required
-                                        >
-                                            <option value="">
-                                                Select Facility
-                                            </option>
-                                            {facilities.map((facility) => (
-                                                <option
-                                                    key={facility.id}
-                                                    value={facility.id}
-                                                >
-                                                    {facility.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <label htmlFor="floatingFacility">
-                                            Facility
-                                        </label>
-                                    </div>
-
-                                    {/* Auto-filled District */}
-                                    {form.district && (
-                                        <div className="form-floating mb-3">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="floatingDistrict"
-                                                name="district"
-                                                value={form.district}
-                                                readOnly
-                                                placeholder="District"
-                                            />
-                                            <label htmlFor="floatingDistrict">
-                                                District
-                                            </label>
-                                        </div>
-                                    )}
-
-                                    {/* Designation (only for health workers) */}
+                                    {/* Role-specific form */}
                                     {selectedRole === "health_worker" && (
-                                        <div className="form-floating mb-3">
-                                            <select
-                                                className="form-select"
-                                                id="floatingDesignation"
-                                                name="designation"
-                                                value={form.designation}
-                                                onChange={handleChange}
-                                                required
-                                            >
-                                                <option value="">
-                                                    Select Designation
-                                                </option>
-                                                <option value="nurse">
-                                                    Nurse
-                                                </option>
-                                                <option value="midwife">
-                                                    Midwife
-                                                </option>
-                                                <option value="community_health_worker">
-                                                    Community Health Worker
-                                                </option>
-                                                <option value="doctor">
-                                                    Doctor
-                                                </option>
-                                                <option value="clinical_manager">
-                                                    Clinical Manager
-                                                </option>
-                                                <option value="other">
-                                                    Other
-                                                </option>
-                                            </select>
-                                            <label htmlFor="floatingDesignation">
-                                                Designation
-                                            </label>
-                                        </div>
+                                        <HealthWorkerForm
+                                            form={form}
+                                            facilities={facilities}
+                                            onChange={handleChange}
+                                        />
                                     )}
-                                    {selectedRole === "health_worker" && form.designation === "other" && (
-  <div className="form-floating mb-3">
-    <input
-      type="text"
-      className="form-control"
-      id="floatingCustomDesignation"
-      name="custom_designation"
-      value={form.custom_designation}
-      onChange={handleChange}
-      placeholder="Specify your role"
-      required
-    />
-    <label htmlFor="floatingCustomDesignation">Specify Your Role</label>
-  </div>
-)}
-
-                                    {/* Registration Info & Errors */}
-                                    {selectedRole !== "mother" && (
-                                        <div className="alert alert-info">
-                                            Your registration will be reviewed
-                                            by an administrator before approval.
-                                        </div>
+                                    {selectedRole === "mother" && (
+                                        <MotherForm
+                                            form={form}
+                                            facilities={facilities}
+                                            onChange={handleChange}
+                                        />
                                     )}
 
+                                    {/* Errors */}
                                     {error && (
                                         <div className="alert alert-danger">
                                             {error}
                                         </div>
                                     )}
-                                    {/* Submit */}
+
                                     <button
                                         type="submit"
                                         className="btn btn-primary w-100"
+                                        disabled={loading}
                                     >
                                         Register
                                     </button>

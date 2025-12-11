@@ -106,7 +106,7 @@ const FacilityList = () => {
                     {facilities.map((facility) => (
                         <li key={facility.id} className="list-group-item d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>{facility.name}</strong> — {facility.location}
+                                <strong>{facility.name}</strong> — {facility.region}
                             </div>
                             <div>
                                 <Button variant="outline-secondary" size="sm" className="me-2" onClick={() => handleShowModal(facility)}>

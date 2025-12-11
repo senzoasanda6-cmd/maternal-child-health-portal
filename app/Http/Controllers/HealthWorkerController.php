@@ -4,9 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MotherProfile;
+use App\Models\HealthWorker;
 
 class HealthWorkerController extends Controller
 {
+
+    public function index()
+    {
+        try {
+            $workers = HealthWorker::select('id', 'name', 'role', 'facility_id')->get();
+            return response()->json($workers, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Internal Server Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function patients(Request $request)
     {
         $user = $request->user();
